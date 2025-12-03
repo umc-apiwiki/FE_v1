@@ -1,0 +1,29 @@
+# APIWIKI Frontend
+
+Vite + React + TypeScript 프로젝트에 Tailwind CSS를 결합해 API 문서 관리 포털의 프런트엔드 기반을 구성했습니다. ESBuild 대안인 `rolldown-vite`가 기본으로 적용되어 빠른 빌드/핫리로드를 제공합니다.
+
+## 개발 환경
+
+- Node.js 18 이상 권장 (현재 devcontainer에서는 22.x 사용)
+- 패키지 매니저: npm
+- 스타일: Tailwind CSS 3.x, PostCSS, Autoprefixer
+
+## 사용 방법
+
+```bash
+npm install        # 의존성 설치
+npm run dev        # http://localhost:5173 에서 개발 서버 실행
+npm run build      # 타입체크 후 Vite 프로덕션 번들 생성 (dist)
+npm run preview    # 빌드 결과를 로컬에서 확인
+npm run lint       # ESLint 검사
+```
+
+## Tailwind 설정
+
+- `tailwind.config.js`: `./index.html`, `./src/**/*.{js,ts,jsx,tsx}` 경로를 감시하며 `brand` 컬러 팔레트를 확장했습니다.
+- `postcss.config.js`: Tailwind와 Autoprefixer 플러그인을 활성화했습니다.
+- `src/index.css`: `@tailwind base/components/utilities` 선언과 기본 타이포그래피/배경 스타일을 정의했습니다.
+
+## 배포
+
+`npm run build`로 생성된 `dist` 폴더를 Dockerfile에서 Nginx 정적 서버로 복사합니다. `nginx.conf`에서 라우팅 규칙을 조정해 SPA 히스토리 모드를 지원할 수 있습니다.
