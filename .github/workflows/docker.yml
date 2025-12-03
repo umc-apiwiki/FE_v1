@@ -31,7 +31,7 @@ jobs:
               "title": "✅ Vite 빌드 완료!",
               "description": "React 앱 빌드 성공\n📁 ${{ github.repository }}",
               "color": 65280,
-              "timestamp": "${{ now() }}"
+              "timestamp": "${{ github.event.created_at }}"
             }]
           }' \
           ${{ secrets.DISCORD_WEBHOOK_URL }}
