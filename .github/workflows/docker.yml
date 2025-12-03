@@ -65,7 +65,7 @@ jobs:
                 "value": "`${{ github.sha }}`",
                 "inline": true
               }],
-              "timestamp": "${{ now() }}"
+              "timestamp": "${{ github.event.created_at }}"
             }]
           }' \
           ${{ secrets.DISCORD_WEBHOOK_URL }}
@@ -85,7 +85,7 @@ jobs:
                 "value": "`${{ github.job }}/${{ github.status }}`",
                 "inline": true
               }],
-              "timestamp": "${{ now() }}"
+              "timestamp": "${{ github.event.created_at }}"
             }]
           }' \
           ${{ secrets.DISCORD_WEBHOOK_URL }}
