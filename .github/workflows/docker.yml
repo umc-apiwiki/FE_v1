@@ -58,7 +58,7 @@ jobs:
           -d '{
             "embeds": [{
               "title": "🚀 프론트엔드 배포 완료!",
-              "description": "Nginx 이미지 푸시됨\n🏷️ ${{ github.repository }}:latest\n🔄 Watchtower 자동 업데이트 예정",
+              "description": "Node preview 이미지 푸시됨\n🏷️ ${{ github.repository }}:latest\n🔄 Watchtower 자동 업데이트 예정",
               "color": 5763719,
               "fields": [{
                 "name": "커밋",
