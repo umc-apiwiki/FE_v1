@@ -77,8 +77,7 @@ const config: Config = {
 
       // 테두리 두께
       borderWidth: {
-        thin: "0.0156rem", // 0.25px approx 0.0156rem
-        "0.25": "0.0156rem",
+        thin: "0.0625rem", // 1px
         "0.5": "0.03125rem", // 0.5px
       },
 
