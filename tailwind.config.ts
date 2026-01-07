@@ -2,9 +2,8 @@ import type { Config } from "tailwindcss";
 
 const config: Config = {
   content: [
-    "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
     container: {
@@ -64,8 +63,8 @@ const config: Config = {
         md: "0.625rem", // 10px
         lg: "1rem", // 16px
         xl: "1.25rem", // 20px
-        "2xl": "1rem", // 16px (카드용)
-        "3xl": "1.5rem", // 24px
+        "2xl": "1.5rem", // 24px
+        "3xl": "2rem", // 32px
       },
 
       // 그림자 효과
@@ -85,7 +84,10 @@ const config: Config = {
 
       // 폰트 패밀리
       fontFamily: {
-        sans: ["Pretendard Variable", "sans-serif"], // 기본 폰트를 Pretendard Variable로 설정
+        sans: [
+          "Pretendard Variable",
+          "sans-serif",
+        ],
       },
 
       // 폰트 크기
