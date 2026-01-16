@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import HomeLogo from '@/assets/icons/navigation/ic_home_logo.svg';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import profileImg from '@/assets/default_profile.png';
 
 
@@ -10,6 +10,33 @@ const Header = () => {
         profileImg: profileImg,
     };
     const [isOpen, setIsOpen] = useState(false);
+    const dropdownRef = useRef<HTMLDivElement | null>(null);
+
+    // 외부 클릭 시 드롭다운 닫기
+    useEffect(() => {
+        if (!isOpen) return;
+
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === "Escape") {
+                setIsOpen(false);
+            }
+        };
+        const handleClickOutside = (e: MouseEvent) => {
+        if (
+            dropdownRef.current &&
+            !dropdownRef.current.contains(e.target as Node)
+        ) {
+            setIsOpen(false)
+        }
+        }
+        document.addEventListener("keydown", handleKeyDown);
+        document.addEventListener('mousedown', handleClickOutside)
+
+        return () => {
+            document.removeEventListener("keydown", handleKeyDown);
+            document.removeEventListener('mousedown', handleClickOutside)
+        }
+    }, [isOpen])
 
     return (
         <header>
@@ -41,7 +68,9 @@ const Header = () => {
                         <span>Login</span>
                     ): (
                         // 로그인 했을 때
-                        <div className="relative">
+                        <div 
+                        ref={dropdownRef}
+                        className="relative">
                             <button 
                                 type="button"
                                 onClick={()=> setIsOpen((prev) => ! prev)}
