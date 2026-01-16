@@ -53,11 +53,10 @@ const Header = () => {
                                 />
                             </button>
                             {isOpen && (
-                                <div className="absolute right-0 z-50 w-[118px] h-[180px] bg-white border border-brand-500/25 shadow-lg shadow-brand-500/25 rounded-lg rounded-tr-none flex flex-col gap-3 py-4 text-center text-lg font-sans font-medium text-[#0d3c61]">
-                                    <button>Profile</button>
-                                    <button>History</button>
-                                    <button>Setting</button>
-                                    <button>Logout</button>
+                                <div className="absolute right-0 z-50 w-[118px] h-36 bg-white border border-brand-500/25 shadow-lg shadow-brand-500/25 rounded-lg rounded-tr-none flex flex-col gap-3 py-4 text-center text-lg font-sans font-medium text-[#0d3c61]">
+                                    <button className="hover:text-brand-500">Profile</button>
+                                    <button className="hover:text-brand-500">History</button>
+                                    <button className="hover:text-brand-500">Logout</button>
                                 </div>
                             )}
                         </div>
