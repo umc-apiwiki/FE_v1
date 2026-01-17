@@ -4,7 +4,6 @@ about: 버그 발생 시 이 템플릿을 사용해 주세요
 title: ''
 labels: "\U0001F41E BugFix"
 assignees: dusvlf111
-
 ---
 
 ## #️⃣ 어떤 버그인가요?

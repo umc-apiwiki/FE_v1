@@ -1,21 +1,21 @@
-import APICard from '../components/APICard';
-import APICarousel from '../components/APICarousel';
-import NewsCard from '../components/NewsCard';
-import SearchBar from '../components/SearchBar';
+import APICard from '../components/APICard'
+import APICarousel from '../components/APICarousel'
+import NewsCard from '../components/NewsCard'
+import SearchBar from '../components/SearchBar'
 
 interface APIData {
-  title: string;
-  star: string;
-  usedBy: string;
-  price: string;
-  iconUrl: string;
-  description?: string;
+  title: string
+  star: string
+  usedBy: string
+  price: string
+  iconUrl: string
+  description?: string
 }
 
 interface NewsData {
-  title: string;
-  publisher: string;
-  thumb: string;
+  title: string
+  publisher: string
+  thumb: string
 }
 
 function SearchTag({ label }: { label: string }) {
@@ -28,7 +28,7 @@ function SearchTag({ label }: { label: string }) {
         <span className="text-white text-lg font-medium">{label}</span>
       </div>
     </div>
-  );
+  )
 }
 
 export default function HomePage() {
@@ -68,7 +68,7 @@ export default function HomePage() {
       price: 'Free',
       iconUrl: '/images/Gmail.svg',
     },
-  ];
+  ]
 
   const suggestAPIs: APIData[] = [
     {
@@ -106,7 +106,7 @@ export default function HomePage() {
       price: 'Paid',
       iconUrl: '/images/네이버지도.svg',
     },
-  ];
+  ]
 
   const newsItems: NewsData[] = [
     {
@@ -134,7 +134,7 @@ export default function HomePage() {
       publisher: 'https://placehold.co/107x14',
       thumb: 'https://placehold.co/310x150',
     },
-  ];
+  ]
 
   const detailListData1: APIData[] = [
     {
@@ -201,7 +201,7 @@ export default function HomePage() {
       iconUrl: 'https://placehold.co/100x100',
       description: '글로벌 전자상거래 간편 결제 API입니다.',
     },
-  ];
+  ]
 
   const detailListData2: APIData[] = [
     {
@@ -268,7 +268,7 @@ export default function HomePage() {
       iconUrl: 'https://placehold.co/103x96',
       description: '깃허브의 모든 기능을 제어할 수 있습니다.',
     },
-  ];
+  ]
 
   const detailListData3: APIData[] = [
     {
@@ -335,7 +335,7 @@ export default function HomePage() {
       iconUrl: 'https://placehold.co/117x109',
       description: '가장 널리 쓰이는 간편 결제 시스템입니다.',
     },
-  ];
+  ]
 
   const detailListData4: APIData[] = [
     {
@@ -402,7 +402,7 @@ export default function HomePage() {
       iconUrl: 'https://placehold.co/117x109',
       description: '깃허브의 모든 기능을 제어합니다.',
     },
-  ];
+  ]
 
   const detailListData5: APIData[] = [
     {
@@ -557,25 +557,14 @@ export default function HomePage() {
       iconUrl: 'https://placehold.co/103x96',
       description: '얼굴 감지 및 닮은꼴 찾기 기능을 제공합니다.',
     },
-  ];
+  ]
 
-  const searchTags = [
-    '결제',
-    '소셜로그인',
-    '지도',
-    '날씨',
-    'AI',
-    '이메일',
-    '금융',
-    '데이터',
-  ];
+  const searchTags = ['결제', '소셜로그인', '지도', '날씨', 'AI', '이메일', '금융', '데이터']
 
   return (
     <div className="min-h-screen bg-[radial-gradient(circle_at_center,_#f0f7ff_0%,_#ffffff_100%)] pt-20 flex flex-col items-center overflow-x-hidden pb-40">
       <section className="flex flex-col items-center mb-24 w-full">
-        <h1 className="text-8xl font-bold text-slate-900 mb-10 tracking-tight">
-          API Wiki
-        </h1>
+        <h1 className="text-8xl font-bold text-slate-900 mb-10 tracking-tight">API Wiki</h1>
         <SearchBar />
       </section>
 
@@ -610,21 +599,14 @@ export default function HomePage() {
       ].map((list, idx) => (
         <section
           key={idx}
-          className={`w-full max-w-[1240px] px-10 ${
-            idx === 4 ? 'mb-40' : 'mb-20'
-          }`}
+          className={`w-full max-w-[1240px] px-10 ${idx === 4 ? 'mb-40' : 'mb-20'}`}
         >
           <h2 className="text-purple-500 text-2xl font-bold mb-12 flex items-center gap-2">
             <span className="text-xl">❖</span> {list.title}
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 justify-items-center">
             {list.data.map((item, i) => (
-              <APICard
-                key={i}
-                {...item}
-                isDetail={true}
-                isLarge={list.isLarge}
-              />
+              <APICard key={i} {...item} isDetail={true} isLarge={list.isLarge} />
             ))}
           </div>
         </section>
@@ -639,5 +621,5 @@ export default function HomePage() {
         </div>
       </section>
     </div>
-  );
+  )
 }

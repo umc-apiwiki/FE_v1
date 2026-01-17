@@ -1,12 +1,12 @@
 interface APICardProps {
-  title: string;
-  star: string;
-  usedBy: string;
-  price: string;
-  iconUrl: string;
-  description?: string;
-  isDetail?: boolean;
-  isLarge?: boolean;
+  title: string
+  star: string
+  usedBy: string
+  price: string
+  iconUrl: string
+  description?: string
+  isDetail?: boolean
+  isLarge?: boolean
 }
 
 export default function APICard({
@@ -20,8 +20,8 @@ export default function APICard({
   isLarge = false,
 }: APICardProps) {
   // 캐러셀용 작은 카드는 w-[288px], 목록용 큰 카드는 w-[380px]로 고정
-  const cardSize = isDetail ? 'w-[380px] h-[260px]' : 'w-[288px] h-[144px]';
-  const btnSize = isLarge ? 'w-32 h-8' : 'w-28 h-7';
+  const cardSize = isDetail ? 'w-[380px] h-[260px]' : 'w-[288px] h-[144px]'
+  const btnSize = isLarge ? 'w-32 h-8' : 'w-28 h-7'
 
   return (
     <div className={`group relative ${cardSize} flex-shrink-0 cursor-pointer`}>
@@ -44,11 +44,7 @@ export default function APICard({
             } rounded-[10px] overflow-hidden flex-shrink-0 bg-white shadow-sm`}
           >
             {/* 위 div에서 border-[0.5px] border-sky-500 삭제함 */}
-            <img
-              src={iconUrl}
-              alt={title}
-              className="w-full h-full object-cover"
-            />
+            <img src={iconUrl} alt={title} className="w-full h-full object-cover" />
           </div>
           <div className="flex flex-col justify-start pt-1">
             <h3
@@ -82,5 +78,5 @@ export default function APICard({
         )}
       </div>
     </div>
-  );
+  )
 }

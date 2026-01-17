@@ -1,7 +1,7 @@
 name: Docker Frontend
 on:
   push:
-    branches: [ main ]
+    branches: [main]
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -9,83 +9,83 @@ jobs:
       contents: read
       packages: write
     steps:
-    - name: 📥 Checkout code
-      uses: actions/checkout@v4
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
 
-    - name: 🟢 Setup Node.js 20
-      uses: actions/setup-node@v4
-      with:
-        node-version: 20.19.0
-        cache: 'npm'
+      - name: 🟢 Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.19.0
+          cache: 'npm'
 
-    - name: 📦 Install & Vite Build
-      run: npm ci && npm run build
+      - name: 📦 Install & Vite Build
+        run: npm ci && npm run build
 
-    - name: ✅ Send Build Success
-      if: success()
-      run: |
-        curl -H "Content-Type: application/json" \
-          -X POST \
-          -d '{
-            "embeds": [{
-              "title": "✅ Vite 빌드 완료!",
-              "description": "React 앱 빌드 성공\n📁 ${{ github.repository }}",
-              "color": 65280,
-              "timestamp": "${{ github.event.created_at }}"
-            }]
-          }' \
-          ${{ secrets.DISCORD_WEBHOOK_URL }}
+      - name: ✅ Send Build Success
+        if: success()
+        run: |
+          curl -H "Content-Type: application/json" \
+            -X POST \
+            -d '{
+              "embeds": [{
+                "title": "✅ Vite 빌드 완료!",
+                "description": "React 앱 빌드 성공\n📁 ${{ github.repository }}",
+                "color": 65280,
+                "timestamp": "${{ github.event.created_at }}"
+              }]
+            }' \
+            ${{ secrets.DISCORD_WEBHOOK_URL }}
 
-    - name: 🔐 Login to GHCR
-      uses: docker/login-action@v3
-      with:
-        registry: ghcr.io
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
+      - name: 🔐 Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: 🐳 Build & Push Docker
-      uses: docker/build-push-action@v5
-      with:
-        context: .
-        push: true
-        tags: ghcr.io/${{ github.repository_owner }}/apiwiki-fe-v1:latest
+      - name: 🐳 Build & Push Docker
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ghcr.io/${{ github.repository_owner }}/apiwiki-fe-v1:latest
 
-    - name: 🎉 Send Deploy Success
-      if: success()
-      run: |
-        curl -H "Content-Type: application/json" \
-          -X POST \
-          -d '{
-            "embeds": [{
-              "title": "🚀 프론트엔드 배포 완료!",
-              "description": "Node preview 이미지 푸시됨\n🏷️ ${{ github.repository }}:latest\n🔄 Watchtower 자동 업데이트 예정",
-              "color": 5763719,
-              "fields": [{
-                "name": "커밋",
-                "value": "`${{ github.sha }}`",
-                "inline": true
-              }],
-              "timestamp": "${{ github.event.created_at }}"
-            }]
-          }' \
-          ${{ secrets.DISCORD_WEBHOOK_URL }}
+      - name: 🎉 Send Deploy Success
+        if: success()
+        run: |
+          curl -H "Content-Type: application/json" \
+            -X POST \
+            -d '{
+              "embeds": [{
+                "title": "🚀 프론트엔드 배포 완료!",
+                "description": "Node preview 이미지 푸시됨\n🏷️ ${{ github.repository }}:latest\n🔄 Watchtower 자동 업데이트 예정",
+                "color": 5763719,
+                "fields": [{
+                  "name": "커밋",
+                  "value": "`${{ github.sha }}`",
+                  "inline": true
+                }],
+                "timestamp": "${{ github.event.created_at }}"
+              }]
+            }' \
+            ${{ secrets.DISCORD_WEBHOOK_URL }}
 
-    - name: ❌ Send Failure Alert
-      if: failure()
-      run: |
-        curl -H "Content-Type: application/json" \
-          -X POST \
-          -d '{
-            "embeds": [{
-              "title": "❌ 프론트엔드 빌드 실패!",
-              "description": "**${{ github.repository }}**\nVite 빌드/푸시 실패\n🔧 수동 확인 필요",
-              "color": 16711680,
-              "fields": [{
-                "name": "실패 단계",
-                "value": "`${{ github.job }}/${{ github.status }}`",
-                "inline": true
-              }],
-              "timestamp": "${{ github.event.created_at }}"
-            }]
-          }' \
-          ${{ secrets.DISCORD_WEBHOOK_URL }}
+      - name: ❌ Send Failure Alert
+        if: failure()
+        run: |
+          curl -H "Content-Type: application/json" \
+            -X POST \
+            -d '{
+              "embeds": [{
+                "title": "❌ 프론트엔드 빌드 실패!",
+                "description": "**${{ github.repository }}**\nVite 빌드/푸시 실패\n🔧 수동 확인 필요",
+                "color": 16711680,
+                "fields": [{
+                  "name": "실패 단계",
+                  "value": "`${{ github.job }}/${{ github.status }}`",
+                  "inline": true
+                }],
+                "timestamp": "${{ github.event.created_at }}"
+              }]
+            }' \
+            ${{ secrets.DISCORD_WEBHOOK_URL }}

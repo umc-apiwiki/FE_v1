@@ -2,14 +2,14 @@
 name: Feat
 about: 새로운 기능을 추가하거나 기존 기능(성능 포함)을 개선할 때 사용해주세요.
 title: ''
-labels: "✨ Feature"
+labels: '✨ Feature'
 assignees: ''
-
 ---
 
 ## #️⃣ 요청 유형
 
 > 해당되는 항목을 선택해주세요.
+
 - [ ] 새로운 기능 추가
 - [ ] 기존 기능 개선
 - [ ] 성능 개선

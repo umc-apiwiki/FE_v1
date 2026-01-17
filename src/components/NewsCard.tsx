@@ -1,14 +1,10 @@
 interface NewsCardProps {
-  title: string;
-  publisherLogoUrl: string;
-  thumbnailUrl: string;
+  title: string
+  publisherLogoUrl: string
+  thumbnailUrl: string
 }
 
-export default function NewsCard({
-  title,
-  publisherLogoUrl,
-  thumbnailUrl,
-}: NewsCardProps) {
+export default function NewsCard({ title, publisherLogoUrl, thumbnailUrl }: NewsCardProps) {
   return (
     <div className="group relative w-80 h-60 flex-shrink-0 cursor-pointer">
       {/* 수정됨: border-[0.25px] border-sky-500 삭제 */}
@@ -21,21 +17,15 @@ export default function NewsCard({
           src={thumbnailUrl}
           alt="news"
         />
-        <img
-          className="h-3.5 ml-1 mb-2 object-contain"
-          src={publisherLogoUrl}
-          alt="publisher"
-        />
+        <img className="h-3.5 ml-1 mb-2 object-contain" src={publisherLogoUrl} alt="publisher" />
 
         <div className="ml-1">
-          <div className="text-black text-sm font-medium line-clamp-1">
-            {title}
-          </div>
+          <div className="text-black text-sm font-medium line-clamp-1">{title}</div>
           <div className="text-zinc-400 text-[10px] font-normal mt-1">
             자유롭게 의견을 나누어 보세요!
           </div>
         </div>
       </div>
     </div>
-  );
+  )
 }

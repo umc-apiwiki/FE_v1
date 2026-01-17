@@ -1,32 +1,24 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react'
 
 export default function SearchBar() {
-  const [isOpen, setIsOpen] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const [isOpen, setIsOpen] = useState(false)
+  const containerRef = useRef<HTMLDivElement>(null)
 
   // 검색어 데이터 4개
-  const recentSearches = [
-    'AWS API',
-    '네이버지도 API',
-    '강아지 앱 API',
-    '게임 앱 API',
-  ];
+  const recentSearches = ['AWS API', '네이버지도 API', '강아지 앱 API', '게임 앱 API']
 
   // 외부 클릭 시 닫기
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (
-        containerRef.current &&
-        !containerRef.current.contains(event.target as Node)
-      ) {
-        setIsOpen(false);
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+        setIsOpen(false)
       }
     }
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside)
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [])
 
   return (
     <div
@@ -90,5 +82,5 @@ export default function SearchBar() {
         ))}
       </div>
     </div>
-  );
+  )
 }
