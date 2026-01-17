@@ -1,6 +1,6 @@
 import BrandLogo from '@/assets/icons/common/ic_brand_logo.svg'
 import SearchLine from '@/assets/icons/action/ic_search_line.svg'
-import ShevronDown from '@/assets/icons/action/ic_chevron_down.svg'
+import ShevronUp from '@/assets/icons/action/ic_chevron_up.svg'
 import CategoryTag from '@/components/CategoryTag';
 import ArrowLeft from '@/assets/icons/action/ic_arrow_left.svg'
 import ArrowRight from '@/assets/icons/action/ic_arrow_right.svg'
@@ -110,8 +110,8 @@ const HomePage = () => {
                 </div>
             </div>
             {/* 하단 버튼*/}
-            <button type='button' className='fixed bottom-0 hover:-translate-y-1 transition-all duration-200'>
-                <img src={ShevronDown} />
+            <button type='button' className='fixed bottom-3 hover:-translate-y-1 transition-all duration-200'>
+                <img src={ShevronUp} />
             </button>
         </div>
 
