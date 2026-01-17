@@ -87,6 +87,11 @@ const config: Config = {
           "Pretendard Variable",
           "sans-serif",
         ],
+        // Fira Code 폰트
+        mono: [
+          "Fira Code",
+          "monospace",
+        ],
       },
 
       // 폰트 크기
