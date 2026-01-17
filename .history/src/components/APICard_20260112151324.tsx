@@ -25,11 +25,8 @@ export default function APICard({
 
   return (
     <div className={`group relative ${cardSize} flex-shrink-0 cursor-pointer`}>
-      {/* 수정됨: border-[0.25px] border-sky-500 삭제 */}
-      <div className="absolute inset-0 bg-gradient-to-b from-sky-500/10 to-white/20 rounded-2xl shadow-[1px_5px_10px_0px_rgba(33,150,243,0.25)]" />
-
-      {/* 수정됨: border-[0.25px] border-sky-500 삭제 */}
-      <div className="absolute inset-0 bg-white rounded-2xl shadow-[1px_5px_10px_0px_rgba(33,150,243,0.25)] transition-opacity duration-300 group-hover:opacity-0" />
+      <div className="absolute inset-0 bg-gradient-to-b from-sky-500/10 to-white/20 rounded-2xl border-[0.25px] border-sky-500 shadow-[1px_5px_10px_0px_rgba(33,150,243,0.25)]" />
+      <div className="absolute inset-0 bg-white rounded-2xl border-[0.25px] border-sky-500 shadow-[1px_5px_10px_0px_rgba(33,150,243,0.25)] transition-opacity duration-300 group-hover:opacity-0" />
 
       {/* 내부 패딩을 작은 카드는 p-4, 상세 카드는 p-6~7로 차등 적용 */}
       <div
@@ -41,9 +38,8 @@ export default function APICard({
           <div
             className={`${
               isDetail ? 'w-24 h-24' : 'w-16 h-16'
-            } rounded-[10px] overflow-hidden flex-shrink-0 bg-white shadow-sm`}
+            } rounded-[10px] border-[0.5px] border-sky-500 overflow-hidden flex-shrink-0 bg-white shadow-sm`}
           >
-            {/* 위 div에서 border-[0.5px] border-sky-500 삭제함 */}
             <img
               src={iconUrl}
               alt={title}
