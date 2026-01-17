@@ -23,7 +23,9 @@ dist-ssr
 *.sln
 *.sw?
 .docker
-*.history
-.history/
+.history
+.history/*
+**/.history/
+**/.history/**
 .env
 .env.local
