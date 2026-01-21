@@ -6,7 +6,7 @@ export default function BottomButtomSection() {
         type="button"
         className="fixed bottom-3 hover:-translate-y-1 transition-all duration-200"
     >
-        <img src={ChevronUp} />
+        <img src={ChevronUp} alt="홈 스크롤"/>
     </button>
   )
 }

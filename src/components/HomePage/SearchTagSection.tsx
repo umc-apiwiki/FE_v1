@@ -55,7 +55,7 @@ export default function SearchTagSection() {
     <div className="flex flex-col items-center justify-center gap-4">
         <div className="flex z-10 gap-3">
             <button type="button" onClick={handlePrev}>
-                <img src={ArrowLeft} />
+                <img src={ArrowLeft} alt="이전"/>
             </button>
             <div
                 ref={tagScrollRef}
@@ -67,7 +67,7 @@ export default function SearchTagSection() {
                 ))}
             </div>
             <button type="button" onClick={handleNext}>
-                <img src={ArrowRight} />
+                <img src={ArrowRight} alt="다음"/>
             </button>
         </div>
 

@@ -4,8 +4,8 @@ export default function IntroSection() {
   return (
     <div className="flex flex-col items-center z-10">
         <div className="flex flex-col items-center">
-        <img src={BrandLogo} />
-        <h1 className="font-mono font font-medium text-[70px] text-brand-800 tracking-[-3px]">
+        <img src={BrandLogo} alt="API Wiki 로고"/>
+        <h1 className="font-mono font-medium text-[70px] text-brand-800 tracking-[-3px]">
             API Wiki
         </h1>
         </div>

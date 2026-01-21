@@ -54,7 +54,7 @@ export default function SearchBar({ isOpen, setIsOpen }: SearchBarProps) {
         {/* [돋보기 아이콘 자리] */}
         <div className="w-6 h-6 flex items-center justify-center cursor-pointer ml-4">
           <button type='button'>
-            <img src={SearchLine} />
+            <img src={SearchLine} alt="검색"/>
           </button>
         </div>
       </div>
@@ -72,7 +72,7 @@ export default function SearchBar({ isOpen, setIsOpen }: SearchBarProps) {
           >
             {/* 시계 아이콘 */}
             <div className="w-6 h-6 flex items-center justify-center mr-4">
-              <img src={SearchHistory}/>
+              <img src={SearchHistory} alt="최근 기록"/>
             </div>
 
             {/* 텍스트 */}
@@ -83,7 +83,7 @@ export default function SearchBar({ isOpen, setIsOpen }: SearchBarProps) {
             {/* X 버튼 */}
             <div className="w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
               <button type='button'>
-                <img src={Cancel}/>
+                <img src={Cancel} alt="삭제"/>
               </button>
             </div>
           </div>

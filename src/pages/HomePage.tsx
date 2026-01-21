@@ -1,11 +1,11 @@
 import SearchBar from '@/components/HomePage/SearchBar'
 import IntroSection from '@/components/HomePage/IntroSection'
 import SearchTagSection from '@/components/HomePage/SearchTagSection'
-import BottomButtomSection from '@/components/HomePage/BottomButtomSection'
+import BottomButtomSection from '@/components/HomePage/BottomButtonSection'
 import { useState } from 'react'
 
 const HomePage = () => {
-    const [isSearchOpen, setIsSearchOpen] = useState(false);
+    const [isSearchOpen, setIsSearchOpen] = useState(false)
 
   return (
     // 홈화면
