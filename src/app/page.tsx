@@ -1,7 +1,7 @@
 import APICard from '../components/APICard'
 import APICarousel from '../components/APICarousel'
 import NewsCard from '../components/NewsCard'
-import SearchBar from '../components/SearchBar'
+import SearchBar from '../components/HomePage/SearchBar'
 
 interface APIData {
   title: string
