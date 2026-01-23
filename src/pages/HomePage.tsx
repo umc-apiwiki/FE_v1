@@ -21,6 +21,7 @@ const HomePage = () => {
         <SearchBar
             isOpen={isSearchOpen}
             setIsOpen={setIsSearchOpen}
+            isMain={true}
         />
 
         {/* 태그 컴포넌트*/}
