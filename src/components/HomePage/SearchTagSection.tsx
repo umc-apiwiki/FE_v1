@@ -4,7 +4,7 @@ import ArrowRight from '@/assets/icons/action/ic_arrow_right.svg'
 import { useRef, useState } from 'react'
 
 export default function SearchTagSection() {
-    const categories = [
+  const categories = [
     { id: 1, name: '결제' },
     { id: 2, name: '소셜로그인' },
     { id: 3, name: '지도' },
@@ -53,32 +53,32 @@ export default function SearchTagSection() {
   }
   return (
     <div className="flex flex-col items-center justify-center gap-4">
-        <div className="flex z-10 gap-3">
-            <button type="button" onClick={handlePrev}>
-                <img src={ArrowLeft} alt="이전"/>
-            </button>
-            <div
-                ref={tagScrollRef}
-                onScroll={handleScroll}
-                className="flex gap-3 overflow-x-hidden  w-[600px] whitespace-nowrap py-1"
-            >
-                {categories.map((cat) => (
-                <CategoryTag key={cat.id} category={cat} />
-                ))}
-            </div>
-            <button type="button" onClick={handleNext}>
-                <img src={ArrowRight} alt="다음"/>
-            </button>
+      <div className="flex z-10 gap-3">
+        <button type="button" onClick={handlePrev}>
+          <img src={ArrowLeft} alt="이전" />
+        </button>
+        <div
+          ref={tagScrollRef}
+          onScroll={handleScroll}
+          className="flex gap-3 overflow-x-hidden  w-[600px] whitespace-nowrap py-1"
+        >
+          {categories.map((cat) => (
+            <CategoryTag key={cat.id} category={cat} />
+          ))}
         </div>
+        <button type="button" onClick={handleNext}>
+          <img src={ArrowRight} alt="다음" />
+        </button>
+      </div>
 
-        {/* 라인*/}
-        <div className="relative w-20 mt-1">
-            <div className="absolute inset-0 w-20 h-1 bg-[#D9D9D9] rounded-3xl" />
-            <div
-                className="absolute inset-0 w-14 h-1 bg-brand-500 rounded-3xl z-15 transition-transform duration-200"
-                style={{ transform: `translateX(${indicatorX}px)` }}
-            />
-        </div>
+      {/* 라인*/}
+      <div className="relative w-20 mt-1">
+        <div className="absolute inset-0 w-20 h-1 bg-[#D9D9D9] rounded-3xl" />
+        <div
+          className="absolute inset-0 w-14 h-1 bg-brand-500 rounded-3xl z-15 transition-transform duration-200"
+          style={{ transform: `translateX(${indicatorX}px)` }}
+        />
+      </div>
     </div>
   )
 }

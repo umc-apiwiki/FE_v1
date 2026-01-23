@@ -5,7 +5,7 @@ import BottomButtomSection from '@/components/HomePage/BottomButtonSection'
 import { useState } from 'react'
 
 const HomePage = () => {
-    const [isSearchOpen, setIsSearchOpen] = useState(false)
+  const [isSearchOpen, setIsSearchOpen] = useState(false)
 
   return (
     // 홈화면
@@ -18,15 +18,11 @@ const HomePage = () => {
         {!isSearchOpen && <IntroSection />}
 
         {/* 검색창*/}
-        <SearchBar
-            isOpen={isSearchOpen}
-            setIsOpen={setIsSearchOpen}
-            isMain={true}
-        />
+        <SearchBar isOpen={isSearchOpen} setIsOpen={setIsSearchOpen} isMain={true} />
 
         {/* 태그 컴포넌트*/}
         {!isSearchOpen && <SearchTagSection />}
-    </div>
+      </div>
 
       {/* 하단 버튼*/}
       {!isSearchOpen && <BottomButtomSection />}

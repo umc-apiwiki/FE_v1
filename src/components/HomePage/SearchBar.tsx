@@ -4,10 +4,10 @@ import SearchHistory from '@/assets/icons/common/ic_search_history.svg'
 import Cancel from '@/assets/icons/common/ic_cancel.svg'
 
 type SearchBarProps = {
-  isOpen: boolean;
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  isMain?: boolean; // 홈페이지 여부
-};
+  isOpen: boolean
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
+  isMain?: boolean // 홈페이지 여부
+}
 
 export default function SearchBar({ isOpen, setIsOpen, isMain = false }: SearchBarProps) {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -38,9 +38,11 @@ export default function SearchBar({ isOpen, setIsOpen, isMain = false }: SearchB
               ? `
                 fixed left-1/2 -translate-x-1/2
                 transition-all duration-300 ease-in-out
-                ${isOpen
-                  ? 'top-1/2 -translate-y-1/2 w-[876px] h-[500px] z-50'
-                  : 'top-[60%] -translate-y-1/2 w-[876px] h-14 z-30'}
+                ${
+                  isOpen
+                    ? 'top-1/2 -translate-y-1/2 w-[876px] h-[500px] z-50'
+                    : 'top-[60%] -translate-y-1/2 w-[876px] h-14 z-30'
+                }
                 rounded-[34px] border
               `
               : `
@@ -61,8 +63,8 @@ export default function SearchBar({ isOpen, setIsOpen, isMain = false }: SearchB
           />
 
           <div className="w-6 h-6 flex items-center justify-center cursor-pointer ml-4">
-            <button type='button'>
-              <img src={SearchLine} alt="검색"/>
+            <button type="button">
+              <img src={SearchLine} alt="검색" />
             </button>
           </div>
         </div>
@@ -70,7 +72,9 @@ export default function SearchBar({ isOpen, setIsOpen, isMain = false }: SearchB
         <div
           className={`w-full p-2 px-[10px] flex flex-col gap-1 transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0'}`}
         >
-          <span className='font-sans font-medium text-lg text-brand-800 tracking-[-1px] px-[20px] p-0'>Recent</span>
+          <span className="font-sans font-medium text-lg text-brand-800 tracking-[-1px] px-[20px] p-0">
+            Recent
+          </span>
           {recentSearches.map((text, index) => (
             <div
               key={index}
@@ -78,16 +82,14 @@ export default function SearchBar({ isOpen, setIsOpen, isMain = false }: SearchB
             hover:bg-brand-500/10 hover:rounded-[30px] hover:rounded-br-[30px]"
             >
               <div className="w-6 h-6 flex items-center justify-center mr-4">
-                <img src={SearchHistory} alt="최근 기록"/>
+                <img src={SearchHistory} alt="최근 기록" />
               </div>
 
-              <span className="text-[#071E31] text-lg font-medium font-sans flex-1">
-                {text}
-              </span>
+              <span className="text-[#071E31] text-lg font-medium font-sans flex-1">{text}</span>
 
               <div className="w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                <button type='button'>
-                  <img src={Cancel} alt="삭제"/>
+                <button type="button">
+                  <img src={Cancel} alt="삭제" />
                 </button>
               </div>
             </div>

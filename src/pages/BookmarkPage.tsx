@@ -40,9 +40,11 @@ const BookmarkPage = () => {
       })
 
       const text = await res.text()
-      setCorsResponse(`status: ${res.status}\nheaders: ${[...res.headers.entries()]
-        .map(([k, v]) => `${k}: ${v}`)
-        .join('\n')}\n\nbody:\n${text}`)
+      setCorsResponse(
+        `status: ${res.status}\nheaders: ${[...res.headers.entries()]
+          .map(([k, v]) => `${k}: ${v}`)
+          .join('\n')}\n\nbody:\n${text}`
+      )
       setCorsStatus(res.ok ? 'success' : 'fail')
     } catch (err) {
       console.error('CORS test failed', err)
@@ -92,9 +94,7 @@ const BookmarkPage = () => {
         <pre className="whitespace-pre-wrap break-all rounded-md border border-slate-200 bg-slate-50 p-3 text-xs text-slate-800">
           {corsResponse || '응답 대기 중...'}
         </pre>
-        <p className="text-xs text-slate-500">
-          요청 URL: {API_URL}
-        </p>
+        <p className="text-xs text-slate-500">요청 URL: {API_URL}</p>
       </section>
     </div>
   )

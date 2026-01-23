@@ -2,9 +2,9 @@ name: Vite CI
 
 on:
   push:
-    branches: [ main ] # 메인 브랜치에 푸시될 때 실행
+    branches: [main] # 메인 브랜치에 푸시될 때 실행
   pull_request:
-    branches: [ main ] # PR이 생성될 때 실행
+    branches: [main] # PR이 생성될 때 실행
 
 jobs:
   quality-checks:
