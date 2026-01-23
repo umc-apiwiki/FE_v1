@@ -7,7 +7,7 @@ on:
     branches: [ main ] # PR이 생성될 때 실행
 
 jobs:
-  build:
+  quality-checks:
     runs-on: ubuntu-latest
 
     steps:
