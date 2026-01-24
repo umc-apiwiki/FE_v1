@@ -5,8 +5,8 @@ import HomePage from './pages/HomePage'
 import ExplorePage from './pages/ExplorePage'
 import AboutPage from './pages/AboutPage'
 import BookmarkPage from './pages/BookmarkPage'
-// ProfilePage import 추가 (모달은 지우세요)
 import ProfilePage from './pages/ProfilePage'
+import HistoryPage from './pages/HistoryPage' // [추가됨] import
 
 const publicRoutes: RouteObject[] = [
   {
@@ -18,8 +18,8 @@ const publicRoutes: RouteObject[] = [
       { path: 'bookmark', element: <BookmarkPage /> },
       { path: 'explore', element: <ExplorePage /> },
       { path: 'about', element: <AboutPage /> },
-      // 프로필 라우트 추가
       { path: 'profile', element: <ProfilePage /> },
+      { path: 'history', element: <HistoryPage /> },
     ],
   },
 ]

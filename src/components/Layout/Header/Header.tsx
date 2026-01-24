@@ -82,7 +82,6 @@ const Header = () => {
               </button>
               {isOpen && (
                 <div className="absolute right-0 z-50 w-[118px] h-36 bg-white border border-brand-500/25 shadow-lg shadow-brand-500/25 rounded-lg rounded-tr-none flex flex-col gap-3 py-4 text-center text-lg font-sans font-medium text-[#0d3c61]">
-                  {/* 여기만 수정했습니다: button -> Link */}
                   <Link
                     to="/profile"
                     className="hover:text-brand-500"
@@ -90,7 +89,14 @@ const Header = () => {
                   >
                     Profile
                   </Link>
-                  <button className="hover:text-brand-500">History</button>
+                  {/* 여기 수정됨: History 버튼을 Link로 변경 */}
+                  <Link
+                    to="/history"
+                    className="hover:text-brand-500"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    History
+                  </Link>
                   <button className="hover:text-brand-500">Logout</button>
                 </div>
               )}

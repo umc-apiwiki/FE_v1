@@ -1,24 +1,20 @@
 import { motion } from 'framer-motion'
 import profileImg from '@/assets/default_profile.png'
-// 아이콘 경로는 실제 프로젝트 위치에 맞춰주세요
 import editIcon from '@/assets/icons/common/ic_edit.svg'
 
 const ProfilePage = () => {
-  // 인풋 스타일 (피그마 디자인 적용)
   const inputBaseStyle =
     'w-80 h-11 bg-white rounded-[30px] shadow-[0px_3px_5px_0px_rgba(224,224,233,0.25)] border border-zinc-200 outline-none focus:border-brand-500 transition-colors pl-6 text-base font-medium text-slate-900 placeholder:text-stone-300'
 
   return (
-    // 헤더 높이(80px)를 뺀 나머지 공간을 꽉 채우고 중앙 정렬
     <div className="flex flex-col items-center justify-center min-h-[calc(100vh-80px)] relative overflow-hidden pt-10 pb-20">
-      {/* [수정됨] 배경 블러 효과 
-          1. -z-10 제거 (배경 뒤로 숨는 문제 해결)
-          2. pointer-events-none 추가 (배경이 클릭을 방해하지 않도록 설정)
-          3. 홈페이지와 동일한 색상/투명도/블러 적용
+      {/* [수정됨] 배경 위치 조정 
+        top-1/2 -> top-[40%] (홈페이지와 동일한 높이감)
+        -translate-y-1/2 제거 (top 기준 위치 사용)
       */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-brand-500/50 rounded-full blur-[200px] pointer-events-none" />
+      <div className="absolute top-[40%] left-1/2 -translate-x-1/2 w-[300px] h-[300px] bg-brand-500/50 rounded-full blur-[200px] pointer-events-none" />
 
-      {/* 컨텐츠 영역 (z-10으로 배경보다 위에 오도록 명시) */}
+      {/* 컨텐츠 영역 */}
       <div className="z-10 flex flex-col items-center gap-10">
         {/* 1. Title */}
         <motion.div
@@ -35,14 +31,12 @@ const ProfilePage = () => {
           animate={{ opacity: 1, scale: 1 }}
           className="relative w-48 h-48"
         >
-          {/* 프로필 이미지 */}
           <img
             src={profileImg}
             alt="Profile"
             className="w-full h-full rounded-full border border-brand-500 object-cover bg-white shadow-sm"
           />
 
-          {/* 편집 버튼: 이미지 우측 하단 바깥쪽으로 배치 */}
           <motion.button
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
@@ -59,10 +53,8 @@ const ProfilePage = () => {
           transition={{ delay: 0.1 }}
           className="flex flex-col gap-6 items-center"
         >
-          {/* 닉네임 */}
           <div className="relative w-80 h-11">
             <input type="text" placeholder="닉네임" className={inputBaseStyle} />
-            {/* 중복 확인 버튼 */}
             <button
               type="button"
               className="absolute -right-[100px] top-2 w-24 h-7 bg-white rounded-2xl border-[0.5px] border-brand-500 shadow-[0px_1px_2px_0px_rgba(33,150,243,0.25)] text-brand-500 text-sm font-medium hover:bg-brand-50 transition-colors flex items-center justify-center pb-0.5 cursor-pointer"
@@ -71,12 +63,10 @@ const ProfilePage = () => {
             </button>
           </div>
 
-          {/* 비밀번호 */}
           <div className="relative w-80 h-11">
             <input type="password" placeholder="변경 비밀번호" className={inputBaseStyle} />
           </div>
 
-          {/* 비밀번호 확인 */}
           <div className="relative w-80 h-11">
             <input type="password" placeholder="변경 비밀번호 확인" className={inputBaseStyle} />
           </div>
