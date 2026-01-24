@@ -1,9 +1,12 @@
 import APICard from '../components/APICard'
+import APICardSmall from '../components/APICardSmall'
 import APICarousel from '../components/APICarousel'
 import NewsCard from '../components/NewsCard'
 import SearchBar from '../components/HomePage/SearchBar'
 
+// API 데이터의 구조를 정의하는 인터페이스
 interface APIData {
+  id: number
   title: string
   star: string
   usedBy: string
@@ -12,12 +15,14 @@ interface APIData {
   description?: string
 }
 
+// 뉴스 데이터의 구조를 정의하는 인터페이스
 interface NewsData {
   title: string
   publisher: string
   thumb: string
 }
 
+// 검색 태그 컴포넌트
 function SearchTag({ label }: { label: string }) {
   return (
     <div className="group relative cursor-pointer flex-shrink-0">
@@ -31,9 +36,11 @@ function SearchTag({ label }: { label: string }) {
   )
 }
 
-export default function HomePage() {
+export default function HomePage2() {
+  // 인기 API 목록 데이터
   const popularAPIs: APIData[] = [
     {
+      id: 1,
       title: 'Youtube',
       star: '4.8',
       usedBy: '1.2B people',
@@ -41,6 +48,7 @@ export default function HomePage() {
       iconUrl: '/images/YouTube.svg',
     },
     {
+      id: 2,
       title: 'OpenStreetMap',
       star: '4.1',
       usedBy: '760M people',
@@ -48,6 +56,7 @@ export default function HomePage() {
       iconUrl: '/images/OpenStreetMap.svg',
     },
     {
+      id: 3,
       title: 'Google Login',
       star: '4.7',
       usedBy: '2.1B people',
@@ -55,6 +64,7 @@ export default function HomePage() {
       iconUrl: '/images/Google Login.svg',
     },
     {
+      id: 4,
       title: 'Open AI',
       star: '4.2',
       usedBy: '970M people',
@@ -62,6 +72,7 @@ export default function HomePage() {
       iconUrl: '/images/Open AI.svg',
     },
     {
+      id: 5,
       title: 'Gmail',
       star: '4.9',
       usedBy: '45M people',
@@ -70,8 +81,10 @@ export default function HomePage() {
     },
   ]
 
+  // 제안 API 목록 데이터
   const suggestAPIs: APIData[] = [
     {
+      id: 6,
       title: '국토부 2D지도API',
       star: '4.8',
       usedBy: '1.2B people',
@@ -79,6 +92,7 @@ export default function HomePage() {
       iconUrl: '/images/국토부 2D지도API.svg',
     },
     {
+      id: 7,
       title: 'Naver',
       star: '4.3',
       usedBy: '820M people',
@@ -86,6 +100,7 @@ export default function HomePage() {
       iconUrl: '/images/Naver.svg',
     },
     {
+      id: 8,
       title: '카카오페이',
       star: '3.6',
       usedBy: '120M people',
@@ -93,6 +108,7 @@ export default function HomePage() {
       iconUrl: '/images/카카오페이.svg',
     },
     {
+      id: 9,
       title: 'AWS API',
       star: '4.8',
       usedBy: '990M people',
@@ -100,6 +116,7 @@ export default function HomePage() {
       iconUrl: '/images/AWS API.svg',
     },
     {
+      id: 10,
       title: '네이버 지도',
       star: '3.7',
       usedBy: '34M people',
@@ -108,6 +125,7 @@ export default function HomePage() {
     },
   ]
 
+  // 뉴스 아이템 목록 데이터
   const newsItems: NewsData[] = [
     {
       title: '"쿠팡 중국인 피의자, 20년 경력개발자 위 개발자"',
@@ -136,8 +154,10 @@ export default function HomePage() {
     },
   ]
 
+  // 상세 목록 1 데이터
   const detailListData1: APIData[] = [
     {
+      id: 11,
       title: 'Google Gemini',
       star: '4.2',
       usedBy: '970M people',
@@ -146,6 +166,7 @@ export default function HomePage() {
       description: '구글의 최신 멀티모달 AI 모델을 활용해 기능을 제공합니다.',
     },
     {
+      id: 12,
       title: 'Open AI',
       star: '4.2',
       usedBy: '970M people',
@@ -154,6 +175,7 @@ export default function HomePage() {
       description: 'GPT-4o 등 텍스트 생성 기능을 지원합니다.',
     },
     {
+      id: 13,
       title: 'Eleven Labs',
       star: '4.2',
       usedBy: '970M people',
@@ -162,6 +184,7 @@ export default function HomePage() {
       description: '가장 자연스러운 AI 음성 합성 기능을 제공합니다.',
     },
     {
+      id: 14,
       title: 'Google Maps',
       star: '4.2',
       usedBy: '970M people',
@@ -170,6 +193,7 @@ export default function HomePage() {
       description: '지도 표시, 경로 찾기 등 위치 서비스의 표준입니다.',
     },
     {
+      id: 15,
       title: 'Kakao Maps',
       star: '4.2',
       usedBy: '970M people',
@@ -178,6 +202,7 @@ export default function HomePage() {
       description: '국내 특화 기능이 강력한 한국 전용 지도입니다.',
     },
     {
+      id: 16,
       title: 'Mapbox',
       star: '4.2',
       usedBy: '970M people',
@@ -186,6 +211,7 @@ export default function HomePage() {
       description: '커스텀 디자인 지도를 만들기에 최적화되어 있습니다.',
     },
     {
+      id: 17,
       title: 'Stripe',
       star: '4.2',
       usedBy: '970M people',
@@ -194,6 +220,7 @@ export default function HomePage() {
       description: '전 세계 온라인 결제의 표준 서비스입니다.',
     },
     {
+      id: 18,
       title: 'PayPal',
       star: '4.2',
       usedBy: '970M people',
@@ -203,8 +230,10 @@ export default function HomePage() {
     },
   ]
 
+  // 상세 목록 2 데이터
   const detailListData2: APIData[] = [
     {
+      id: 19,
       title: 'Toss Payments',
       star: '4.2',
       usedBy: '970M people',
@@ -213,6 +242,7 @@ export default function HomePage() {
       description: '국내 결제 환경에 최적화된 API입니다.',
     },
     {
+      id: 20,
       title: 'Discord',
       star: '4.2',
       usedBy: '970M people',
@@ -221,6 +251,7 @@ export default function HomePage() {
       description: '커뮤니티 봇 제작이나 알림 연동에 사용됩니다.',
     },
     {
+      id: 21,
       title: 'Slack',
       star: '4.2',
       usedBy: '970M people',
@@ -229,6 +260,7 @@ export default function HomePage() {
       description: '협업 툴 슬랙에 자동화 도구를 통합합니다.',
     },
     {
+      id: 22,
       title: 'Meta Graph',
       star: '4.2',
       usedBy: '970M people',
@@ -237,6 +269,7 @@ export default function HomePage() {
       description: 'SNS 게시물 관리 및 분석 데이터를 다룹니다.',
     },
     {
+      id: 23,
       title: 'Notion',
       star: '4.2',
       usedBy: '970M people',
@@ -245,6 +278,7 @@ export default function HomePage() {
       description: '노션 페이지를 데이터베이스로 사용합니다.',
     },
     {
+      id: 24,
       title: 'Twilio',
       star: '4.2',
       usedBy: '970M people',
@@ -253,6 +287,7 @@ export default function HomePage() {
       description: 'SMS, 음성 전화 자동화의 글로벌 강자입니다.',
     },
     {
+      id: 25,
       title: 'Send Grid',
       star: '4.2',
       usedBy: '970M people',
@@ -261,6 +296,7 @@ export default function HomePage() {
       description: '대량 이메일 발송 자동화에 특화되어 있습니다.',
     },
     {
+      id: 26,
       title: 'GitHub',
       star: '4.2',
       usedBy: '970M people',
@@ -270,8 +306,10 @@ export default function HomePage() {
     },
   ]
 
+  // 상세 목록 3 데이터
   const detailListData3: APIData[] = [
     {
+      id: 27,
       title: 'Google Gemini',
       star: '4.2',
       usedBy: '970M people',
@@ -280,6 +318,7 @@ export default function HomePage() {
       description: '구글 최신 모델 기능을 제공합니다.',
     },
     {
+      id: 28,
       title: 'Open AI',
       star: '4.2',
       usedBy: '970M people',
@@ -288,6 +327,7 @@ export default function HomePage() {
       description: 'GPT-4o 등 최신 API를 지원합니다.',
     },
     {
+      id: 29,
       title: 'Eleven Labs',
       star: '4.2',
       usedBy: '970M people',
@@ -296,6 +336,7 @@ export default function HomePage() {
       description: '자연스러운 AI 음성 합성 기능입니다.',
     },
     {
+      id: 30,
       title: 'Google Maps',
       star: '4.2',
       usedBy: '970M people',
@@ -304,6 +345,7 @@ export default function HomePage() {
       description: '지도 및 경로 데이터의 표준입니다.',
     },
     {
+      id: 31,
       title: 'Kakao Maps',
       star: '4.2',
       usedBy: '970M people',
@@ -312,6 +354,7 @@ export default function HomePage() {
       description: '한국 내 특화 지도를 제공합니다.',
     },
     {
+      id: 32,
       title: 'Mapbox',
       star: '4.2',
       usedBy: '970M people',
@@ -320,6 +363,7 @@ export default function HomePage() {
       description: '세련된 디자인 지도를 위한 API입니다.',
     },
     {
+      id: 33,
       title: 'Stripe',
       star: '4.2',
       usedBy: '970M people',
@@ -328,6 +372,7 @@ export default function HomePage() {
       description: '글로벌 온라인 결제 로직을 구현합니다.',
     },
     {
+      id: 34,
       title: 'PayPal',
       star: '4.2',
       usedBy: '970M people',
@@ -337,8 +382,10 @@ export default function HomePage() {
     },
   ]
 
+  // 상세 목록 4 데이터
   const detailListData4: APIData[] = [
     {
+      id: 35,
       title: 'Toss Payments',
       star: '4.2',
       usedBy: '970M people',
@@ -347,6 +394,7 @@ export default function HomePage() {
       description: '한국 결제 환경에 최적화된 API입니다.',
     },
     {
+      id: 36,
       title: 'Discord',
       star: '4.2',
       usedBy: '970M people',
@@ -355,6 +403,7 @@ export default function HomePage() {
       description: '커뮤니티 봇 제작 및 연동을 지원합니다.',
     },
     {
+      id: 37,
       title: 'Slack',
       star: '4.2',
       usedBy: '970M people',
@@ -363,6 +412,7 @@ export default function HomePage() {
       description: '업무 자동화 및 앱 통합 서비스입니다.',
     },
     {
+      id: 38,
       title: 'Meta Graph',
       star: '4.2',
       usedBy: '970M people',
@@ -371,6 +421,7 @@ export default function HomePage() {
       description: 'SNS 데이터 관리 및 분석을 다룹니다.',
     },
     {
+      id: 39,
       title: 'Notion',
       star: '4.2',
       usedBy: '970M people',
@@ -379,6 +430,7 @@ export default function HomePage() {
       description: '노션 내용을 자동 업데이트합니다.',
     },
     {
+      id: 40,
       title: 'Twilio',
       star: '4.2',
       usedBy: '970M people',
@@ -387,6 +439,7 @@ export default function HomePage() {
       description: '글로벌 메시징 자동화 서비스입니다.',
     },
     {
+      id: 41,
       title: 'Send Grid',
       star: '4.2',
       usedBy: '970M people',
@@ -395,6 +448,7 @@ export default function HomePage() {
       description: '대량 이메일 발송 특화 서비스입니다.',
     },
     {
+      id: 42,
       title: 'GitHub',
       star: '4.2',
       usedBy: '970M people',
@@ -404,8 +458,10 @@ export default function HomePage() {
     },
   ]
 
+  // 상세 목록 5 데이터
   const detailListData5: APIData[] = [
     {
+      id: 43,
       title: '네이버 로그인',
       star: '4.2',
       usedBy: '970M people',
@@ -414,6 +470,7 @@ export default function HomePage() {
       description: '네이버 아이디로 쉽고 안전한 로그인을 구현합니다.',
     },
     {
+      id: 44,
       title: '네이버 검색',
       star: '4.2',
       usedBy: '970M people',
@@ -422,6 +479,7 @@ export default function HomePage() {
       description: '네이버의 방대한 검색 결과를 가져옵니다.',
     },
     {
+      id: 45,
       title: '단축 URL API',
       star: '4.2',
       usedBy: '970M people',
@@ -430,6 +488,7 @@ export default function HomePage() {
       description: '긴 URL을 짧은 주소로 변환합니다.',
     },
     {
+      id: 46,
       title: '캡차 API',
       star: '4.2',
       usedBy: '970M people',
@@ -438,6 +497,7 @@ export default function HomePage() {
       description: '이미지나 음성 퀴즈로 자동 가입을 방지합니다.',
     },
     {
+      id: 47,
       title: 'Hyper LLM',
       star: '4.2',
       usedBy: '970M people',
@@ -446,6 +506,7 @@ export default function HomePage() {
       description: '네이버의 거대 언어 모델을 활용합니다.',
     },
     {
+      id: 48,
       title: '데이터랩',
       star: '4.2',
       usedBy: '970M people',
@@ -454,6 +515,7 @@ export default function HomePage() {
       description: '네이버 검색 트렌드 데이터를 조회합니다.',
     },
     {
+      id: 49,
       title: '프리미엄 로그 분석',
       star: '4.2',
       usedBy: '970M people',
@@ -462,6 +524,7 @@ export default function HomePage() {
       description: '유입 경로와 방문자 행동을 분석합니다.',
     },
     {
+      id: 50,
       title: 'SENS',
       star: '4.2',
       usedBy: '970M people',
@@ -470,6 +533,7 @@ export default function HomePage() {
       description: 'SMS, 알림톡, Push 발송 기능을 제공합니다.',
     },
     {
+      id: 51,
       title: 'Object Storage',
       star: '4.2',
       usedBy: '970M people',
@@ -478,6 +542,7 @@ export default function HomePage() {
       description: '클라우드 저장소 연동 API입니다.',
     },
     {
+      id: 52,
       title: 'Papago 번역',
       star: '4.2',
       usedBy: '970M people',
@@ -486,6 +551,7 @@ export default function HomePage() {
       description: '실시간 번역을 높은 정확도로 제공합니다.',
     },
     {
+      id: 53,
       title: '카페/블로그',
       star: '4.2',
       usedBy: '970M people',
@@ -494,6 +560,7 @@ export default function HomePage() {
       description: '네이버 카페 및 블로그 기능을 연동합니다.',
     },
     {
+      id: 54,
       title: 'Naver Works',
       star: '4.2',
       usedBy: '970M people',
@@ -502,6 +569,7 @@ export default function HomePage() {
       description: '네이버웍스 연동 및 메시지 봇 생성을 지원합니다.',
     },
     {
+      id: 55,
       title: 'Dynamic Map',
       star: '4.2',
       usedBy: '970M people',
@@ -510,6 +578,7 @@ export default function HomePage() {
       description: '화면에 대화형 지도를 삽입합니다.',
     },
     {
+      id: 56,
       title: 'Geocoding',
       star: '4.2',
       usedBy: '970M people',
@@ -518,6 +587,7 @@ export default function HomePage() {
       description: '주소와 좌표를 상호 변환합니다.',
     },
     {
+      id: 57,
       title: 'Search Places',
       star: '4.2',
       usedBy: '970M people',
@@ -526,6 +596,7 @@ export default function HomePage() {
       description: '주변의 장소나 업체 정보를 검색합니다.',
     },
     {
+      id: 58,
       title: 'Direction',
       star: '4.2',
       usedBy: '970M people',
@@ -534,6 +605,7 @@ export default function HomePage() {
       description: '교통 수단별 경로 데이터를 제공합니다.',
     },
     {
+      id: 59,
       title: 'CLOVA Speech',
       star: '4.2',
       usedBy: '970M people',
@@ -542,6 +614,7 @@ export default function HomePage() {
       description: '음성을 텍스트로 자동 변환합니다.',
     },
     {
+      id: 60,
       title: 'CLOVA Voice',
       star: '4.2',
       usedBy: '970M people',
@@ -550,6 +623,7 @@ export default function HomePage() {
       description: '텍스트를 자연스러운 목소리로 읽어줍니다.',
     },
     {
+      id: 61,
       title: 'CLOVA FR',
       star: '4.2',
       usedBy: '970M people',
@@ -559,23 +633,35 @@ export default function HomePage() {
     },
   ]
 
-  const searchTags = ['결제', '소셜로그인', '지도', '날씨', 'AI', '이메일', '금융', '데이터']
+  // 검색 태그 목록
+  const searchTags = [
+    '결제',
+    '소셜로그인',
+    '지도',
+    '날씨',
+    'AI',
+    '이메일',
+    '금융',
+    '데이터',
+  ]
 
   return (
     <div className="min-h-screen bg-[radial-gradient(circle_at_center,_#f0f7ff_0%,_#ffffff_100%)] pt-20 flex flex-col items-center overflow-x-hidden pb-40">
       <section className="flex flex-col items-center mb-24 w-full">
-        <h1 className="text-8xl font-bold text-slate-900 mb-10 tracking-tight">API Wiki</h1>
+        <h1 className="text-8xl font-bold text-slate-900 mb-10 tracking-tight">
+          API Wiki
+        </h1>
         <SearchBar />
       </section>
 
       <APICarousel title="인기 API">
-        {popularAPIs.map((api, i) => (
-          <APICard key={i} {...api} />
+        {popularAPIs.map((api) => (
+          <APICard key={api.id} {...api} />
         ))}
       </APICarousel>
       <APICarousel title="제안 API">
-        {suggestAPIs.map((api, i) => (
-          <APICard key={i} {...api} />
+        {suggestAPIs.map((api) => (
+          <APICard key={api.id} {...api} />
         ))}
       </APICarousel>
       <APICarousel title="최신 뉴스">
@@ -605,9 +691,13 @@ export default function HomePage() {
             <span className="text-xl">❖</span> {list.title}
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 justify-items-center">
-            {list.data.map((item, i) => (
-              <APICard key={i} {...item} isDetail={true} isLarge={list.isLarge} />
-            ))}
+            {list.data.map((item) =>
+              list.isLarge ? (
+                <APICard key={item.id} {...item} />
+              ) : (
+                <APICardSmall key={item.id} {...item} />
+              ),
+            )}
           </div>
         </section>
       ))}
