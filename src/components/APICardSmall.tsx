@@ -1,11 +1,4 @@
-interface APICardProps {
-  title: string
-  star: string
-  usedBy: string
-  price: string
-  iconUrl: string
-  description?: string
-}
+import type { APICardProps } from './APICard'
 
 export default function APICardSmall({ title, star, usedBy, price, iconUrl }: APICardProps) {
   return (

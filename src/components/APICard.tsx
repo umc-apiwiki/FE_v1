@@ -2,15 +2,14 @@ import HeartLine from '@/assets/icons/common/ic_heart_line.svg'
 import HeartFill from '@/assets/icons/common/ic_heart_fill.svg'
 import { useState } from 'react'
 
-interface APICardProps {
+export interface APICardProps {
+  id: number
   title: string
   star: string
   usedBy: string
   price: string
   iconUrl: string
   description?: string
-  isDetail?: boolean
-  isLarge?: boolean
 }
 
 export default function APICard({
