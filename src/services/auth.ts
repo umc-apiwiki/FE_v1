@@ -5,42 +5,66 @@ import type { ApiResponse, LoginRequest, LoginResponse, SignupRequest } from '@/
  * 회원가입
  */
 export const signup = async (data: SignupRequest): Promise<ApiResponse<LoginResponse>> => {
-  const response = await api.post('/api/v1/auth/signup', data)
-  return response.data
+  try {
+    const response = await api.post('/api/v1/auth/signup', data)
+    return response.data
+  } catch (error: any) {
+    // 서버가 400 에러로 응답한 경우에도 response.data 반환
+    if (error.response?.data) {
+      return error.response.data
+    }
+    throw error
+  }
 }
 
 /**
  * 로그인
  */
 export const login = async (data: LoginRequest): Promise<ApiResponse<LoginResponse>> => {
-  const response = await api.post('/api/v1/auth/login', data)
-  const result = response.data
+  try {
+    const response = await api.post('/api/v1/auth/login', data)
+    const result = response.data
 
-  // 로그인 성공 시 토큰과 유저 정보 저장
-  if (result.isSuccess && result.result) {
-    localStorage.setItem('accessToken', result.result.accessToken)
-    localStorage.setItem('memberId', String(result.result.memberId))
-    localStorage.setItem('nickname', result.result.nickname)
+    // 로그인 성공 시 토큰과 유저 정보 저장
+    if (result.isSuccess && result.result) {
+      localStorage.setItem('accessToken', result.result.accessToken)
+      localStorage.setItem('memberId', String(result.result.memberId))
+      localStorage.setItem('nickname', result.result.nickname)
+    }
+
+    return result
+  } catch (error: any) {
+    // 서버가 400 에러로 응답한 경우에도 response.data 반환
+    if (error.response?.data) {
+      return error.response.data
+    }
+    throw error
   }
-
-  return result
 }
 
 /**
  * 로그아웃
  */
 export const logout = async (): Promise<ApiResponse<string>> => {
-  const response = await api.post('/api/v1/auth/logout')
-  const result = response.data
+  try {
+    const response = await api.post('/api/v1/auth/logout')
+    const result = response.data
 
-  // 로그아웃 성공 시 로컬 스토리지 정리
-  if (result.isSuccess) {
-    localStorage.removeItem('accessToken')
-    localStorage.removeItem('memberId')
-    localStorage.removeItem('nickname')
+    // 로그아웃 성공 시 로컬 스토리지 정리
+    if (result.isSuccess) {
+      localStorage.removeItem('accessToken')
+      localStorage.removeItem('memberId')
+      localStorage.removeItem('nickname')
+    }
+
+    return result
+  } catch (error: any) {
+    // 서버가 400 에러로 응답한 경우에도 response.data 반환
+    if (error.response?.data) {
+      return error.response.data
+    }
+    throw error
   }
-
-  return result
 }
 
 /**
