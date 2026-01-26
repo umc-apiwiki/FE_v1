@@ -60,7 +60,7 @@ const ExplorePage = () => {
   ]
   const [isSearchOpen, setIsSearchOpen] = useState(false)
   const [isFilterOpen, setIsFilterOpen] = useState(false)
-  
+
   return (
     <div className="mt-10">
       <SearchBar isOpen={isSearchOpen} setIsOpen={setIsSearchOpen} />
@@ -71,13 +71,15 @@ const ExplorePage = () => {
           <span className="font-sans text-sm text-[#B0B0B0]">1,022개</span>
           <div className="flex gap-6 sm:pr-8 md:pr-16 lg:pr-20 xl:pr-28 2xl:pr-32 font-sans text-lg font-medium text-[#0D3C61]">
             {/* Hide Filters */}
-            <button type='button' onClick={() => setIsFilterOpen(true)} className="flex hover:text-brand-500">
+            <button
+              type="button"
+              onClick={() => setIsFilterOpen(true)}
+              className="flex hover:text-brand-500"
+            >
               <span>Hide Filters</span>
               <img src={Filter} alt="필터" />
             </button>
-            {isFilterOpen && (
-                <FilterModal onClose={() => setIsFilterOpen(false)}/>
-            )}
+            {isFilterOpen && <FilterModal onClose={() => setIsFilterOpen(false)} />}
             {/* Sort By */}
             <div className="flex">
               <span>Sort By</span>
