@@ -1,101 +1,57 @@
-import { useState } from 'react'
-import * as Sentry from '@sentry/react'
-
-const API_URL = import.meta.env.VITE_API_BASE_URL + '/health'
-
-type SendStatus = 'idle' | 'sending' | 'done' | 'error'
-type CorsStatus = 'idle' | 'loading' | 'success' | 'fail'
+import APICard from '@/components/APICard'
+import { apiData } from '@/data/mockData'
+import { useBookmark } from '@/context/BookmarkContext'
+import BookmarkCarousel from '@/components/BookmarkCarousel'
 
 const BookmarkPage = () => {
-  const [sentryStatus, setSentryStatus] = useState<SendStatus>('idle')
-  const [corsStatus, setCorsStatus] = useState<CorsStatus>('idle')
-  const [corsResponse, setCorsResponse] = useState<string>('')
+  const { bookmarkedIds } = useBookmark()
 
-  const handleSendError = async () => {
-    setSentryStatus('sending')
-    try {
-      const eventId = Sentry.captureException(new Error('GlitchTip test error'), {
-        tags: { source: 'bookmark-test' },
-        level: 'error',
-      })
-      await Sentry.flush(2000)
-      setSentryStatus(eventId ? 'done' : 'error')
-    } catch (err) {
-      console.error('GlitchTip test send failed', err)
-      setSentryStatus('error')
-    }
-  }
+  // 1. 찜한 데이터 필터링
+  const myBookmarkedItems = apiData.filter((item) => bookmarkedIds.includes(item.id))
 
-  const handleCorsTest = async () => {
-    setCorsStatus('loading')
-    setCorsResponse('')
-    try {
-      const res = await fetch(API_URL, {
-        method: 'GET',
-        mode: 'cors',
-        headers: {
-          // Hint to server which Origin to allow; browser sets real Origin automatically
-          Origin: window.location.origin,
-        },
-      })
+  // 2. 날짜별 그룹화 (현재는 2025.12.30 하나로 통일됨)
+  const groupedData = myBookmarkedItems.reduce(
+    (acc, item) => {
+      if (!acc[item.date]) {
+        acc[item.date] = []
+      }
+      acc[item.date].push(item)
+      return acc
+    },
+    {} as Record<string, typeof apiData>
+  )
 
-      const text = await res.text()
-      setCorsResponse(
-        `status: ${res.status}\nheaders: ${[...res.headers.entries()]
-          .map(([k, v]) => `${k}: ${v}`)
-          .join('\n')}\n\nbody:\n${text}`
-      )
-      setCorsStatus(res.ok ? 'success' : 'fail')
-    } catch (err) {
-      console.error('CORS test failed', err)
-      setCorsResponse(String(err))
-      setCorsStatus('fail')
-    }
-  }
+  const sortedDates = Object.keys(groupedData)
 
   return (
-    <div className="flex flex-col gap-6 p-6">
-      <section className="flex flex-col gap-2">
-        <h2 className="text-lg font-semibold text-slate-900">GlitchTip 테스트</h2>
-        <button
-          type="button"
-          className="w-fit rounded-md bg-brand-500 px-4 py-2 text-white shadow hover:bg-brand-600 disabled:cursor-not-allowed disabled:bg-brand-300"
-          onClick={handleSendError}
-          disabled={sentryStatus === 'sending'}
-        >
-          {sentryStatus === 'sending' ? 'Sending…' : 'Send GlitchTip test error'}
-        </button>
-        <p className="text-sm text-slate-700">
-          상태: {sentryStatus === 'idle' && '대기 중'}
-          {sentryStatus === 'sending' && '전송 중'}
-          {sentryStatus === 'done' && '전송 완료 (GlitchTip 확인)'}
-          {sentryStatus === 'error' && '전송 실패 (콘솔 확인)'}
-        </p>
-      </section>
-
-      <section className="flex flex-col gap-2">
-        <h2 className="text-lg font-semibold text-slate-900">CORS 테스트</h2>
-        <div className="flex gap-3 items-center">
-          <button
-            type="button"
-            className="w-fit rounded-md bg-indigo-600 px-4 py-2 text-white shadow hover:bg-indigo-700 disabled:cursor-not-allowed disabled:bg-indigo-300"
-            onClick={handleCorsTest}
-            disabled={corsStatus === 'loading'}
-          >
-            {corsStatus === 'loading' ? '요청 중…' : 'CORS 테스트 요청 보내기'}
-          </button>
-          <span className="text-sm text-slate-700">
-            상태: {corsStatus === 'idle' && '대기 중'}
-            {corsStatus === 'loading' && '요청 중'}
-            {corsStatus === 'success' && '성공'}
-            {corsStatus === 'fail' && '실패'}
-          </span>
+    <div className="w-full min-h-screen pb-40 overflow-x-hidden mt-10">
+      <div className="flex flex-col w-full max-w-[1440px] mx-auto">
+        {/* Archive 제목 중앙 정렬 */}
+        <div className="w-full flex justify-center mb-16">
+          <div className="text-slate-900 text-3xl font-medium font-['Pretendard_Variable'] tracking-widest">
+            Archive
+          </div>
         </div>
-        <pre className="whitespace-pre-wrap break-all rounded-md border border-slate-200 bg-slate-50 p-3 text-xs text-slate-800">
-          {corsResponse || '응답 대기 중...'}
-        </pre>
-        <p className="text-xs text-slate-500">요청 URL: {API_URL}</p>
-      </section>
+
+        {/* 찜한 목록이 없을 때 */}
+        {sortedDates.length === 0 ? (
+          <div className="flex flex-col items-center justify-center mt-20 text-gray-400">
+            <p className="text-xl">아직 찜한 API가 없습니다.</p>
+            <p className="text-sm mt-2">Explore 페이지에서 하트를 눌러보세요!</p>
+          </div>
+        ) : (
+          // 날짜별 캐러셀 렌더링
+          <div className="flex flex-col gap-10 px-4 md:px-10 lg:px-20">
+            {sortedDates.map((date) => (
+              <BookmarkCarousel key={date} date={date}>
+                {groupedData[date].map((item) => (
+                  <APICard key={item.id} {...item} />
+                ))}
+              </BookmarkCarousel>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   )
 }
