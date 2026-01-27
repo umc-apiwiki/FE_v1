@@ -4,6 +4,7 @@ import Filter from '@/assets/icons/action/ic_filter.svg'
 import ArrowDown from '@/assets/icons/action/ic_arrow_down.svg'
 
 import { useState } from 'react'
+import FilterModal from '@/components/FilterModal'
 
 const ExplorePage = () => {
   const apies: APICardProps[] = [
@@ -58,6 +59,8 @@ const ExplorePage = () => {
     },
   ]
   const [isSearchOpen, setIsSearchOpen] = useState(false)
+  const [isFilterOpen, setIsFilterOpen] = useState(false)
+
   return (
     <div className="mt-10">
       <SearchBar isOpen={isSearchOpen} setIsOpen={setIsSearchOpen} />
@@ -68,10 +71,15 @@ const ExplorePage = () => {
           <span className="font-sans text-sm text-[#B0B0B0]">1,022개</span>
           <div className="flex gap-6 sm:pr-8 md:pr-16 lg:pr-20 xl:pr-28 2xl:pr-32 font-sans text-lg font-medium text-[#0D3C61]">
             {/* Hide Filters */}
-            <div className="flex">
+            <button
+              type="button"
+              onClick={() => setIsFilterOpen(true)}
+              className="flex hover:text-brand-500"
+            >
               <span>Hide Filters</span>
               <img src={Filter} alt="필터" />
-            </div>
+            </button>
+            {isFilterOpen && <FilterModal onClose={() => setIsFilterOpen(false)} />}
             {/* Sort By */}
             <div className="flex">
               <span>Sort By</span>
