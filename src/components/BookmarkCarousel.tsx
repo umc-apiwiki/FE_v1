@@ -49,7 +49,8 @@ export default function BookmarkCarousel({ date, children }: BookmarkCarouselPro
     startX.current = e.clientX
     startIndicatorX.current = indicatorX
 
-    document.body.style.userSelect = 'none'
+    // eslint-disable-next-line
+    document.body.style.userSelect = 'none' // 드래그 중 텍스트 선택 방지
     document.addEventListener('mousemove', handleMouseMove)
     document.addEventListener('mouseup', handleMouseUp)
   }
@@ -77,7 +78,8 @@ export default function BookmarkCarousel({ date, children }: BookmarkCarouselPro
   // 5. [드래그 종료]
   const handleMouseUp = () => {
     isDragging.current = false
-    document.body.style.userSelect = ''
+    // eslint-disable-next-line
+    document.body.style.userSelect = '' // 텍스트 선택 잠금 해제
     document.removeEventListener('mousemove', handleMouseMove)
     document.removeEventListener('mouseup', handleMouseUp)
   }

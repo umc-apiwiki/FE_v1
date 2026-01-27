@@ -8,7 +8,6 @@ interface BookmarkContextType {
 
 const BookmarkContext = createContext<BookmarkContextType | undefined>(undefined)
 
-// [중요] export function 이어야 다른 곳에서 import { BookmarkProvider } 가 가능합니다.
 export function BookmarkProvider({ children }: { children: ReactNode }) {
   const [bookmarkedIds, setBookmarkedIds] = useState<number[]>([])
 
@@ -27,7 +26,8 @@ export function BookmarkProvider({ children }: { children: ReactNode }) {
   )
 }
 
-// [중요] export function 이어야 다른 곳에서 import { useBookmark } 가 가능합니다.
+// 아래 줄은 Vite HMR 규칙 경고를 무시하는 코드입니다.
+// eslint-disable-next-line react-refresh/only-export-components
 export function useBookmark() {
   const context = useContext(BookmarkContext)
   if (!context) {
