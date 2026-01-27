@@ -29,7 +29,7 @@ export default function SearchBar({ isOpen, setIsOpen, isMain = false }: SearchB
     return () => {
       document.removeEventListener('mousedown', handleClickOutside)
     }
-  }, [])
+  }, [setOpen])
 
   return (
     <div className="relative mx-auto w-[876px] h-14">
