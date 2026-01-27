@@ -1,3 +1,4 @@
+// src/App.tsx
 import { createBrowserRouter, RouterProvider, type RouteObject } from 'react-router-dom'
 import Layout from './components/Layout/Layout'
 import NotFoundPage from './pages/NotFoundPage'
@@ -6,7 +7,8 @@ import ExplorePage from './pages/ExplorePage'
 import AboutPage from './pages/AboutPage'
 import BookmarkPage from './pages/BookmarkPage'
 import ProfilePage from './pages/ProfilePage'
-import HistoryPage from './pages/HistoryPage' // [추가됨] import
+import HistoryPage from './pages/HistoryPage'
+import { BookmarkProvider } from './context/BookmarkContext' // [추가]
 
 const publicRoutes: RouteObject[] = [
   {
@@ -27,7 +29,11 @@ const publicRoutes: RouteObject[] = [
 const router = createBrowserRouter([...publicRoutes])
 
 function App() {
-  return <RouterProvider router={router} />
+  return (
+    <BookmarkProvider>
+      <RouterProvider router={router} />
+    </BookmarkProvider>
+  )
 }
 
 export default App

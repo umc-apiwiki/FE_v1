@@ -1,6 +1,6 @@
 import HeartLine from '@/assets/icons/common/ic_heart_line.svg'
 import HeartFill from '@/assets/icons/common/ic_heart_fill.svg'
-import { useState } from 'react'
+import { useBookmark } from '@/context/BookmarkContext'
 
 export interface APICardProps {
   id: number
@@ -13,6 +13,7 @@ export interface APICardProps {
 }
 
 export default function APICard({
+  id,
   title,
   star,
   usedBy,
@@ -20,7 +21,8 @@ export default function APICard({
   iconUrl,
   description,
 }: APICardProps) {
-  const [isLike, setIsLike] = useState(false)
+  const { isBookmarked, toggleBookmark } = useBookmark()
+  const isLike = isBookmarked(id)
   return (
     <div className="group relative w-96 h-64 flex-shrink-0 cursor-pointer ">
       {/* 카드 배경(테두리 + 그림자 + 배경색) */}
@@ -29,7 +31,10 @@ export default function APICard({
       <div className="relative">
         <button
           type="button"
-          onClick={() => setIsLike((prev) => !prev)}
+          onClick={(e) => {
+            e.stopPropagation() // 카드 클릭 이벤트 전파 방지
+            toggleBookmark(id) // 찜 상태 토글
+          }}
           className="absolute top-3 right-4 z-10"
         >
           <img src={isLike ? HeartFill : HeartLine} alt={isLike ? '찜됨' : '찜 안됨'} />
