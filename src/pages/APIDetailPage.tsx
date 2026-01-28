@@ -29,13 +29,13 @@ export default function APIDetailPage() {
   const bookmarked = isBookmarked(apiId)
 
   return (
-    <div className="mt-32 w-full max-w-7xl mx-auto px-16">
+    <div className="mx-auto px-16 mt-32 2xl:mx-44">
       {/* 메인 영역 */}
       <div className="">
         {/* api 상세정보 + 이미지 */}
-        <div className="relative mb-10 w-full">
+        <div className="mb-28">
           {/* 아이콘과 텍스트가 가로로 배치되는 영역 */}
-          <div className="flex flex-col md:flex-row justify-between items-center w-full">
+          <div className="flex justify-between mx-auto items-center">
             <div className="flex flex-col justify-center gap-2 mt-3 w-full md:w-auto">
               <h1 className="font-semibold text-[50px] text-[#071E31] mb-10">{api?.title}</h1>
               <p className="font-medium text-2xl text-[#0D3C61]">Star {api?.star}</p>
