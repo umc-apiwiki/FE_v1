@@ -6,7 +6,7 @@ import BottomButtonSection from '@/components/HomePage/BottomButtonSection'
 import APICardSmall from '@/components/APICardSmall'
 import NewsCard from '@/components/NewsCard'
 
-// -------------------- 1. 데이터 정의 (변경 없음) --------------------
+// -------------------- 1. 데이터 정의 --------------------
 interface APIData {
   id: number
   title: string
@@ -164,6 +164,7 @@ const ScrollableSection = ({
     isDragging.current = true
     startX.current = e.clientX
     startIndicatorX.current = indicatorX
+    // eslint-disable-next-line
     document.body.style.userSelect = 'none'
     document.addEventListener('mousemove', handleMouseMove)
     document.addEventListener('mouseup', handleMouseUp)
@@ -181,6 +182,7 @@ const ScrollableSection = ({
   }
   const handleMouseUp = () => {
     isDragging.current = false
+    // eslint-disable-next-line
     document.body.style.userSelect = ''
     document.removeEventListener('mousemove', handleMouseMove)
     document.removeEventListener('mouseup', handleMouseUp)
@@ -248,12 +250,9 @@ const HomePage = () => {
     if (showMore) window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
-  // ★★★ [원본 코드 복구] ★★★
-  // !showMore 일 때는 님께서 주신 원본 코드를 그대로 렌더링합니다.
-  // 불필요한 부모 div나 스타일을 일절 추가하지 않았습니다.
   if (!showMore) {
     return (
-      // 홈화면 (원본 구조 100% 유지)
+      // 홈화면
       <div className="flex flex-col items-center justify-center">
         <div className="relative w-full h-[calc(100vh-200px)] flex flex-col items-center justify-center gap-8">
           {/* 로고와 소개글*/}
@@ -266,7 +265,7 @@ const HomePage = () => {
           {!isSearchOpen && <SearchTagSection />}
         </div>
 
-        {/* 하단 버튼 (이벤트 연결만 추가됨) */}
+        {/* 하단 버튼*/}
         {!isSearchOpen && <BottomButtonSection onClick={toggleView} isExpanded={false} />}
       </div>
     )
@@ -281,7 +280,7 @@ const HomePage = () => {
         <ScrollableSection title="Suggest API" data={suggestAPIs} type="api" />
       </div>
 
-      {/* 버튼: 상단 위치 (expanded=true -> top-24, Down 아이콘) */}
+      {/* 하단 버튼 (상단 고정, Down 아이콘) */}
       <BottomButtonSection onClick={toggleView} isExpanded={true} />
     </div>
   )

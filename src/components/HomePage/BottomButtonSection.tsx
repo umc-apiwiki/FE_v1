@@ -11,8 +11,6 @@ export default function BottomButtonSection({ onClick, isExpanded }: BottomButto
     <button
       type="button"
       onClick={onClick}
-      // ★ 위치 수정: top-24 -> top-32 (약 128px)
-      // 헤더와 겹치지 않고, 보내주신 이미지처럼 여백의 중간쯤에 위치하도록 내렸습니다.
       className={`fixed left-1/2 -translate-x-1/2 z-[9999] p-2 transition-all duration-500 ease-in-out focus:outline-none
         ${isExpanded ? 'top-32' : 'bottom-3'}
         ${!isExpanded && 'hover:-translate-y-1'}
