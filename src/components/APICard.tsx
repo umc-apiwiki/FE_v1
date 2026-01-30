@@ -1,6 +1,7 @@
 import HeartLine from '@/assets/icons/common/ic_heart_line.svg'
 import HeartFill from '@/assets/icons/common/ic_heart_fill.svg'
 import { useBookmark } from '@/context/BookmarkContext'
+import { useNavigate } from 'react-router-dom'
 
 export interface APICardProps {
   id: number
@@ -23,8 +24,14 @@ export default function APICard({
 }: APICardProps) {
   const { isBookmarked, toggleBookmark } = useBookmark()
   const isLike = isBookmarked(id)
+
+  const navigate = useNavigate()
+
   return (
-    <div className="group relative w-96 h-64 flex-shrink-0 cursor-pointer ">
+    <div
+      className="group relative w-96 h-64 flex-shrink-0 cursor-pointer "
+      onClick={() => navigate(`/apis/${id}`)}
+    >
       {/* 카드 배경(테두리 + 그림자 + 배경색) */}
       <div className="absolute inset-0 rounded-[15px] border-brand-500/30 border-thin bg-white shadow-[1px_5px_10px_0px_var(--tw-shadow-color)] shadow-brand-500/25 group-hover:bg-gradient-to-b group-hover:from-brand-500/15 group-hover:to-white transition-all duration-300" />
       {/* 하트 */}
@@ -65,11 +72,14 @@ export default function APICard({
           </p>
           <div className="mx-auto w-[133px] h-8 relative rounded-[20px] shadow-[0px_2px_4px_0px_rgba(33,150,243,0.25)] border border-sky-500 overflow-hidden cursor-pointer">
             {/* compare 버튼 */}
-            <div className="w-full h-full bg-white flex items-center justify-center hover:bg-brand-500 group/btn transition-colors duration-300">
+            <button
+              type="button"
+              className="w-full h-full bg-white flex items-center justify-center hover:bg-brand-500 group/btn transition-colors duration-300"
+            >
               <span className="text-brand-500 text-xl font-medium group-hover/btn:text-white transition-colors duration-300 pb-1">
                 compare
               </span>
-            </div>
+            </button>
           </div>
         </div>
       </div>

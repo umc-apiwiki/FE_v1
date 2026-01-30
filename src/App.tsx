@@ -9,6 +9,7 @@ import BookmarkPage from './pages/BookmarkPage'
 import ProfilePage from './pages/ProfilePage'
 import HistoryPage from './pages/HistoryPage'
 import { BookmarkProvider } from './context/BookmarkContext' // [추가]
+import APIDetailPage from './pages/APIDetailPage'
 
 const publicRoutes: RouteObject[] = [
   {
@@ -22,6 +23,7 @@ const publicRoutes: RouteObject[] = [
       { path: 'about', element: <AboutPage /> },
       { path: 'profile', element: <ProfilePage /> },
       { path: 'history', element: <HistoryPage /> },
+      { path: 'apis/:id', element: <APIDetailPage /> },
     ],
   },
 ]
