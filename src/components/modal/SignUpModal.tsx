@@ -11,12 +11,15 @@ type SignUpModalProps = {
 }
 
 export default function SignUpModal({ onClose, onSwitchToSignIn }: SignUpModalProps) {
+  const [nickname, setNickname] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [passwordConfirm, setPasswordConfirm] = useState('')
 
   return (
     <Modal onClose={onClose}>
-      <img src={Cancel} alt="취소" onClick={onClose} className="absolute right-2 z-50 m-4" />
+      {/* 닫기 버튼 */}
+      <img src={Cancel} alt="닫기" onClick={onClose} className="absolute right-2 z-50 m-4" />
       {/* 모달 안 */}
       <div className="m-8 flex flex-col items-center">
         {/* 아이콘 */}
@@ -29,32 +32,33 @@ export default function SignUpModal({ onClose, onSwitchToSignIn }: SignUpModalPr
 
         {/* 입력 영역 */}
         <div className="flex flex-col gap-5 mb-3">
+          {/* 닉네임 입력 */}
           <ModalInput
             type="text"
-            value={email}
+            value={nickname}
             placeholder="닉네임"
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => setNickname(e.target.value)}
           />
-
+          {/* 이메일 입력 */}
           <ModalInput
             type="email"
             value={email}
             placeholder="이메일"
             onChange={(e) => setEmail(e.target.value)}
           />
-
+          {/* 비밀번호 입력 */}
           <ModalInput
             type="Password"
             value={password}
             placeholder="비밀번호"
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => setPassword(e.target.value)}
           />
-
+          {/* 비밀번호 확인 입력 */}
           <ModalInput
             type="Password"
-            value={password}
+            value={passwordConfirm}
             placeholder="비밀번호 확인"
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => setPasswordConfirm(e.target.value)}
           />
 
           <ModalButton>회원가입</ModalButton>

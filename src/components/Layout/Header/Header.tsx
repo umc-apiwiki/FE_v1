@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import HomeLogo from '@/assets/icons/navigation/ic_home_logo.svg'
 import { useEffect, useRef, useState } from 'react'
-import profileImg from '@/assets/default_profile.png'
+// import profileImg from '@/assets/default_profile.png'
 import SignInModal from '@/components/modal/SignInModal'
 import SignUpModal from '@/components/modal/SignUpModal'
 
@@ -12,7 +12,12 @@ type User = {
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false)
-  const [user, setUser] = useState<User | null>(null)
+  const [
+    user,
+    {
+      /* , setUser*/
+    },
+  ] = useState<User | null>(null)
   const [isSignInOpen, setIsSignInOpen] = useState(false)
   const [isSignUpOpen, setIsSignUpOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement | null>(null)

@@ -16,7 +16,8 @@ export default function SignInModal({ onClose, onSwitchToSignUp }: SignInModalPr
 
   return (
     <Modal onClose={onClose}>
-      <img src={Cancel} alt="취소" onClick={onClose} className="absolute right-2 z-50 m-4" />
+      {/* 닫기 버튼 */}
+      <img src={Cancel} alt="닫기" onClick={onClose} className="absolute right-2 z-50 m-4" />
       {/* 모달 안 */}
       <div className="m-8 flex flex-col items-center mt-20">
         {/* 아이콘 이미지 */}
@@ -27,21 +28,22 @@ export default function SignInModal({ onClose, onSwitchToSignUp }: SignInModalPr
           </h1>
         </div>
         {/* Id + PW + 로그인 버튼 */}
+        {/* 아이디 입력 */}
         <div className="flex flex-col gap-6 mb-3">
           <ModalInput
             type="Id"
-            value=""
+            value={email}
             placeholder="아이디"
             onChange={(e) => setEmail(e.target.value)}
           />
-
+          {/* 비밀번호 입력 */}
           <ModalInput
             type="Password"
-            value=""
+            value={password}
             placeholder="비밀번호"
             onChange={(e) => setPassword(e.target.value)}
           />
-
+          {/* 로그인 버튼 */}
           <ModalButton>로그인</ModalButton>
         </div>
         {/* 계정 찾기 및 회원가입 */}
