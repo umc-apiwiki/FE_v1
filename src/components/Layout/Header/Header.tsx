@@ -12,7 +12,7 @@ type User = {
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false)
-  const [user, _] = useState<User | null>(null)
+  const [user] = useState<User | null>(null)
   const [isSignInOpen, setIsSignInOpen] = useState(false)
   const [isSignUpOpen, setIsSignUpOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement | null>(null)
