@@ -4,6 +4,7 @@ import PriceFilter from '../filter/PriceFilter'
 import RatingFilter from '../filter/RatingFilter'
 import AuthFilter from '../filter/AuthFilter'
 import DocsFilter from '../filter/DocsFilter'
+import ModalButton from './components/ModalButton'
 
 type Filters = {
   price: string[]
@@ -86,10 +87,8 @@ export default function FilterModal({ onClose }: FilterModalProps) {
           )}
         </div>
         {/* 필터 적용 버튼 */}
-        <div className="absolute bottom-24 left-1/2 -translate-x-1/2 w-[308px] h-[55px] rounded-[30px] border-[#E0E0E9] overflow-hidden cursor-pointer">
-          <div className="w-full h-full bg-brand-500 flex items-center justify-center">
-            <span className="text-white text-lg font-medium font-s pb-1">필터 적용</span>
-          </div>
+        <div className="absolute bottom-24 left-1/2 -translate-x-1/2">
+          <ModalButton>필터 적용</ModalButton>
         </div>
       </div>
     </Modal>

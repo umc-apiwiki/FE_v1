@@ -24,8 +24,8 @@ export default function Modal({
   }, [onClose])
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <div className="absolute inset-0 bg-black/20 backdrop-blur-sm" onClick={onClose} />
+    <div className="fixed top-[80px] left-0 right-0 bottom-0 z-50 flex items-center justify-center">
+      <div className="absolute inset-0 bg-black/20 backdrop-blur-sm " onClick={onClose} />
 
       <div
         className={`relative z-50 ${width} ${height} rounded-[25px] border border-brand-500/60 bg-white shadow-[1px_1px_10px_2px_var(--tw-shadow-color)] shadow-brand-500/50`}

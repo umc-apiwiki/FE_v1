@@ -2,14 +2,29 @@ import { Link } from 'react-router-dom'
 import HomeLogo from '@/assets/icons/navigation/ic_home_logo.svg'
 import { useEffect, useRef, useState } from 'react'
 import profileImg from '@/assets/default_profile.png'
+import SignInModal from '@/components/modal/SignInModal'
+import SignUpModal from '@/components/modal/SignUpModal'
+
+type User = {
+  name: string
+  profileImg: string
+}
 
 const Header = () => {
-  const user = {
-    name: 'nongbu',
-    profileImg: profileImg,
-  }
   const [isOpen, setIsOpen] = useState(false)
+  const [user, setUser] = useState<User | null>(null)
+  const [isSignInOpen, setIsSignInOpen] = useState(false)
+  const [isSignUpOpen, setIsSignUpOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement | null>(null)
+
+  const switchToSignUp = () => {
+    setIsSignUpOpen(true)
+    setIsSignInOpen(false)
+  }
+  const switchToSignIn = () => {
+    setIsSignUpOpen(false)
+    setIsSignInOpen(true)
+  }
 
   // 외부 클릭 시 드롭다운 닫기
   useEffect(() => {
@@ -65,7 +80,12 @@ const Header = () => {
         <div className="flex justify-self-end whitespace-nowrap pr-4 sm:pr-8 md:pr-16 lg:pr-32 font-sans text-xl font-medium tracking-[-1px] text-[#0D3C61]">
           {!user ? (
             // 로그인 안 했을 때
-            <span>Login</span>
+            <span
+              className="cursor-pointer hover:text-brand-500"
+              onClick={() => setIsSignInOpen(true)}
+            >
+              Login
+            </span>
           ) : (
             // 로그인 했을 때
             <div ref={dropdownRef} className="relative">
@@ -103,6 +123,12 @@ const Header = () => {
             </div>
           )}
         </div>
+        {isSignInOpen && (
+          <SignInModal onClose={() => setIsSignInOpen(false)} onSwitchToSignUp={switchToSignUp} />
+        )}
+        {isSignUpOpen && (
+          <SignUpModal onClose={() => setIsSignUpOpen(false)} onSwitchToSignIn={switchToSignIn} />
+        )}
       </nav>
     </header>
   )
