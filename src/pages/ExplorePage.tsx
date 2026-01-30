@@ -4,7 +4,7 @@ import Filter from '@/assets/icons/action/ic_filter.svg'
 import ArrowDown from '@/assets/icons/action/ic_arrow_down.svg'
 
 import { useState } from 'react'
-import FilterModal from '@/components/FilterModal'
+import FilterModal from '@/components/modal/FilterModal'
 import { apiData } from '@/data/mockData'
 
 const ExplorePage = () => {
