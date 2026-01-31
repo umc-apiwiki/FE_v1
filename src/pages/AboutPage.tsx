@@ -4,17 +4,14 @@ import { Link } from 'react-router-dom'
 export default function AboutPage() {
   return (
     <motion.div
-      className="min-h-screen bg-brand-50 overflow-x-hidden relative"
+      className="w-full relative"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5, ease: 'easeInOut' }}
     >
-      {/* 배경 글로우 효과 (스크롤해도 고정됨 - 유지) */}
-      <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-brand-500/50 rounded-full blur-[200px] pointer-events-none z-0" />
-
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20 z-10">
+      <section className="relative h-[calc(100vh-80px)] flex items-center justify-center overflow-hidden z-10">
         <motion.div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.h1
             className="text-[4rem] md:text-[5.5rem] font-bold mb-8 text-brand-500 leading-tight tracking-tight"
