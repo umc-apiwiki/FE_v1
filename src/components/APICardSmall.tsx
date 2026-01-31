@@ -14,13 +14,13 @@ export default function APICardSmall({ title, star, usedBy, price, iconUrl }: AP
           <div className="flex items-center justify-center flex-shrink-0">
             <div className="w-[70px] h-[70px] rounded-[10px] overflow-hidden flex-shrink-0 bg-white border border-brand-500/50">
               {/* 아이콘 이미지 */}
-              <img src={iconUrl} alt={title} />
+              <img src={iconUrl} alt={title} className="w-full h-full object-contain " />
             </div>
           </div>
 
           {/* 텍스트 정보 영역 (세로 정렬) */}
           <div className="flex flex-col justify-center pl-2">
-            <h3 className="text-[#071E31] font-medium leading-tight text-xl pb-2">{title}</h3>
+            <h3 className="text-info-darker font-medium leading-tight text-xl pb-2">{title}</h3>
             <p className="text-sm font-medium">Star {star}</p>
             <p className="text-sm font-medium">Used by {usedBy}</p>
             <p className="text-[#B0B0B0] text-xs mt-0.5">{price}</p>

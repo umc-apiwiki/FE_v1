@@ -19,7 +19,7 @@ const ExplorePage = () => {
         {/* 카드 개수 및 필터 */}
         <div className="flex whitespace-nowrap justify-between sm:pl-8 md:pl-16 lg:pl-20 xl:pl-28 2xl:pl-32">
           <span className="font-sans text-sm text-[#B0B0B0]">1,022개</span>
-          <div className="flex gap-6 sm:pr-8 md:pr-16 lg:pr-20 xl:pr-28 2xl:pr-32 font-sans text-lg font-medium text-[#0D3C61]">
+          <div className="flex gap-6 sm:pr-8 md:pr-16 lg:pr-20 xl:pr-28 2xl:pr-32 font-sans text-lg font-medium text-info-dark">
             {/* Hide Filters */}
             <button
               type="button"

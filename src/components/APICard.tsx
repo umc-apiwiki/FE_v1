@@ -54,14 +54,14 @@ export default function APICard({
           {/* 아이콘 이미지 박스 (고정 크기, 그림자, 테두리 적용) */}
           <div className="w-[116px] h-[108px] rounded-[10px] overflow-hidden flex-shrink-0 bg-white shadow-[1px_4px_6px_0px_var(--tw-shadow-color)] shadow-brand-500/25 border border-brand-500/25">
             {/* 아이콘 이미지 */}
-            <img src={iconUrl} alt={title} />
+            <img src={iconUrl} alt={title} className="w-full h-full object-contain " />
           </div>
 
           {/* 텍스트 정보 영역 (세로 정렬) */}
           <div className="flex flex-col justify-start pl-8">
-            <h3 className="text-[#071E31] font-medium leading-tight text-xl pb-4">{title}</h3>
-            <p className="text-[#0D3C61] text-sm font-medium">Star {star}</p>
-            <p className="text-[#0D3C61] text-sm font-medium">Used by {usedBy}</p>
+            <h3 className="text-info-darker font-medium leading-tight text-xl pb-4">{title}</h3>
+            <p className="text-info-dark text-sm font-medium">Star {star}</p>
+            <p className="text-info-dark text-sm font-medium">Used by {usedBy}</p>
             <p className="text-[#B0B0B0] text-xs mt-0.5">{price}</p>
           </div>
         </div>

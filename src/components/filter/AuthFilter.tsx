@@ -28,7 +28,7 @@ export default function AuthFilter({ value, onChange }: AuthFilterProps) {
         return (
           <label
             key={auth}
-            className="flex items-center gap-3 cursor-pointer font-sans font-normal text-lg text-[#071E31]"
+            className="flex items-center gap-3 cursor-pointer font-sans font-normal text-lg text-info-darker"
           >
             <input
               type="checkbox"
