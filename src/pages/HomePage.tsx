@@ -196,7 +196,7 @@ const ScrollableSection = ({
   }, [])
 
   return (
-    <div className="w-full max-w-[1200px] mx-auto flex flex-col mb-12 animate-fade-in px-4">
+    <div className="w-full max-w-[1444px] mx-auto flex flex-col mb-12 animate-fade-in px-4">
       <div className="w-full mb-6">
         <div className="justify-start text-black/60 text-2xl font-medium font-['Pretendard_Variable']">
           {title}
@@ -273,7 +273,7 @@ const HomePage = () => {
 
   // [화면 2] 리스트 화면
   return (
-    <div className="w-full flex flex-col items-center justify-center min-h-screen bg-white">
+    <div className="w-full flex flex-col items-center justify-center min-h-screen">
       <div className="w-full flex flex-col items-center pt-24 pb-24 animate-slide-up">
         <ScrollableSection title="Latest News" data={newsItems} type="news" />
         <ScrollableSection title="Recent Popular" data={popularAPIs} type="api" />
