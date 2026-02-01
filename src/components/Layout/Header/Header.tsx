@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom'
 import HomeLogo from '@/assets/icons/navigation/ic_home_logo.svg'
+import HeartIcon from '@/assets/icons/common/ic_heart_line.svg' // [추가] 하트 아이콘
 import { useEffect, useRef, useState } from 'react'
-// import profileImg from '@/assets/default_profile.png'
+import profileImg from '@/assets/default_profile.png'
 import SignInModal from '@/components/modal/SignInModal'
 import SignUpModal from '@/components/modal/SignUpModal'
 
@@ -12,7 +13,8 @@ type User = {
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false)
-  const [user] = useState<User | null>(null)
+  // 테스트용 유저 데이터 (필요 시 null로 변경하세요)
+  const [user] = useState<User | null>({ name: 'nongbu', profileImg })
   const [isSignInOpen, setIsSignInOpen] = useState(false)
   const [isSignUpOpen, setIsSignUpOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement | null>(null)
@@ -64,9 +66,9 @@ const Header = () => {
         </div>
 
         {/* 중앙 메뉴 */}
-        <div className="flex justify-self-center sm:gap-12 md:gap-16 lg:gap-36 whitespace-nowrap font-sans text-xl font-medium tracking-[-1px] text-info-dark pr-2">
-          <Link to="/bookmark" className="hover:text-brand-500">
-            Bookmark
+        <div className="flex justify-self-center items-center sm:gap-12 md:gap-16 lg:gap-36 whitespace-nowrap font-sans text-xl font-medium tracking-[-1px] text-info-dark pr-2">
+          <Link to="/community" className="hover:text-brand-500">
+            Community
           </Link>
           <Link to="/explore" className="hover:text-brand-500">
             Explore
@@ -88,38 +90,45 @@ const Header = () => {
             </span>
           ) : (
             // 로그인 했을 때
-            <div ref={dropdownRef} className="relative">
-              <button
-                type="button"
-                onClick={() => setIsOpen((prev) => !prev)}
-                className="cursor-pointer focus:outline-none pt-2"
-              >
-                <img
-                  src={user.profileImg}
-                  alt="프로필 이미지"
-                  className="w-10 h-10 rounded-full border border-brand-500 object-cover"
-                />
-              </button>
-              {isOpen && (
-                <div className="absolute right-0 z-50 w-[118px] h-36 bg-white border border-brand-500/25 shadow-lg shadow-brand-500/25 rounded-lg rounded-tr-none flex flex-col gap-3 py-4 text-center text-lg font-sans font-medium text-info-dark">
-                  <Link
-                    to="/profile"
-                    className="hover:text-brand-500"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    Profile
-                  </Link>
-                  {/* 여기 수정됨: History 버튼을 Link로 변경 */}
-                  <Link
-                    to="/history"
-                    className="hover:text-brand-500"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    History
-                  </Link>
-                  <button className="hover:text-brand-500">Logout</button>
-                </div>
-              )}
+            <div className="flex items-center gap-4">
+              {/* 하트 버튼 */}
+              <Link to="/bookmark" className="cursor-pointer hover:opacity-70 pt-2">
+                <img src={HeartIcon} alt="Heart" className="w-7 h-7" />
+              </Link>
+
+              <div ref={dropdownRef} className="relative">
+                <button
+                  type="button"
+                  onClick={() => setIsOpen((prev) => !prev)}
+                  className="cursor-pointer focus:outline-none pt-2"
+                >
+                  <img
+                    src={user.profileImg}
+                    alt="프로필 이미지"
+                    className="w-10 h-10 rounded-full border border-brand-500 object-cover"
+                  />
+                </button>
+                {isOpen && (
+                  <div className="absolute right-0 z-50 w-[118px] h-36 bg-white border border-brand-500/25 shadow-lg shadow-brand-500/25 rounded-lg rounded-tr-none flex flex-col gap-3 py-4 text-center text-lg font-sans font-medium text-info-dark">
+                    <Link
+                      to="/profile"
+                      className="hover:text-brand-500"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      Profile
+                    </Link>
+
+                    <Link
+                      to="/history"
+                      className="hover:text-brand-500"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      History
+                    </Link>
+                    <button className="hover:text-brand-500">Logout</button>
+                  </div>
+                )}
+              </div>
             </div>
           )}
         </div>

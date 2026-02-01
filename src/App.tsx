@@ -1,4 +1,3 @@
-// src/App.tsx
 import { createBrowserRouter, RouterProvider, type RouteObject } from 'react-router-dom'
 import Layout from './components/Layout/Layout'
 import NotFoundPage from './pages/NotFoundPage'
@@ -8,8 +7,9 @@ import AboutPage from './pages/AboutPage'
 import BookmarkPage from './pages/BookmarkPage'
 import ProfilePage from './pages/ProfilePage'
 import HistoryPage from './pages/HistoryPage'
-import { BookmarkProvider } from './context/BookmarkContext' // [추가]
+import CommunityPage from './pages/CommunityPage'
 import APIDetailPage from './pages/APIDetailPage'
+import { BookmarkProvider } from './context/BookmarkContext'
 
 const publicRoutes: RouteObject[] = [
   {
@@ -19,6 +19,7 @@ const publicRoutes: RouteObject[] = [
     children: [
       { index: true, element: <HomePage /> },
       { path: 'bookmark', element: <BookmarkPage /> },
+      { path: 'community', element: <CommunityPage /> },
       { path: 'explore', element: <ExplorePage /> },
       { path: 'about', element: <AboutPage /> },
       { path: 'profile', element: <ProfilePage /> },
