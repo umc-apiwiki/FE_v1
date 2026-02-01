@@ -49,8 +49,8 @@ const config: Config = {
         // 정보 상태 컬러 (파란색 계열 - brand와 동일)
         info: {
           DEFAULT: '#2196F3', // 기본 정보 컬러 (brand-500과 동일)
-          dark: '#1E88E5', // 진한 정보 컬러
-          darker: '#0D47A1', // 가장 진한 정보 컬러
+          dark: '#0D3C61', // 진한 정보 컬러
+          darker: '#071E31', // 가장 진한 정보 컬러
         },
       },
 

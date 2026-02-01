@@ -20,7 +20,7 @@ export default function PriceFilter({ value, onChange }: PriceFilterProps) {
         return (
           <label
             key={price}
-            className="flex items-center gap-3 cursor-pointer font-sans font-normal text-lg text-[#071E31]"
+            className="flex items-center gap-3 cursor-pointer font-sans font-normal text-lg text-info-darker"
           >
             <input
               type="checkbox"

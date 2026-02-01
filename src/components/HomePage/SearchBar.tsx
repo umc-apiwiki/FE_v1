@@ -62,7 +62,7 @@ export default function SearchBar({ isOpen, setIsOpen, isMain = false }: SearchB
         <div className="h-14 w-full flex items-center px-[30px] relative shrink-0">
           <input
             type="text"
-            className="w-full h-full text-lg text-[#071E31] font-medium font-sans placeholder:text-slate-400 outline-none bg-transparent ml-1"
+            className="w-full h-full text-lg text-info-darker font-medium font-sans placeholder:text-slate-400 outline-none bg-transparent ml-1"
             placeholder="궁금한 API를 검색해보세요"
             onFocus={() => setOpen(true)}
           />
@@ -90,7 +90,7 @@ export default function SearchBar({ isOpen, setIsOpen, isMain = false }: SearchB
                 <img src={SearchHistory} alt="최근 기록" />
               </div>
 
-              <span className="text-[#071E31] text-lg font-medium font-sans flex-1">{text}</span>
+              <span className="text-info-darker text-lg font-medium font-sans flex-1">{text}</span>
 
               <div className="w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                 <button type="button">

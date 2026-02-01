@@ -10,6 +10,7 @@ import ReviewSection from '@/components/APIDetail/ReviewSection'
 import CodeExampleSection from '@/components/APIDetail/CodeExampleSection'
 import { useBookmark } from '@/context/BookmarkContext'
 import { apiData } from '@/data/mockData'
+import APICardSmall from '@/components/APICardSmall'
 
 const MENUS = [
   { key: 'A', label: '개요' },
@@ -31,15 +32,15 @@ export default function APIDetailPage() {
   return (
     <div className="mx-auto px-16 mt-32 2xl:mx-44">
       {/* 메인 영역 */}
-      <div className="">
+      <div className="p-5">
         {/* api 상세정보 + 이미지 */}
         <div className="mb-28">
           {/* 아이콘과 텍스트가 가로로 배치되는 영역 */}
           <div className="flex justify-between mx-auto items-center">
             <div className="flex flex-col justify-center gap-2 mt-3 w-full md:w-auto">
-              <h1 className="font-semibold text-[50px] text-[#071E31] mb-10">{api?.title}</h1>
-              <p className="font-medium text-2xl text-[#0D3C61]">Star {api?.star}</p>
-              <p className="font-medium text-2xl text-[#0D3C61] mb-4">Used by {api?.usedBy}</p>
+              <h1 className="font-semibold text-[50px] text-info-darker mb-10">{api?.title}</h1>
+              <p className="font-medium text-2xl text-info-dark">Star {api?.star}</p>
+              <p className="font-medium text-2xl text-info-dark mb-4">Used by {api?.usedBy}</p>
               <p className="font-normal text-xl text-[#B0B0B0]">{api?.price}</p>
             </div>
             {/* api 이미지 */}
@@ -71,18 +72,18 @@ export default function APIDetailPage() {
                   onClick={() => setActiveMenu(key)}
                   className={`
                                 relative pb-3 text-2xl transition-colors
-                                ${activeMenu === key ? 'text-[#0D3C61]' : 'text-[#B0B0B0]'}
+                                ${activeMenu === key ? 'text-info-dark' : 'text-[#B0B0B0]'}
                                 `}
                 >
                   {label}
                   {activeMenu === key && (
-                    <div className="absolute left-1/2 -translate-x-1/2 bottom-0 w-full h-[1px] bg-[#0D3C61]/80" />
+                    <div className="absolute left-1/2 -translate-x-1/2 bottom-0 w-full h-[1px] bg-info-dark/80" />
                   )}
                 </button>
               ))}
             </div>
             {/* 내용물 */}
-            <div className="m-2">
+            <div>
               {activeMenu === 'A' && <OverviewSection />}
 
               {activeMenu === 'B' && <PricingSection />}
@@ -92,8 +93,23 @@ export default function APIDetailPage() {
               {activeMenu === 'D' && <CodeExampleSection />}
             </div>
           </div>
+          {/* API 위키 */}
+          <div>
+            <span className="font-sans font-medium text-2xl text-info-dark">API 위키</span>
+            <div className="w-full max-w-[1112px] h-[580px] bg-white border border-brand-500 rounded-xl mt-3 mb-10" />
+          </div>
           {/* 비슷한 api */}
-          <div></div>
+          <div>
+            <div className="mb-6">
+              <span className="text-2xl font-medium text-info-dark">비슷한 API</span>
+            </div>
+
+            <div className="flex gap-10 overflow-hidden pb-20">
+              {apiData.map((data) => (
+                <APICardSmall key={data.id} {...data} />
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </div>
