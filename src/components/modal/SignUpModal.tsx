@@ -1,25 +1,57 @@
-import { useState } from 'react'
+import { useEffect } from 'react'
 import Modal from '../modal/Modal'
 import ModalInput from './components/ModalInput'
 import ModalButton from './components/ModalButton'
 import BrandLogo from '@/assets/icons/common/ic_brand_logo.svg'
 import Cancel from '@/assets/icons/common/ic_cancel.svg'
+import { validateSignup } from '@/utils/validateSignUp'
+import useForm from '@/hooks/useForm'
+import { useAuth } from '@/hooks'
 
 type SignUpModalProps = {
   onClose: () => void
   onSwitchToSignIn: () => void
 }
+const initialValue = {
+  nickname: '',
+  email: '',
+  password: '',
+  passwordConfirm: '',
+}
 
 export default function SignUpModal({ onClose, onSwitchToSignIn }: SignUpModalProps) {
-  const [nickname, setNickname] = useState('')
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [passwordConfirm, setPasswordConfirm] = useState('')
+  const { signUp, isLoading, error } = useAuth()
+  const { values, errors, touched, getInputProps } = useForm({
+    initialValue,
+    validate: validateSignup,
+  })
+
+  const isFormValid = Object.keys(errors).length === 0
+
+  const handleSubmit = async () => {
+    if (Object.keys(errors).length > 0) return
+
+    const result = await signUp({
+      nickname: values.nickname,
+      email: values.email,
+      password: values.password,
+    })
+
+    if (result.success) {
+      onClose()
+    }
+  }
+  useEffect(() => {
+    if (error) {
+      alert(error.message)
+    }
+  }, [error])
 
   return (
     <Modal onClose={onClose}>
       {/* 닫기 버튼 */}
       <img src={Cancel} alt="닫기" onClick={onClose} className="absolute right-2 z-50 m-4" />
+
       {/* 모달 안 */}
       <div className="m-8 flex flex-col items-center">
         {/* 아이콘 */}
@@ -33,35 +65,59 @@ export default function SignUpModal({ onClose, onSwitchToSignIn }: SignUpModalPr
         {/* 입력 영역 */}
         <div className="flex flex-col gap-5 mb-3">
           {/* 닉네임 입력 */}
-          <ModalInput
-            type="text"
-            value={nickname}
-            placeholder="닉네임"
-            onChange={(e) => setNickname(e.target.value)}
-          />
-          {/* 이메일 입력 */}
-          <ModalInput
-            type="email"
-            value={email}
-            placeholder="이메일"
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          {/* 비밀번호 입력 */}
-          <ModalInput
-            type="Password"
-            value={password}
-            placeholder="비밀번호"
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          {/* 비밀번호 확인 입력 */}
-          <ModalInput
-            type="Password"
-            value={passwordConfirm}
-            placeholder="비밀번호 확인"
-            onChange={(e) => setPasswordConfirm(e.target.value)}
-          />
+          <div>
+            <ModalInput
+              placeholder="닉네임"
+              isError={touched.nickname && !!errors.nickname}
+              {...getInputProps('nickname')}
+            />
+            {touched.nickname && errors.nickname && (
+              <p className="absolute text-xs text-error-dark pl-5">{errors.nickname}</p>
+            )}
+          </div>
 
-          <ModalButton>회원가입</ModalButton>
+          {/* 이메일 입력 */}
+          <div>
+            <ModalInput
+              type="email"
+              placeholder="이메일"
+              isError={touched.email && !!errors.email}
+              {...getInputProps('email')}
+            />
+            {touched.email && errors.email && (
+              <p className="absolute text-xs text-error-dark pl-5">{errors.email}</p>
+            )}
+          </div>
+
+          {/* 비밀번호 입력 */}
+          <div>
+            <ModalInput
+              type="password"
+              placeholder="비밀번호"
+              isError={touched.password && !!errors.password}
+              {...getInputProps('password')}
+            />
+            {touched.password && errors.password && (
+              <p className="absolute text-xs text-error-dark pl-5">{errors.password}</p>
+            )}
+          </div>
+
+          {/* 비밀번호 확인 입력 */}
+          <div>
+            <ModalInput
+              type="password"
+              placeholder="비밀번호 확인"
+              {...getInputProps('passwordConfirm')}
+              isError={touched.passwordConfirm && !!errors.passwordConfirm}
+            />
+            {touched.passwordConfirm && errors.passwordConfirm && (
+              <p className="absolute text-xs text-error-dark pl-5">{errors.passwordConfirm}</p>
+            )}
+          </div>
+
+          <ModalButton onClick={handleSubmit} disabled={!isFormValid || isLoading}>
+            회원가입
+          </ModalButton>
         </div>
 
         {/* 하단 링크 */}
