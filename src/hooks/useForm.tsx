@@ -1,27 +1,26 @@
-import { useEffect, useState, type ChangeEvent } from 'react'
+import { useState, useMemo, type ChangeEvent } from 'react'
 
 interface UseFormProps<T> {
   initialValue: T
   validate: (values: T) => Partial<Record<keyof T, string>>
 }
 
-function useForm<T extends Record<string, any>>({ initialValue, validate }: UseFormProps<T>) {
+function useForm<T extends Record<string, unknown>>({ initialValue, validate }: UseFormProps<T>) {
   const [values, setValues] = useState<T>(initialValue)
   const [touched, setTouched] = useState<Partial<Record<keyof T, boolean>>>({})
-  const [errors, setErrors] = useState<Partial<Record<keyof T, string>>>({})
 
   const handleChange = (name: keyof T, text: string) => {
-    setValues({
-      ...values,
+    setValues((prev) => ({
+      ...prev,
       [name]: text,
-    })
+    }))
   }
 
   const handleBlur = (name: keyof T) => {
-    setTouched({
-      ...touched,
+    setTouched((prev) => ({
+      ...prev,
       [name]: true,
-    })
+    }))
   }
 
   const getInputProps = (name: keyof T) => {
@@ -33,10 +32,8 @@ function useForm<T extends Record<string, any>>({ initialValue, validate }: UseF
     return { value, onChange, onBlur }
   }
 
-  useEffect(() => {
-    const newErrors = validate(values)
-    setErrors(newErrors)
-  }, [values, validate])
+  // errors를 useMemo로 계산 → Effect 안 setState 사용 X
+  const errors = useMemo(() => validate(values), [values, validate])
 
   return { values, errors, touched, getInputProps }
 }
