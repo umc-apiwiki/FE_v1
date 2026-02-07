@@ -6,6 +6,7 @@ import FilterModal from '@/components/modal/FilterModal'
 import type { FilterValues } from '@/components/modal/FilterModal'
 import { useApiList, useFavoriteToggle } from '@/hooks'
 import type { ApiListParams, SortOption, ApiPreview } from '@/types/api'
+import { saveBookmarkDate, removeBookmarkDate } from '@/utils/bookmarkDate'
 import Filter from '@/assets/icons/action/ic_filter.svg'
 import ArrowDown from '@/assets/icons/action/ic_arrow_down.svg'
 
@@ -151,15 +152,24 @@ const ExplorePage = () => {
     setIsSortOpen(false)
   }, [])
 
-  // 즐겨찾기 토글 (낙관적 업데이트)
+  // 즐겨찾기 토글 (낙관적 업데이트 + 날짜 저장)
   const handleToggleFavorite = useCallback(
     (apiId: number) => {
+      // 낙관적 UI 업데이트
       setItems((prev) =>
         prev.map((item) =>
           item.apiId === apiId ? { ...item, isFavorited: !item.isFavorited } : item
         )
       )
-      toggle(apiId, () => {})
+
+      // 서버 요청 및 날짜 저장/삭제
+      toggle(apiId, (result) => {
+        if (result.isFavorited) {
+          saveBookmarkDate(apiId)
+        } else {
+          removeBookmarkDate(apiId)
+        }
+      })
     },
     [toggle]
   )

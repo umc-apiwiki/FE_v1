@@ -1,39 +1,50 @@
 import APICard from '@/components/APICard'
-import { apiData } from '@/data/mockData'
-import { useBookmark } from '@/context/BookmarkContext'
 import BookmarkCarousel from '@/components/BookmarkCarousel'
-import type { ApiPreview } from '@/types/api'
+import { useBookmark } from '@/hooks/useBookmark'
 
-const toPreview = (item: (typeof apiData)[number]): ApiPreview => ({
-  apiId: item.id,
-  name: item.title,
-  summary: item.description,
-  avgRating: parseFloat(item.star) || 0,
-  reviewCount: 0,
-  viewCounts: 0,
-  pricingType: item.price === 'Free' ? 'FREE' : item.price === 'Mixed' ? 'MIXED' : 'PAID',
-  authType: 'API_KEY',
-  providerCompany: 'ETC',
-  isFavorited: true,
-})
-
+/**
+ * BookmarkPage
+ * 사용자가 북마크(좋아요)한 API 목록을 날짜별로 표시합니다.
+ */
 const BookmarkPage = () => {
-  const { bookmarkedIds } = useBookmark()
+  const { groupedByDate, isLoading, error, toggleBookmark, isToggling } = useBookmark()
 
-  const myBookmarkedItems = apiData.filter((item) => bookmarkedIds.includes(item.id))
+  // 로딩 상태
+  if (isLoading) {
+    return (
+      <div className="w-full min-h-screen pb-40 overflow-x-hidden mt-10">
+        <div className="flex flex-col w-full max-w-[1440px] mx-auto">
+          <div className="w-full flex justify-center mb-16">
+            <div className="text-slate-900 text-3xl font-medium font-['Pretendard_Variable'] tracking-widest">
+              Archive
+            </div>
+          </div>
+          <div className="flex items-center justify-center mt-20">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-slate-900"></div>
+          </div>
+        </div>
+      </div>
+    )
+  }
 
-  const groupedData = myBookmarkedItems.reduce(
-    (acc, item) => {
-      if (!acc[item.date]) {
-        acc[item.date] = []
-      }
-      acc[item.date].push(item)
-      return acc
-    },
-    {} as Record<string, typeof apiData>
-  )
-
-  const sortedDates = Object.keys(groupedData)
+  // 에러 상태
+  if (error) {
+    return (
+      <div className="w-full min-h-screen pb-40 overflow-x-hidden mt-10">
+        <div className="flex flex-col w-full max-w-[1440px] mx-auto">
+          <div className="w-full flex justify-center mb-16">
+            <div className="text-slate-900 text-3xl font-medium font-['Pretendard_Variable'] tracking-widest">
+              Archive
+            </div>
+          </div>
+          <div className="flex flex-col items-center justify-center mt-20 text-red-500">
+            <p className="text-xl">오류가 발생했습니다</p>
+            <p className="text-sm mt-2">{error}</p>
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="w-full min-h-screen pb-40 overflow-x-hidden mt-10">
@@ -44,17 +55,25 @@ const BookmarkPage = () => {
           </div>
         </div>
 
-        {sortedDates.length === 0 ? (
+        {groupedByDate.length === 0 ? (
           <div className="flex flex-col items-center justify-center mt-20 text-gray-400">
             <p className="text-xl">아직 찜한 API가 없습니다.</p>
             <p className="text-sm mt-2">Explore 페이지에서 하트를 눌러보세요!</p>
           </div>
         ) : (
           <div className="flex flex-col gap-10 px-4 md:px-10 lg:px-20">
-            {sortedDates.map((date) => (
-              <BookmarkCarousel key={date} date={date}>
-                {groupedData[date].map((item) => (
-                  <APICard key={item.id} {...toPreview(item)} />
+            {groupedByDate.map((group) => (
+              <BookmarkCarousel key={group.date} date={group.date}>
+                {group.items.map((api) => (
+                  <APICard
+                    key={api.apiId}
+                    {...api}
+                    onToggleFavorite={async () => {
+                      if (!isToggling) {
+                        await toggleBookmark(api.apiId)
+                      }
+                    }}
+                  />
                 ))}
               </BookmarkCarousel>
             ))}

@@ -9,6 +9,7 @@ import PricingSection from '@/components/APIDetail/PricingSection'
 import ReviewSection from '@/components/APIDetail/ReviewSection'
 import CodeExampleSection from '@/components/APIDetail/CodeExampleSection'
 import { useApiDetail, useFavoriteToggle } from '@/hooks'
+import { saveBookmarkDate, removeBookmarkDate } from '@/utils/bookmarkDate'
 
 const MENUS = [
   { key: 'A', label: '개요' },
@@ -41,9 +42,17 @@ export default function APIDetailPage() {
   }, [apiDetail])
 
   const handleToggleFavorite = useCallback(() => {
-    setIsFavorited((prev) => !prev)
-    toggle(apiId)
-  }, [apiId, toggle])
+    const willBeFavorited = !isFavorited
+    setIsFavorited(willBeFavorited)
+
+    toggle(apiId, (result) => {
+      if (result.isFavorited) {
+        saveBookmarkDate(apiId)
+      } else {
+        removeBookmarkDate(apiId)
+      }
+    })
+  }, [apiId, isFavorited, toggle])
 
   if (isLoading) {
     return (
