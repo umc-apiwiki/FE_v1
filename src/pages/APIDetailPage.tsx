@@ -1,5 +1,6 @@
 import { useParams } from 'react-router-dom'
 import { useState, useEffect, useCallback } from 'react'
+import MDEditor from '@uiw/react-md-editor' // 마크다운 에디터 추가
 
 import HeartLine from '@/assets/icons/common/ic_heart_line.svg'
 import HeartFill from '@/assets/icons/common/ic_heart_fill.svg'
@@ -8,7 +9,7 @@ import OverviewSection from '@/components/APIDetail/OverviewSection'
 import PricingSection from '@/components/APIDetail/PricingSection'
 import ReviewSection from '@/components/APIDetail/ReviewSection'
 import CodeExampleSection from '@/components/APIDetail/CodeExampleSection'
-import { useApiDetail, useFavoriteToggle } from '@/hooks'
+import { useApiDetail, useFavoriteToggle, useWikiContent, useWikiUpdate } from '@/hooks'
 import { saveBookmarkDate, removeBookmarkDate } from '@/utils/bookmarkDate'
 
 const MENUS = [
@@ -27,19 +28,34 @@ export default function APIDetailPage() {
   const { data: apiDetail, isLoading, error, fetchApiDetail } = useApiDetail()
   const { toggle } = useFavoriteToggle()
 
+  // ===== Wiki Hooks & State =====
+  const { data: wikiData, fetchWiki } = useWikiContent()
+  const { saveWiki } = useWikiUpdate()
+
+  // 에디터 상태 관리
+  const [wikiText, setWikiText] = useState('')
+  const [isEditing, setIsEditing] = useState(false) // 수정 모드 여부
+
   useEffect(() => {
     if (apiId) {
       fetchApiDetail(apiId)
+      fetchWiki(apiId)
     }
-  }, [apiId, fetchApiDetail])
+  }, [apiId, fetchApiDetail, fetchWiki])
 
-  // apiDetail 로드 시 즐겨찾기 상태 동기화
   useEffect(() => {
     if (apiDetail) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setIsFavorited(apiDetail.isFavorited)
     }
   }, [apiDetail])
+
+  useEffect(() => {
+    if (wikiData) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setWikiText(wikiData.content)
+    }
+  }, [wikiData])
 
   const handleToggleFavorite = useCallback(() => {
     const willBeFavorited = !isFavorited
@@ -53,6 +69,33 @@ export default function APIDetailPage() {
       }
     })
   }, [apiId, isFavorited, toggle])
+
+  // 위키 저장 핸들러
+  const handleSaveWiki = async () => {
+    if (!wikiText.trim()) {
+      alert('내용을 입력해주세요.')
+      return
+    }
+
+    try {
+      const currentVersion = wikiData?.version ?? 0
+      await saveWiki(apiId, { content: wikiText, version: currentVersion })
+      alert('위키가 저장되었습니다!')
+      await fetchWiki(apiId)
+      setIsEditing(false) // 저장 성공 시 뷰어 모드로 전환
+    } catch (e) {
+      console.error(e)
+      alert('위키 저장에 실패했습니다.')
+    }
+  }
+
+  // 수정 취소 핸들러
+  const handleCancelEdit = () => {
+    if (window.confirm('수정을 취소하시겠습니까? 작성 중인 내용은 사라집니다.')) {
+      setWikiText(wikiData?.content || '') // 원래 내용으로 복구
+      setIsEditing(false) // 뷰어 모드로 전환
+    }
+  }
 
   if (isLoading) {
     return (
@@ -167,10 +210,65 @@ export default function APIDetailPage() {
             </div>
           </div>
 
-          {/* API 위키 */}
-          <div>
-            <span className="font-sans font-medium text-2xl text-info-dark">API 위키</span>
-            <div className="w-full max-w-[1112px] h-[580px] bg-white border border-brand-500 rounded-xl mt-3 mb-10" />
+          {/* API 위키 (MD Editor 적용) */}
+          <div className="mt-10">
+            <div className="flex justify-between items-end mb-3">
+              <span className="font-sans font-medium text-2xl text-info-dark">API 위키</span>
+              <span className="text-gray-500 text-sm font-sans">
+                마지막 업데이트 버전: <span className="font-bold">{wikiData?.version ?? 0}</span>
+              </span>
+            </div>
+
+            <div className="w-full max-w-[1112px] border border-brand-500 rounded-xl bg-white overflow-hidden p-4">
+              {isEditing ? (
+                /* 수정 모드: 마크다운 에디터 */
+                <div data-color-mode="light">
+                  <MDEditor
+                    value={wikiText}
+                    onChange={(val) => setWikiText(val || '')}
+                    height={500}
+                    preview="edit"
+                  />
+                  <div className="flex justify-end gap-3 mt-4">
+                    <button
+                      onClick={handleCancelEdit}
+                      className="px-6 py-2 bg-gray-200 text-gray-700 font-bold rounded-lg hover:bg-gray-300 transition-colors"
+                    >
+                      취소
+                    </button>
+                    <button
+                      onClick={handleSaveWiki}
+                      className="px-6 py-2 bg-brand-500 text-white font-bold rounded-lg hover:bg-brand-600 transition-colors shadow-md"
+                    >
+                      저장하기
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                /* 조회 모드: 마크다운 뷰어 */
+                <div data-color-mode="light">
+                  {wikiData?.content ? (
+                    <MDEditor.Markdown
+                      source={wikiData.content}
+                      style={{ backgroundColor: 'white', color: '#333', minHeight: '300px' }}
+                    />
+                  ) : (
+                    <div className="flex flex-col items-center justify-center h-[300px] text-gray-400">
+                      <p>아직 등록된 위키 내용이 없습니다.</p>
+                      <p>첫 번째 기여자가 되어보세요!</p>
+                    </div>
+                  )}
+                  <div className="flex justify-end mt-6 pt-4 border-t border-gray-100">
+                    <button
+                      onClick={() => setIsEditing(true)}
+                      className="px-6 py-2 border-2 border-brand-500 text-brand-500 font-bold rounded-lg hover:bg-brand-50 transition-colors"
+                    >
+                      위키 수정하기
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>

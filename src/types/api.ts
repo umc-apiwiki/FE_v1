@@ -177,3 +177,23 @@ export type FavoriteToggle = {
   apiId: number
   isFavorited: boolean
 }
+
+// ===== Wiki Types =====
+
+/**
+ * 위키 내용 조회 응답 데이터
+ * Schema: Content
+ */
+export interface WikiContent {
+  content: string
+  version: number
+}
+
+/**
+ * 위키 수정 요청 데이터
+ * Schema: EditContent
+ */
+export interface WikiUpdateRequest {
+  content: string
+  version: number
+}
