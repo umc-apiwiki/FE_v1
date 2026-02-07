@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import SearchBar from '@/components/HomePage/SearchBar'
 import IntroSection from '@/components/HomePage/IntroSection'
 import SearchTagSection from '@/components/HomePage/SearchTagSection'
@@ -255,8 +256,13 @@ const ScrollableSection = ({
 // -------------------- 3. HomePage Component --------------------
 
 const HomePage = () => {
+  const navigate = useNavigate()
   const [isSearchOpen, setIsSearchOpen] = useState(false)
   const [showMore, setShowMore] = useState(false)
+
+  const handleSearch = (query: string) => {
+    navigate(`/explore?q=${encodeURIComponent(query)}`)
+  }
 
   const toggleView = () => {
     setShowMore((prev) => !prev)
@@ -273,7 +279,12 @@ const HomePage = () => {
           {!isSearchOpen && <IntroSection />}
 
           {/* 검색창*/}
-          <SearchBar isOpen={isSearchOpen} setIsOpen={setIsSearchOpen} isMain={true} />
+          <SearchBar
+            isOpen={isSearchOpen}
+            setIsOpen={setIsSearchOpen}
+            isMain={true}
+            onSearch={handleSearch}
+          />
 
           {/* 태그 컴포넌트*/}
           {!isSearchOpen && <SearchTagSection />}

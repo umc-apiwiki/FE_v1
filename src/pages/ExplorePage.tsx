@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import APICard from '@/components/APICard'
 import SearchBar from '@/components/HomePage/SearchBar'
 import FilterModal from '@/components/modal/FilterModal'
@@ -15,6 +16,7 @@ const SORT_OPTIONS: { label: string; value: SortOption }[] = [
 ]
 
 const ExplorePage = () => {
+  const [searchParams, setSearchParams] = useSearchParams()
   const [isSearchOpen, setIsSearchOpen] = useState(false)
   const [isFilterOpen, setIsFilterOpen] = useState(false)
   const [isSortOpen, setIsSortOpen] = useState(false)
@@ -27,6 +29,7 @@ const ExplorePage = () => {
     size: 16,
     sort: 'LATEST',
     direction: 'DESC',
+    q: searchParams.get('q') || undefined,
   })
 
   // 필터 상태 (FilterModal 초기값 전달용)
@@ -44,6 +47,8 @@ const ExplorePage = () => {
   const [totalElements, setTotalElements] = useState<number | null>(null)
   // 리셋 구분 (검색/필터/정렬 변경 시 true → 교체, 스크롤 시 false → 추가)
   const isResetRef = useRef(true)
+  // 이전 API 호출 params 저장 (중복 호출 방지용)
+  const prevParamsRef = useRef<string>('')
 
   // pageData 수신 시 items 업데이트 (무한 스크롤 누적)
   useEffect(() => {
@@ -63,8 +68,16 @@ const ExplorePage = () => {
     isResetRef.current = false
   }, [pageData])
 
-  // params 변경 시 재조회
+  // params 변경 시 재조회 (중복 호출 방지)
   useEffect(() => {
+    const currentParamsKey = JSON.stringify(params)
+
+    // 이전 호출과 동일한 params인 경우 스킵
+    if (prevParamsRef.current === currentParamsKey) {
+      return
+    }
+
+    prevParamsRef.current = currentParamsKey
     fetchApiList(params)
   }, [params, fetchApiList])
 
@@ -98,13 +111,19 @@ const ExplorePage = () => {
   }, [])
 
   // 검색
-  const handleSearch = useCallback((q: string) => {
-    isResetRef.current = true
-    setItems([])
-    setHasMore(true)
-    setTotalElements(null)
-    setParams((prev) => ({ ...prev, q, page: 0 }))
-  }, [])
+  const handleSearch = useCallback(
+    (q: string) => {
+      isResetRef.current = true
+      setItems([])
+      setHasMore(true)
+      setTotalElements(null)
+      setParams((prev) => ({ ...prev, q, page: 0 }))
+
+      // URL 쿼리 파라미터 업데이트
+      setSearchParams({ q })
+    },
+    [setSearchParams]
+  )
 
   // 필터 적용
   const handleFilterApply = useCallback((filters: FilterValues) => {
