@@ -1,12 +1,13 @@
 import APICard from '@/components/APICard'
+import BookmarkCarousel from '@/components/BookmarkCarousel'
 import { useBookmark } from '@/hooks/useBookmark'
 
 /**
  * BookmarkPage
- * 사용자가 북마크(좋아요)한 API 목록을 표시합니다.
+ * 사용자가 북마크(좋아요)한 API 목록을 날짜별로 표시합니다.
  */
 const BookmarkPage = () => {
-  const { bookmarkedApis, isLoading, error, toggleBookmark, isToggling } = useBookmark()
+  const { groupedByDate, isLoading, error, toggleBookmark, isToggling } = useBookmark()
 
   // 로딩 상태
   if (isLoading) {
@@ -38,7 +39,7 @@ const BookmarkPage = () => {
           </div>
           <div className="flex flex-col items-center justify-center mt-20 text-red-500">
             <p className="text-xl">오류가 발생했습니다</p>
-            <p className="text-sm mt-2">{error.message}</p>
+            <p className="text-sm mt-2">{error}</p>
           </div>
         </div>
       </div>
@@ -54,26 +55,28 @@ const BookmarkPage = () => {
           </div>
         </div>
 
-        {bookmarkedApis.length === 0 ? (
+        {groupedByDate.length === 0 ? (
           <div className="flex flex-col items-center justify-center mt-20 text-gray-400">
             <p className="text-xl">아직 찜한 API가 없습니다.</p>
             <p className="text-sm mt-2">Explore 페이지에서 하트를 눌러보세요!</p>
           </div>
         ) : (
-          <div className="px-4 md:px-10 lg:px-20">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {bookmarkedApis.map((api) => (
-                <APICard
-                  key={api.apiId}
-                  {...api}
-                  onToggleFavorite={async () => {
-                    if (!isToggling) {
-                      await toggleBookmark(api.apiId)
-                    }
-                  }}
-                />
-              ))}
-            </div>
+          <div className="flex flex-col gap-10 px-4 md:px-10 lg:px-20">
+            {groupedByDate.map((group) => (
+              <BookmarkCarousel key={group.date} date={group.date}>
+                {group.items.map((api) => (
+                  <APICard
+                    key={api.apiId}
+                    {...api}
+                    onToggleFavorite={async () => {
+                      if (!isToggling) {
+                        await toggleBookmark(api.apiId)
+                      }
+                    }}
+                  />
+                ))}
+              </BookmarkCarousel>
+            ))}
           </div>
         )}
       </div>
