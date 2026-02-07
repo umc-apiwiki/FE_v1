@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import HeartLine from '@/assets/icons/common/ic_heart_line.svg'
 import HeartFill from '@/assets/icons/common/ic_heart_fill.svg'
 import { useNavigate } from 'react-router-dom'
@@ -13,6 +14,8 @@ const PRICING_LABEL: Record<string, string> = {
   MIXED: 'Free & Paid',
 }
 
+const LOGO_BASE = 'https://api-wiki-api-logos.s3.ap-northeast-2.amazonaws.com/api-logos'
+
 export default function APICard({
   apiId,
   name,
@@ -23,9 +26,13 @@ export default function APICard({
   pricingType,
   providerCompany,
   isFavorited,
+  logo,
   onToggleFavorite,
 }: APICardProps) {
   const navigate = useNavigate()
+  const [imgError, setImgError] = useState(false)
+  // logo prop이 있으면 사용, 없으면 기본 경로 사용
+  const logoUrl = logo ?? `${LOGO_BASE}/api_${apiId}.png`
 
   return (
     <div
@@ -50,11 +57,20 @@ export default function APICard({
       {/* 카드 내부 콘텐츠 */}
       <div className="relative p-8">
         <div className="flex items-start gap-4">
-          {/* 아이콘 placeholder */}
+          {/* 아이콘 */}
           <div className="w-[116px] h-[108px] rounded-[10px] overflow-hidden flex-shrink-0 bg-white shadow-[1px_4px_6px_0px_var(--tw-shadow-color)] shadow-brand-500/25 border border-brand-500/25 flex items-center justify-center">
-            <span className="text-brand-500 font-semibold text-3xl">
-              {name.charAt(0).toUpperCase()}
-            </span>
+            {!imgError ? (
+              <img
+                src={logoUrl}
+                alt={name}
+                className="w-full h-full object-contain p-2"
+                onError={() => setImgError(true)}
+              />
+            ) : (
+              <span className="text-brand-500 font-semibold text-3xl">
+                {name.charAt(0).toUpperCase()}
+              </span>
+            )}
           </div>
 
           {/* 텍스트 정보 */}

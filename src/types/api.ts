@@ -102,9 +102,10 @@ export type ApiPreview = {
   reviewCount: number
   viewCounts: number
   pricingType: PricingType
-  authType: AuthType
+  authType: AuthType | null
   providerCompany: ProviderCompany
   isFavorited: boolean
+  logo?: string
 }
 
 /** 카테고리 항목 */

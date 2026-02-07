@@ -107,7 +107,7 @@ describe('Auth API - 실제 서버 연동', () => {
     console.log('✅ 로그인 실패 케이스 정상 처리됨')
   }, 10000)
 
-  /**
+  /** 
    * 로그아웃 테스트
    */
   it('로그아웃 - 실제 서버 응답 확인', async () => {
@@ -147,7 +147,7 @@ describe('Auth API - 실제 서버 연동', () => {
       password: TEST_PASSWORD,
     })
 
-    const endTime = Date.now()
+    const endTime = Date.now() 
     const responseTime = endTime - startTime
 
     console.log(`⏱️ 로그인 응답 시간: ${responseTime}ms`)
