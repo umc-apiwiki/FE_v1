@@ -1,17 +1,18 @@
 # Explore 페이지 API 연동
 
 ## 📝 설명
+
 API 탐색(Explore) 페이지의 백엔드 API 연동을 위한 타입, 서비스 함수, 커스텀 훅을 구현합니다.
 
 ---
 
 ## 🎯 API 엔드포인트 (swagger.json 기준)
 
-| Method | Path | 설명 |
-|--------|------|------|
-| GET | `/api/v1/apis` | API 목록 조회 (필터 + 정렬 + 페이징) |
-| GET | `/api/v1/apis/{apiId}` | API 상세 조회 |
-| POST | `/api/v1/apis/{apiId}/favorite` | 북마크 토글 |
+| Method | Path                            | 설명                                 |
+| ------ | ------------------------------- | ------------------------------------ |
+| GET    | `/api/v1/apis`                  | API 목록 조회 (필터 + 정렬 + 페이징) |
+| GET    | `/api/v1/apis/{apiId}`          | API 상세 조회                        |
+| POST   | `/api/v1/apis/{apiId}/favorite` | 북마크 토글                          |
 
 ---
 
@@ -31,28 +32,63 @@ type PricingType = 'FREE' | 'PAID' | 'MIXED'
 type AuthType = 'OAUTH2' | 'REFRESH_TOKEN' | 'ACCESS_TOKEN' | 'API_KEY' | 'JWT' | 'COOKIE' | 'BASIC'
 
 type ProviderCompany =
-  | 'KAKAO' | 'NAVER' | 'GOOGLE' | 'MICROSOFT' | 'AMAZON'
-  | 'META' | 'IBM' | 'APPLE' | 'SPOTIFY' | 'ATLASSIAN'
-  | 'OPEN_WEATHER' | 'TELEGRAM' | 'MIXPANEL' | 'STRIPE' | 'LINKEDIN'
-  | 'DISCORD' | 'ASANA' | 'WOLFRAM' | 'NOTION' | 'HUBSPOT'
-  | 'PEXELS' | 'SLACK' | 'OPEN_STREET_MAP' | 'PAYPAL' | 'REDDIT'
-  | 'DROPBOX' | 'DEEPL' | 'TWILIO' | 'NEWS_API' | 'OPEN_AI'
-  | 'MAILCHIMP' | 'SHOPIFY' | 'SQUARE' | 'AMPLITUDE' | 'ZOOM'
-  | 'AUTOMATTIC' | 'UNSPLASH' | 'SENDGRID' | 'GIPHY' | 'GITHUB'
-  | 'TWITTER' | 'SALESFORCE' | 'OPEN_DATA' | 'ETC'
+  | 'KAKAO'
+  | 'NAVER'
+  | 'GOOGLE'
+  | 'MICROSOFT'
+  | 'AMAZON'
+  | 'META'
+  | 'IBM'
+  | 'APPLE'
+  | 'SPOTIFY'
+  | 'ATLASSIAN'
+  | 'OPEN_WEATHER'
+  | 'TELEGRAM'
+  | 'MIXPANEL'
+  | 'STRIPE'
+  | 'LINKEDIN'
+  | 'DISCORD'
+  | 'ASANA'
+  | 'WOLFRAM'
+  | 'NOTION'
+  | 'HUBSPOT'
+  | 'PEXELS'
+  | 'SLACK'
+  | 'OPEN_STREET_MAP'
+  | 'PAYPAL'
+  | 'REDDIT'
+  | 'DROPBOX'
+  | 'DEEPL'
+  | 'TWILIO'
+  | 'NEWS_API'
+  | 'OPEN_AI'
+  | 'MAILCHIMP'
+  | 'SHOPIFY'
+  | 'SQUARE'
+  | 'AMPLITUDE'
+  | 'ZOOM'
+  | 'AUTOMATTIC'
+  | 'UNSPLASH'
+  | 'SENDGRID'
+  | 'GIPHY'
+  | 'GITHUB'
+  | 'TWITTER'
+  | 'SALESFORCE'
+  | 'OPEN_DATA'
+  | 'ETC'
 
 // API 목록 조회 파라미터
 type ApiListParams = {
-  page?: number        // 0-based, 기본값 0
-  size?: number        // 기본값 16
+  page?: number // 0-based, 기본값 0
+  size?: number // 기본값 16
   categoryId?: number
-  q?: string           // 검색어
+  q?: string // 검색어
   sort?: SortOption
   direction?: SortDirection
   providers?: ProviderCompany
   authTypes?: AuthType
   pricingTypes?: PricingType
-  minRating?: number   // 최대 5.0
+  minRating?: number // 최대 5.0
 }
 
 // 페이지네이션 공용 응답
@@ -164,12 +200,12 @@ useFavoriteToggle()
 
 ## 📦 의존성
 
-| 파일 | 역할 | 상태 |
-|------|------|------|
-| `src/services/api.ts` | axios 인스턴스 + 인터셉터 | 이미 존재 |
-| `src/hooks/useApi.ts` | 공용 API 호출 훅 | 이미 존재 |
-| `src/types/api.ts` | 공용 타입 정의 | 이미 존재 (타입 추가 필요) |
-| `docs/swagger.json` | API 명세 | 참조용 |
+| 파일                  | 역할                      | 상태                       |
+| --------------------- | ------------------------- | -------------------------- |
+| `src/services/api.ts` | axios 인스턴스 + 인터셉터 | 이미 존재                  |
+| `src/hooks/useApi.ts` | 공용 API 호출 훅          | 이미 존재                  |
+| `src/types/api.ts`    | 공용 타입 정의            | 이미 존재 (타입 추가 필요) |
+| `docs/swagger.json`   | API 명세                  | 참조용                     |
 
 ## 📐 아키텍처 (Instructions.md 준수)
 
