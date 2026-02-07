@@ -6,7 +6,6 @@ import FilterModal from '@/components/modal/FilterModal'
 import type { FilterValues } from '@/components/modal/FilterModal'
 import { useApiList, useFavoriteToggle } from '@/hooks'
 import type { ApiListParams, SortOption, ApiPreview } from '@/types/api'
-import { addSearchHistory } from '@/utils/searchHistory'
 import Filter from '@/assets/icons/action/ic_filter.svg'
 import ArrowDown from '@/assets/icons/action/ic_arrow_down.svg'
 
@@ -48,6 +47,8 @@ const ExplorePage = () => {
   const [totalElements, setTotalElements] = useState<number | null>(null)
   // 리셋 구분 (검색/필터/정렬 변경 시 true → 교체, 스크롤 시 false → 추가)
   const isResetRef = useRef(true)
+  // 이전 API 호출 params 저장 (중복 호출 방지용)
+  const prevParamsRef = useRef<string>('')
 
   // pageData 수신 시 items 업데이트 (무한 스크롤 누적)
   useEffect(() => {
@@ -67,20 +68,16 @@ const ExplorePage = () => {
     isResetRef.current = false
   }, [pageData])
 
-  // URL 쿼리 파라미터 변경 시 검색 실행
+  // params 변경 시 재조회 (중복 호출 방지)
   useEffect(() => {
-    const queryFromUrl = searchParams.get('q')
-    if (queryFromUrl && queryFromUrl !== params.q) {
-      isResetRef.current = true
-      setItems([])
-      setHasMore(true)
-      setTotalElements(null)
-      setParams((prev) => ({ ...prev, q: queryFromUrl, page: 0 }))
+    const currentParamsKey = JSON.stringify(params)
+    
+    // 이전 호출과 동일한 params인 경우 스킵
+    if (prevParamsRef.current === currentParamsKey) {
+      return
     }
-  }, [searchParams, params.q])
-
-  // params 변경 시 재조회
-  useEffect(() => {
+    
+    prevParamsRef.current = currentParamsKey
     fetchApiList(params)
   }, [params, fetchApiList])
 
@@ -121,9 +118,6 @@ const ExplorePage = () => {
       setHasMore(true)
       setTotalElements(null)
       setParams((prev) => ({ ...prev, q, page: 0 }))
-
-      // 검색어를 쿠키에 저장
-      addSearchHistory(q)
 
       // URL 쿼리 파라미터 업데이트
       setSearchParams({ q })
