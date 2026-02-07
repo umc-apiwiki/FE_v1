@@ -16,7 +16,49 @@ npm run dev        # http://localhost:5173 에서 개발 서버 실행
 npm run build      # 타입체크 후 Vite 프로덕션 번들 생성 (dist)
 npm run preview    # 빌드 결과를 로컬에서 확인
 npm run lint       # ESLint 검사
+npm run lint:fix   # ESLint 자동 수정
+npm run format     # Prettier 포맷팅
+npm run fix        # ESLint 자동 수정 + Prettier 포맷팅 (권장)
+npm run test       # Vitest 유닛 테스트 실행
+npm run test:ui    # Vitest UI 모드
+npm run test:coverage  # 테스트 커버리지 확인
 ```
+
+## 코드 품질 관리
+
+### 린팅 & 포맷팅
+
+- **ESLint**: `eslint.config.js`에서 Flat Config 방식 사용
+  - React 19 최신 규칙 적용
+  - `react-hooks/exhaustive-deps` 경고 활성화
+  - 커밋 전 `npm run fix` 실행 권장
+- **Prettier**: 일관된 코드 스타일 유지
+  - `.prettierrc` 설정 파일 사용
+  - ESLint와 함께 `npm run fix`로 한번에 실행 가능
+
+### 테스팅
+
+- **Vitest**: 핵심 커스텀 훅에 유닛 테스트 작성
+  - `src/hooks/useApi.ts`, `useAuth.ts`, `useBookmark.ts` 등
+  - React Testing Library와 함께 사용
+  - `src/test/setup.ts`에서 테스트 환경 설정
+
+## AI 개발 지원
+
+### GitHub Copilot 설정
+
+- `docs/Prompt/Instructions.md`: AI 코딩 어시스턴트를 위한 프로젝트 가이드라인
+  - 아키텍처 원칙 (로직/뷰 분리)
+  - 기술 스택 및 버전 정보
+  - 코딩 컨벤션 및 베스트 프랙티스
+- `.github/copilot-instructions.md`: PR 작성 시 한국어 사용 가이드
+
+### API 문서
+
+- `docs/swagger.json`: 백엔드 API 명세 (OpenAPI 3.1.0)
+  - **중요**: AI에게 전달 시 JSON 형식이 Markdown보다 효율적
+  - `docs/api-docs.md`: 사람이 읽기 쉬운 Markdown 버전도 별도 제공
+- API 타입: `src/types/api.ts`에서 TypeScript 타입 정의
 
 ## Tailwind 설정
 
