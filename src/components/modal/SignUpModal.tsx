@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import Modal from '../modal/Modal'
 import ModalInput from './components/ModalInput'
 import ModalButton from './components/ModalButton'
@@ -6,12 +6,14 @@ import BrandLogo from '@/assets/icons/common/ic_brand_logo.svg'
 import Cancel from '@/assets/icons/common/ic_cancel.svg'
 import { validateSignup } from '@/utils/validateSignUp'
 import useForm from '@/hooks/useForm'
-import { useAuth } from '@/hooks'
+import { postSignup } from '@/apis/auth'
+import axios from 'axios'
 
 type SignUpModalProps = {
   onClose: () => void
   onSwitchToSignIn: () => void
 }
+
 const initialValue = {
   nickname: '',
   email: '',
@@ -19,38 +21,68 @@ const initialValue = {
   passwordConfirm: '',
 }
 
+interface ApiError {
+  message: string
+}
+
 export default function SignUpModal({ onClose, onSwitchToSignIn }: SignUpModalProps) {
-  const { signUp, isLoading, error } = useAuth()
+  const [isLoading, setIsLoading] = useState(false)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+
   const { values, errors, touched, getInputProps } = useForm({
     initialValue,
     validate: validateSignup,
   })
 
-  const isFormValid = Object.keys(errors).length === 0
+  const isFormValid =
+    Object.values(values).every((value) => value.trim() !== '') && Object.keys(errors).length === 0
 
   const handleSubmit = async () => {
-    if (Object.keys(errors).length > 0) return
+    if (!isFormValid || isLoading) return
 
-    const result = await signUp({
-      nickname: values.nickname,
-      email: values.email,
-      password: values.password,
-    })
+    setIsLoading(true)
+    setErrorMessage(null)
 
-    if (result.success) {
-      onClose()
+    try {
+      const response = await postSignup({
+        nickname: values.nickname,
+        email: values.email,
+        password: values.password,
+      })
+
+      if (response.isSuccess) {
+        alert('회원가입이 완료되었습니다.')
+        onClose()
+      } else {
+        setErrorMessage(response.message || '회원가입에 실패했습니다.')
+      }
+    } catch (error: unknown) {
+      let message = '네트워크 오류가 발생했습니다.'
+
+      /* axios 에러인지 확인하며 타입 좁히기 수행 */
+      if (axios.isAxiosError<ApiError>(error)) {
+        message = error.response?.data?.message || message
+      } else if (error instanceof Error) {
+        message = error.message
+      }
+      setErrorMessage(message)
+    } finally {
+      setIsLoading(false)
     }
   }
+
   useEffect(() => {
-    if (error) {
-      alert(error.message)
+    if (errorMessage) {
+      alert(errorMessage)
     }
-  }, [error])
+  }, [errorMessage])
 
   return (
     <Modal onClose={onClose}>
       {/* 닫기 버튼 */}
-      <img src={Cancel} alt="닫기" onClick={onClose} className="absolute right-2 z-50 m-4" />
+      <button onClick={onClose} className="absolute right-2 z-50 m-4">
+        <img src={Cancel} alt="닫기" />
+      </button>
 
       {/* 모달 안 */}
       <div className="m-8 flex flex-col items-center">
