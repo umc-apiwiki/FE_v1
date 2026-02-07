@@ -108,7 +108,9 @@ export const useBookmark = () => {
 
     content.forEach((api) => {
       const dateStr = getBookmarkDate(api.apiId)
-      const formattedDate = dateStr ? formatBookmarkDate(dateStr) : formatBookmarkDate(new Date().toISOString())
+      const formattedDate = dateStr
+        ? formatBookmarkDate(dateStr)
+        : formatBookmarkDate(new Date().toISOString())
 
       if (!groups[formattedDate]) {
         groups[formattedDate] = []
