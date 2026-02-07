@@ -48,3 +48,89 @@ export interface SearchResult {
   category?: string
   star?: string
 }
+
+// ===== Explore API Types =====
+
+export type SortOption = 'LATEST' | 'POPULAR' | 'MOST_REVIEWED'
+export type SortDirection = 'ASC' | 'DESC'
+
+export type PricingType = 'FREE' | 'PAID' | 'MIXED'
+export type AuthType = 'OAUTH2' | 'REFRESH_TOKEN' | 'ACCESS_TOKEN' | 'API_KEY' | 'JWT' | 'COOKIE' | 'BASIC'
+
+export type ProviderCompany =
+  | 'KAKAO' | 'NAVER' | 'GOOGLE' | 'MICROSOFT' | 'AMAZON'
+  | 'META' | 'IBM' | 'APPLE' | 'SPOTIFY' | 'ATLASSIAN'
+  | 'OPEN_WEATHER' | 'TELEGRAM' | 'MIXPANEL' | 'STRIPE' | 'LINKEDIN'
+  | 'DISCORD' | 'ASANA' | 'WOLFRAM' | 'NOTION' | 'HUBSPOT'
+  | 'PEXELS' | 'SLACK' | 'OPEN_STREET_MAP' | 'PAYPAL' | 'REDDIT'
+  | 'DROPBOX' | 'DEEPL' | 'TWILIO' | 'NEWS_API' | 'OPEN_AI'
+  | 'MAILCHIMP' | 'SHOPIFY' | 'SQUARE' | 'AMPLITUDE' | 'ZOOM'
+  | 'AUTOMATTIC' | 'UNSPLASH' | 'SENDGRID' | 'GIPHY' | 'GITHUB'
+  | 'TWITTER' | 'SALESFORCE' | 'OPEN_DATA' | 'ETC'
+
+/** API 목록 조회 파라미터 */
+export type ApiListParams = {
+  page?: number
+  size?: number
+  categoryId?: number
+  q?: string
+  sort?: SortOption
+  direction?: SortDirection
+  providers?: ProviderCompany
+  authTypes?: AuthType
+  pricingTypes?: PricingType
+  minRating?: number
+}
+
+/** 페이지네이션 공용 응답 */
+export type PageResponse<T> = {
+  content: T[]
+  totalPage: number
+  totalElements: number
+  listSize: number
+  currentPage: number
+  first: boolean
+  last: boolean
+}
+
+/** API 목록 카드 */
+export type ApiPreview = {
+  apiId: number
+  name: string
+  summary: string
+  avgRating: number
+  reviewCount: number
+  viewCounts: number
+  pricingType: PricingType
+  authType: AuthType
+  providerCompany: ProviderCompany
+  isFavorited: boolean
+}
+
+/** 카테고리 항목 */
+export type CategoryItem = {
+  categoryId: number
+  name: string
+}
+
+/** API 상세 조회 */
+export type ApiDetail = {
+  apiId: number
+  name: string
+  summary: string
+  longDescription: string
+  officialUrl: string
+  avgRating: number
+  viewCounts: number
+  categories: CategoryItem[]
+  logo: string
+  createdAt: string
+  updatedAt: string
+  isFavorited: boolean
+}
+
+/** 북마크 토글 응답 */
+export type FavoriteToggle = {
+  apiId: number
+  isFavorited: boolean
+}
