@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import Modal from '../modal/Modal'
 import ModalInput from './components/ModalInput'
 import ModalButton from './components/ModalButton'
@@ -6,12 +6,13 @@ import BrandLogo from '@/assets/icons/common/ic_brand_logo.svg'
 import Cancel from '@/assets/icons/common/ic_cancel.svg'
 import { validateSignup } from '@/utils/validateSignUp'
 import useForm from '@/hooks/useForm'
-import { useAuth } from '@/hooks'
+import { postSignup } from '@/apis/auth'
 
 type SignUpModalProps = {
   onClose: () => void
   onSwitchToSignIn: () => void
 }
+
 const initialValue = {
   nickname: '',
   email: '',
@@ -20,7 +21,9 @@ const initialValue = {
 }
 
 export default function SignUpModal({ onClose, onSwitchToSignIn }: SignUpModalProps) {
-  const { signUp, isLoading, error } = useAuth()
+  const [isLoading, setIsLoading] = useState(false)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+
   const { values, errors, touched, getInputProps } = useForm({
     initialValue,
     validate: validateSignup,
@@ -29,23 +32,37 @@ export default function SignUpModal({ onClose, onSwitchToSignIn }: SignUpModalPr
   const isFormValid = Object.keys(errors).length === 0
 
   const handleSubmit = async () => {
-    if (Object.keys(errors).length > 0) return
+    if (Object.keys(errors).length > 0 || isLoading) return
 
-    const result = await signUp({
-      nickname: values.nickname,
-      email: values.email,
-      password: values.password,
-    })
+    setIsLoading(true)
+    setErrorMessage(null)
 
-    if (result.success) {
-      onClose()
+    try {
+      const response = await postSignup({
+        nickname: values.nickname,
+        email: values.email,
+        password: values.password,
+      })
+
+      if (response.isSuccess) {
+        alert('회원가입이 완료되었습니다.')
+        onClose()
+      } else {
+        setErrorMessage(response.message || '회원가입에 실패했습니다.')
+      }
+    } catch (error: any) {
+      const message = error.response?.data?.message || '네트워크 오류가 발생했습니다.'
+      setErrorMessage(message)
+    } finally {
+      setIsLoading(false)
     }
   }
+
   useEffect(() => {
-    if (error) {
-      alert(error.message)
+    if (errorMessage) {
+      alert(errorMessage)
     }
-  }, [error])
+  }, [errorMessage])
 
   return (
     <Modal onClose={onClose}>

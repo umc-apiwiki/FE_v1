@@ -1,18 +1,17 @@
 import { Link } from 'react-router-dom'
 import HomeLogo from '@/assets/icons/navigation/ic_home_logo.svg'
 import { useEffect, useRef, useState } from 'react'
-// import profileImg from '@/assets/default_profile.png'
 import SignInModal from '@/components/modal/SignInModal'
 import SignUpModal from '@/components/modal/SignUpModal'
-
-type User = {
-  name: string
-  profileImg: string
-}
+import { useAuth } from '@/context/AuthProvider'
+import { getMyInfo } from '@/apis/auth'
+import ProfileImg from '@/assets/default_profile.png'
 
 const Header = () => {
+  const { accessToken, logout } = useAuth()
+
   const [isOpen, setIsOpen] = useState(false)
-  const [user] = useState<User | null>(null)
+  const [user, setUser] = useState<{ nickname: string; profileImg: string } | null>(null)
   const [isSignInOpen, setIsSignInOpen] = useState(false)
   const [isSignUpOpen, setIsSignUpOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement | null>(null)
@@ -21,12 +20,43 @@ const Header = () => {
     setIsSignUpOpen(true)
     setIsSignInOpen(false)
   }
+
   const switchToSignIn = () => {
     setIsSignUpOpen(false)
     setIsSignInOpen(true)
   }
 
-  // 외부 클릭 시 드롭다운 닫기
+  const handleLogout = async () => {
+    await logout()
+    setIsOpen(false)
+    setUser(null)
+  }
+
+  // 인증 토큰 상태에 따른 유저 상세 정보 수신 로직임
+  useEffect(() => {
+    const fetchUserData = async () => {
+      if (accessToken) {
+        try {
+          const response = await getMyInfo()
+          if (response && response.result) {
+            setUser({
+              nickname: response.result.nickname,
+              profileImg: ProfileImg,
+            })
+          }
+        } catch (error) {
+          console.error('사용자 정보 로드 중 오류 발생함', error)
+          setUser(null)
+        }
+      } else {
+        setUser(null)
+      }
+    }
+
+    fetchUserData()
+  }, [accessToken])
+
+  // 외부 클릭 및 키 입력에 따른 드롭다운 상태 제어임
   useEffect(() => {
     if (!isOpen) return
 
@@ -76,9 +106,9 @@ const Header = () => {
           </Link>
         </div>
 
-        {/* 우측 로그인 버튼 영역*/}
+        {/* 우측 로그인 버튼 영역 */}
         <div className="flex justify-self-end whitespace-nowrap pr-4 sm:pr-8 md:pr-16 lg:pr-32 font-sans text-xl font-medium tracking-[-1px] text-info-dark">
-          {!user ? (
+          {!accessToken && !user ? (
             // 로그인 안 했을 때
             <span
               className="cursor-pointer hover:text-brand-500"
@@ -94,8 +124,9 @@ const Header = () => {
                 onClick={() => setIsOpen((prev) => !prev)}
                 className="cursor-pointer focus:outline-none pt-2"
               >
+                {/* 프로필 이미지가 없으면 기본 이미지를 보여주도록 처리 */}
                 <img
-                  src={user.profileImg}
+                  src={user?.profileImg || ProfileImg}
                   alt="프로필 이미지"
                   className="w-10 h-10 rounded-full border border-brand-500 object-cover"
                 />
@@ -109,7 +140,6 @@ const Header = () => {
                   >
                     Profile
                   </Link>
-                  {/* 여기 수정됨: History 버튼을 Link로 변경 */}
                   <Link
                     to="/history"
                     className="hover:text-brand-500"
@@ -117,7 +147,9 @@ const Header = () => {
                   >
                     History
                   </Link>
-                  <button className="hover:text-brand-500">Logout</button>
+                  <button className="hover:text-error-dark" onClick={handleLogout}>
+                    Logout
+                  </button>
                 </div>
               )}
             </div>

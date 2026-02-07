@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import Modal from '../modal/Modal'
 import ModalInput from './components/ModalInput'
 import ModalButton from './components/ModalButton'
@@ -5,8 +6,7 @@ import BrandLogo from '@/assets/icons/common/ic_brand_logo.svg'
 import Cancel from '@/assets/icons/common/ic_cancel.svg'
 import { validateSignIn } from '@/utils/validateSignIn'
 import useForm from '@/hooks/useForm'
-import { useAuth } from '@/hooks'
-import { useEffect } from 'react'
+import { useAuth } from '@/context/AuthProvider'
 
 type LoginModalProps = {
   onClose: () => void
@@ -19,24 +19,31 @@ const initialValue = {
 }
 
 export default function LoginModal({ onClose, onSwitchToSignUp }: LoginModalProps) {
-  const { login, isLoading, error } = useAuth()
+  const { login } = useAuth()
+  const [isLoading, setIsLoading] = useState(false)
+
   const { values, errors, touched, getInputProps } = useForm({
     initialValue,
     validate: validateSignIn,
   })
+
   const isFormValid =
     Object.values(values).every((v) => v.trim() !== '') && Object.keys(errors).length === 0
 
   const handleSubmit = async () => {
-    if (!isFormValid) return
-    const result = await login({ email: values.email, password: values.password })
-    if (result.success) onClose()
-  }
-  useEffect(() => {
-    if (error) {
-      alert(error.message)
+    if (!isFormValid || isLoading) return
+
+    setIsLoading(true)
+    try {
+      await login({ email: values.email, password: values.password })
+
+      onClose()
+    } catch (error) {
+      console.error(error)
+    } finally {
+      setIsLoading(false)
     }
-  }, [error])
+  }
 
   return (
     <Modal onClose={onClose}>
