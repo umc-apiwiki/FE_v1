@@ -10,6 +10,7 @@ import ProfilePage from './pages/ProfilePage'
 import HistoryPage from './pages/HistoryPage'
 import { BookmarkProvider } from './context/BookmarkContext' // [추가]
 import APIDetailPage from './pages/APIDetailPage'
+import { AuthProvider } from './context/AuthProvider'
 
 const publicRoutes: RouteObject[] = [
   {
@@ -32,9 +33,11 @@ const router = createBrowserRouter([...publicRoutes])
 
 function App() {
   return (
-    <BookmarkProvider>
-      <RouterProvider router={router} />
-    </BookmarkProvider>
+    <AuthProvider>
+      <BookmarkProvider>
+        <RouterProvider router={router} />
+      </BookmarkProvider>
+    </AuthProvider>
   )
 }
 
