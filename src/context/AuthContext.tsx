@@ -7,8 +7,4 @@ interface AuthContextType {
   logout: () => Promise<void>
 }
 
-export const AuthContext = createContext<AuthContextType>({
-  accessToken: null,
-  login: async () => {},
-  logout: async () => {},
-})
+export const AuthContext = createContext<AuthContextType | undefined>(undefined)

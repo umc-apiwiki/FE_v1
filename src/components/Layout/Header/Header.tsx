@@ -43,6 +43,8 @@ const Header = () => {
               nickname: response.result.nickname,
               profileImg: ProfileImg,
             })
+          } else {
+            setUser(null)
           }
         } catch (error) {
           console.error('사용자 정보 로드 중 오류 발생함', error)
