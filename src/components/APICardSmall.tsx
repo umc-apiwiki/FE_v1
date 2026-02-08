@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import type { ApiPreview } from '@/types/api'
 
@@ -7,14 +8,24 @@ const PRICING_LABEL: Record<string, string> = {
   MIXED: 'Free & Paid',
 }
 
+// ✅ [추가] 로고 이미지 기본 경로 (APICard와 동일하게 설정)
+const LOGO_BASE = 'https://api-wiki-api-logos.s3.ap-northeast-2.amazonaws.com/api-logos'
+
 export default function APICardSmall({
   apiId,
   name,
   avgRating,
   reviewCount,
   pricingType,
+  logo, // ✅ [추가] logo prop 받기
 }: ApiPreview) {
   const navigate = useNavigate()
+
+  // ✅ [추가] 이미지 에러 처리를 위한 상태
+  const [imgError, setImgError] = useState(false)
+
+  // ✅ [추가] 로고 URL 생성 로직
+  const logoUrl = logo ?? `${LOGO_BASE}/api_${apiId}.png`
 
   return (
     <div
@@ -22,25 +33,34 @@ export default function APICardSmall({
       onClick={() => navigate(`/apis/${apiId}`)}
     >
       {/* 카드 배경 */}
-      <div className="absolute inset-0 rounded-[15px] border-brand-500/30 border-thin bg-white shadow-[1px_5px_10px_0px_var(--tw-shadow-color)] shadow-brand-500/25" />
+      <div className="absolute inset-0 rounded-[15px] border-brand-500/30 border-thin bg-white shadow-[1px_5px_10px_0px_var(--tw-shadow-color)] shadow-brand-500/25 transition-all duration-300 group-hover:bg-gradient-to-b group-hover:from-brand-500/10 group-hover:to-white" />
 
       {/* 카드 내부 콘텐츠 */}
-      <div className="relative pl-8">
-        <div className="flex gap-4 h-36">
-          {/* 아이콘 placeholder */}
-          <div className="flex items-center justify-center flex-shrink-0">
-            <div className="w-[70px] h-[70px] rounded-[10px] overflow-hidden flex-shrink-0 bg-white border border-brand-500/50 flex items-center justify-center">
+      <div className="relative pl-8 h-full flex items-center">
+        <div className="flex gap-4 items-center">
+          {/* ✅ [수정] 아이콘 표시 영역 */}
+          <div className="w-[70px] h-[70px] rounded-[10px] overflow-hidden flex-shrink-0 bg-white border border-brand-500/50 flex items-center justify-center shadow-sm">
+            {!imgError ? (
+              <img
+                src={logoUrl}
+                alt={name}
+                className="w-full h-full object-contain p-1.5"
+                onError={() => setImgError(true)}
+              />
+            ) : (
               <span className="text-brand-500 font-semibold text-2xl">
                 {name.charAt(0).toUpperCase()}
               </span>
-            </div>
+            )}
           </div>
 
           {/* 텍스트 정보 */}
           <div className="flex flex-col justify-center pl-2">
-            <h3 className="text-info-darker font-medium leading-tight text-xl pb-2">{name}</h3>
-            <p className="text-sm font-medium">Star {avgRating.toFixed(1)}</p>
-            <p className="text-sm font-medium">{reviewCount} reviews</p>
+            <h3 className="text-info-darker font-medium leading-tight text-xl pb-2 line-clamp-1">
+              {name}
+            </h3>
+            <p className="text-sm font-medium text-info-dark">Star {avgRating.toFixed(1)}</p>
+            <p className="text-sm font-medium text-info-dark">{reviewCount} reviews</p>
             <p className="text-[#B0B0B0] text-xs mt-0.5">
               {PRICING_LABEL[pricingType] ?? pricingType}
             </p>

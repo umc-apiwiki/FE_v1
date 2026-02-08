@@ -197,3 +197,25 @@ export interface WikiUpdateRequest {
   content: string
   version: number
 }
+
+// ===== Pricing Types (상세 페이지 요금제 연동을 위해 추가됨) =====
+
+/**
+ * Pricing API용 타입 정의
+ * 상세 페이지의 요금제 정보(Pricing) 탭 및 배지 표시용
+ */
+export interface ApiPricing {
+  apiId: number
+  pricingType: string // 'FREE' | 'PAID' | 'MIXED'
+  pricingInfoCsv: string
+}
+
+/**
+ * Pricing API 응답 타입
+ */
+export interface ApiResponseApiPricing {
+  isSuccess: boolean
+  code: string
+  message: string
+  result: ApiPricing
+}

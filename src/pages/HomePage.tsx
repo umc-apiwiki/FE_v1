@@ -8,16 +8,18 @@ import APICardSmall from '@/components/APICardSmall'
 import NewsCard from '@/components/NewsCard'
 import type { ApiPreview } from '@/types/api'
 
-// -------------------- 1. 데이터 정의 --------------------
+// -------------------- 1. 데이터 정의 (MVP용 하드코딩) --------------------
+
 interface APIData {
   id: number
   title: string
   star: string
   usedBy: string
   price: string
-  iconUrl: string
+  iconUrl: string // ✅ 로컬 이미지 경로 (/images/...)
 }
 
+// 하드코딩된 데이터를 APICardSmall용 데이터로 변환
 const toPreview = (d: APIData): ApiPreview => ({
   apiId: d.id,
   name: d.title,
@@ -29,21 +31,24 @@ const toPreview = (d: APIData): ApiPreview => ({
   authType: 'API_KEY',
   providerCompany: 'ETC',
   isFavorited: false,
+  logo: d.iconUrl, // ✅ 여기서 로컬 경로를 강제로 넣어줍니다.
 })
+
 interface NewsData {
   title: string
   publisher: string
   thumb: string
 }
 
+// ✅ [MVP 요구사항] Recent Popular (파일명을 정확히 매칭)
 const popularAPIs: APIData[] = [
   {
-    id: 1,
+    id: 1, // 클릭 시 상세페이지 ID (실제 DB와 다를 수 있음 주의)
     title: 'Youtube',
     star: '4.8',
     usedBy: '1.2B people',
     price: 'Free',
-    iconUrl: '/images/YouTube.svg',
+    iconUrl: '/images/YouTube.svg', // public/images/YouTube.svg
   },
   {
     id: 2,
@@ -78,6 +83,8 @@ const popularAPIs: APIData[] = [
     iconUrl: '/images/Gmail.svg',
   },
 ]
+
+// ✅ [MVP 요구사항] Suggest API
 const suggestAPIs: APIData[] = [
   {
     id: 6,
@@ -117,9 +124,11 @@ const suggestAPIs: APIData[] = [
     star: '3.7',
     usedBy: '34M people',
     price: 'Paid',
-    iconUrl: '/images/네이버지도.svg',
+    iconUrl: '/images/네이버지도.svg', // 파일명이 한글인 경우
   },
 ]
+
+// 뉴스 데이터 (계속 하드코딩 유지)
 const newsItems: NewsData[] = [
   {
     title: '"쿠팡 중국인 피의자, 20년 경력개발자 위 개발자"',
@@ -296,7 +305,7 @@ const HomePage = () => {
     )
   }
 
-  // [화면 2] 리스트 화면
+  // [화면 2] 리스트 화면 (MVP 하드코딩)
   return (
     <div className="w-full flex flex-col items-center justify-center min-h-screen">
       <div className="w-full flex flex-col items-center pt-24 pb-24 animate-slide-up">

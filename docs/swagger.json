@@ -81,6 +81,24 @@
         }
       }
     },
+    "/api/v1/auth/logout": {
+      "post": {
+        "tags": ["user-controller"],
+        "summary": "로그아웃 API By 이노",
+        "description": "로그아웃합니다.<br>\n실제 로그아웃 로직(토큰 블랙리스트 등)은 현재 백엔드 상에서 구현되어 있지 않습니다.<br>\n<br>\n**[프론트엔드 동작]**<br>\n프론트엔드 측에서 해당 응답을 받으면 로컬 스토리지/쿠키의 토큰을 삭제하면 됩니다.\n",
+        "operationId": "logout",
+        "responses": {
+          "200": {
+            "description": "성공",
+            "content": { "*/*": { "schema": { "$ref": "#/components/schemas/ApiResponseString" } } }
+          },
+          "400": {
+            "description": "실패",
+            "content": { "*/*": { "schema": { "$ref": "#/components/schemas/ApiResponseString" } } }
+          }
+        }
+      }
+    },
     "/api/v1/auth/login": {
       "post": {
         "tags": ["user-controller"],
@@ -135,24 +153,6 @@
             "content": {
               "*/*": { "schema": { "$ref": "#/components/schemas/ApiResponseFavoriteToggle" } }
             }
-          }
-        }
-      }
-    },
-    "/api/v1/auth/logout": {
-      "patch": {
-        "tags": ["user-controller"],
-        "summary": "로그아웃 API By 이노",
-        "description": "로그아웃합니다.<br>\n실제 로그아웃 로직(토큰 블랙리스트 등)은 현재 백엔드 상에서 구현되어 있지 않습니다.<br>\n<br>\n**[프론트엔드 동작]**<br>\n프론트엔드 측에서 해당 응답을 받으면 로컬 스토리지/쿠키의 토큰을 삭제하면 됩니다.\n",
-        "operationId": "logout",
-        "responses": {
-          "200": {
-            "description": "성공",
-            "content": { "*/*": { "schema": { "$ref": "#/components/schemas/ApiResponseString" } } }
-          },
-          "400": {
-            "description": "실패",
-            "content": { "*/*": { "schema": { "$ref": "#/components/schemas/ApiResponseString" } } }
           }
         }
       }
@@ -249,6 +249,32 @@
             "description": "인증되지 않은 사용자",
             "content": {
               "*/*": { "schema": { "$ref": "#/components/schemas/ApiResponseMyProfileRes" } }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/users/me/activities": {
+      "get": {
+        "tags": ["user-controller"],
+        "summary": "내 활동 내역 조회 API By 이노",
+        "description": "로그인한 사용자의 활동(좋아요) 내역을 **날짜별 타임라인** 형태로 조회합니다.<br>\n가장 최근에 활동한 날짜가 먼저 나오며, 각 API의 상세 정보(평점, 리뷰 수 등)가 포함됩니다.<br>\n<br>\n(History: 초기 구조 설계 - 제인, 상세 구현 및 그룹화 로직 적용 - 이노)\n",
+        "operationId": "getMyActivities",
+        "responses": {
+          "200": {
+            "description": "성공",
+            "content": {
+              "*/*": {
+                "schema": { "$ref": "#/components/schemas/ApiResponseListDailyActivityRes" }
+              }
+            }
+          },
+          "401": {
+            "description": "인증되지 않은 사용자",
+            "content": {
+              "*/*": {
+                "schema": { "$ref": "#/components/schemas/ApiResponseListDailyActivityRes" }
+              }
             }
           }
         }
@@ -429,6 +455,36 @@
           }
         }
       }
+    },
+    "/api/v1/apis/{apiId}/pricing": {
+      "get": {
+        "tags": ["API 탐색"],
+        "summary": "API 비용 정보 조회 By 제인",
+        "description": "API 상세 - 비용정보 탭에서 사용할 데이터를 조회합니다.\n\n▪ pricingInfoCsv는 DB에 저장된 CSV 텍스트를 반환합니다.\n▪ pricingType은 무료/혼합/유료 필터링 및 뱃지 용도입니다.\n",
+        "operationId": "getApiPricing",
+        "parameters": [
+          {
+            "name": "apiId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "format": "int64" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "API 비용 정보 조회 성공",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ApiResponseApiPricing" } }
+            }
+          },
+          "404": {
+            "description": "요청한 API를 찾을 수 없습니다. (API4001)",
+            "content": {
+              "*/*": { "schema": { "$ref": "#/components/schemas/ApiResponseApiPricing" } }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -488,6 +544,15 @@
           "nickname": { "type": "string" }
         }
       },
+      "ApiResponseString": {
+        "type": "object",
+        "properties": {
+          "isSuccess": { "type": "boolean" },
+          "code": { "type": "string" },
+          "message": { "type": "string" },
+          "result": { "type": "string" }
+        }
+      },
       "LoginReq": {
         "type": "object",
         "properties": { "email": { "type": "string" }, "password": { "type": "string" } }
@@ -506,15 +571,6 @@
         "properties": {
           "apiId": { "type": "integer", "format": "int64" },
           "isFavorited": { "type": "boolean" }
-        }
-      },
-      "ApiResponseString": {
-        "type": "object",
-        "properties": {
-          "isSuccess": { "type": "boolean" },
-          "code": { "type": "string" },
-          "message": { "type": "string" },
-          "result": { "type": "string" }
         }
       },
       "EditContent": {
@@ -600,6 +656,26 @@
           "isFavorited": { "type": "boolean" }
         }
       },
+      "ApiResponseListDailyActivityRes": {
+        "type": "object",
+        "properties": {
+          "isSuccess": { "type": "boolean" },
+          "code": { "type": "string" },
+          "message": { "type": "string" },
+          "result": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/DailyActivityRes" }
+          }
+        }
+      },
+      "DailyActivityRes": {
+        "type": "object",
+        "properties": {
+          "date": { "type": "string", "format": "date" },
+          "count": { "type": "integer", "format": "int32" },
+          "activities": { "type": "array", "items": { "$ref": "#/components/schemas/ApiPreview" } }
+        }
+      },
       "ApiResponsePageResponseDTOApiPreview": {
         "type": "object",
         "properties": {
@@ -671,6 +747,23 @@
         "properties": {
           "content": { "type": "string" },
           "version": { "type": "integer", "format": "int64" }
+        }
+      },
+      "ApiPricing": {
+        "type": "object",
+        "properties": {
+          "apiId": { "type": "integer", "format": "int64" },
+          "pricingType": { "type": "string", "enum": ["FREE", "PAID", "MIXED"] },
+          "pricingInfoCsv": { "type": "string" }
+        }
+      },
+      "ApiResponseApiPricing": {
+        "type": "object",
+        "properties": {
+          "isSuccess": { "type": "boolean" },
+          "code": { "type": "string" },
+          "message": { "type": "string" },
+          "result": { "$ref": "#/components/schemas/ApiPricing" }
         }
       }
     },
