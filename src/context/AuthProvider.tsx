@@ -3,6 +3,7 @@ import { AuthContext } from './AuthContext'
 import type { RequestSigninDto } from '@/types/auth'
 import { useTokenStorage } from '@/hooks/useTokenStorage'
 import { postLogout, postSignin } from '@/apis/auth'
+import axios from 'axios'
 
 export const AuthProvider = ({ children }: PropsWithChildren) => {
   const { getToken, setToken, removeToken } = useTokenStorage()
@@ -38,11 +39,14 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
         const errorMessage = response.message || '로그인 정보가 일치하지 않음.'
         alert(errorMessage)
       }
-    } catch (error: any) {
-      /* API 통신 자체 실패 시 에러 메시지 추출 */
-      const axiosErrorMessage = error?.response?.data?.message || '네트워크 오류가 발생했음.'
-      alert(axiosErrorMessage)
-      console.error(error)
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        alert(error.response?.data?.message ?? '네트워크 오류가 발생했음.')
+      } else if (error instanceof Error) {
+        alert(error.message)
+      } else {
+        alert('알 수 없는 오류가 발생했음.')
+      }
     } finally {
       /* 통신 완료 후 로딩 상태 해제 */
       setIsLoading(false)
