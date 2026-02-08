@@ -11,7 +11,7 @@ import ReviewSection from '@/components/APIDetail/ReviewSection'
 import CodeExampleSection from '@/components/APIDetail/CodeExampleSection'
 import APICardSmall from '@/components/APICardSmall'
 
-import { useApiDetail, useWikiContent, useWikiUpdate, useApiPricing, useApiList } from '@/hooks'
+import { useApiDetail, useWikiContent, useWikiUpdate, useApiList, useApiPricing } from '@/hooks'
 import { usePostFavorite } from '@/hooks/mutations/usePostFavorite'
 import type { ApiDetail } from '@/types/api'
 
@@ -28,7 +28,6 @@ const PRICING_LABEL: Record<string, string> = {
   MIXED: 'Free & Paid',
 }
 
-// 하드코딩 데이터 (MVP용)
 const MOCK_DATA: Record<number, ApiDetail & { pricingType?: string }> = {
   1: {
     apiId: 1,
@@ -84,36 +83,37 @@ export default function APIDetailPage() {
   const apiId = Number(id)
   const [activeMenu, setActiveMenu] = useState<'A' | 'B' | 'C' | 'D'>('A')
 
-  // 서버 데이터 호출
-  const { data: serverApiDetail, isLoading, error, fetchApiDetail } = useApiDetail()
+  const {
+    data: serverApiDetail,
+    isLoading: isDetailLoading,
+    error,
+    fetchApiDetail,
+  } = useApiDetail()
   const { mutate: toggleFavorite, isLoading: isToggling } = usePostFavorite()
   const { data: wikiData, fetchWiki } = useWikiContent()
   const { saveWiki } = useWikiUpdate()
-  const { data: pricingData, fetchApiPricing } = useApiPricing()
   const { data: similarApisData, fetchApiList } = useApiList()
 
-  // 최종 상세 데이터 결정 (하드코딩 우선)
+  // 수정됨: pricingData는 훅 내부에서 apiId를 인자로 받아 자동으로 처리됨
+  const { pricing: pricingData } = useApiPricing(apiId)
+
   const finalDetail = (MOCK_DATA[apiId] || serverApiDetail) as ApiDetail & { pricingType?: string }
 
-  // 찜 상태 (낙관적 업데이트)
   const [localFavorite, setLocalFavorite] = useState<boolean | null>(null)
   const isFavorited = localFavorite ?? finalDetail?.isFavorited ?? false
 
-  // Wiki 편집 상태
   const [isEditing, setIsEditing] = useState(false)
   const [editedWikiText, setEditedWikiText] = useState<string | null>(null)
   const displayWikiText = editedWikiText !== null ? editedWikiText : wikiData?.content || ''
 
-  // API 상세 및 위키, 가격 정보 호출
   useEffect(() => {
     if (apiId) {
       fetchApiDetail(apiId)
       fetchWiki(apiId)
-      fetchApiPricing(apiId)
+      // fetchApiPricing(apiId) -> 삭제됨: useApiPricing 훅 내부 useEffect에서 자동 호출됨
     }
-  }, [apiId, fetchApiDetail, fetchWiki, fetchApiPricing])
+  }, [apiId, fetchApiDetail, fetchWiki])
 
-  // 비슷한 API 호출
   useEffect(() => {
     if (finalDetail?.categories?.length) {
       fetchApiList({ categoryId: finalDetail.categories[0].categoryId, size: 5, sort: 'POPULAR' })
@@ -122,24 +122,18 @@ export default function APIDetailPage() {
     }
   }, [finalDetail, fetchApiList])
 
-  // 찜 버튼 클릭 핸들러 (낙관적 UI 업데이트)
   const handleToggleFavorite = useCallback(async () => {
     if (isToggling) return
-
     const nextStatus = !isFavorited
     setLocalFavorite(nextStatus)
-
     try {
       const result = await toggleFavorite(apiId)
-      if (result.isFavorited !== nextStatus) {
-        setLocalFavorite(result.isFavorited)
-      }
+      if (result.isFavorited !== nextStatus) setLocalFavorite(result.isFavorited)
     } catch {
       setLocalFavorite(!nextStatus)
     }
   }, [apiId, isFavorited, toggleFavorite, isToggling])
 
-  // 위키 편집 관련
   const handleSaveWiki = async () => {
     if (!displayWikiText.trim()) return alert('내용을 입력해주세요.')
     try {
@@ -166,13 +160,13 @@ export default function APIDetailPage() {
     setIsEditing(true)
   }
 
-  // 로딩/에러 처리
-  if (isLoading && !finalDetail)
+  if (isDetailLoading && !finalDetail)
     return (
       <div className="flex justify-center items-center min-h-[60vh]">
         <div className="w-8 h-8 border-4 border-brand-500 border-t-transparent rounded-full animate-spin" />
       </div>
     )
+
   if (error && !finalDetail)
     return (
       <div className="text-center py-20 text-red-500 font-sans">
@@ -186,6 +180,7 @@ export default function APIDetailPage() {
         </button>
       </div>
     )
+
   if (!finalDetail) return null
 
   const pricingType = finalDetail.pricingType || pricingData?.pricingType || 'FREE'
@@ -193,7 +188,6 @@ export default function APIDetailPage() {
 
   return (
     <div className="mx-auto px-16 mt-32 2xl:mx-44 font-['Pretendard_Variable']">
-      {/* 상단 정보 */}
       <div className="p-5 mb-28 flex justify-between mx-auto items-center">
         <div className="flex flex-col justify-center gap-2 mt-3 w-full md:w-auto">
           <h1 className="font-semibold text-[50px] text-info-darker mb-10">{finalDetail.name}</h1>
@@ -265,7 +259,9 @@ export default function APIDetailPage() {
               categories={finalDetail.categories}
             />
           )}
-          {activeMenu === 'B' && <PricingSection categories={finalDetail.categories} />}
+          {activeMenu === 'B' && (
+            <PricingSection categories={finalDetail.categories} pricing={pricingData} />
+          )}
           {activeMenu === 'C' && <ReviewSection />}
           {activeMenu === 'D' && <CodeExampleSection />}
         </div>
