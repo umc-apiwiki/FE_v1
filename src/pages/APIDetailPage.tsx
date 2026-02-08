@@ -100,23 +100,19 @@ export default function APIDetailPage() {
   const { data: pricingData, fetchApiPricing } = useApiPricing()
   const { data: similarApisData, fetchApiList } = useApiList()
 
-  // 핵심 수정: 하드코딩 데이터가 있으면 그걸 쓰고, 없으면 서버 데이터를 쓴다!
+  // 하드코딩 데이터가 있으면 그걸 쓰고, 없으면 서버 데이터를 쓴다!
   const finalDetail = (MOCK_DATA[apiId] || serverApiDetail) as ApiDetail & { pricingType?: string }
 
   // 별도의 isFavorited State를 만들지 않고 finalDetail에서 직접 값을 가져오거나, 로컬에서 바뀐 값만 추적합니다.
   const [localFavorite, setLocalFavorite] = useState<boolean | null>(null)
   const isFavorited = localFavorite !== null ? localFavorite : (finalDetail?.isFavorited ?? false)
 
-  // WikiText 동기화 로직 최적화: 처음 위키 데이터가 로드될 때 한 번만 text state를 초기화합니다.
-  const [wikiText, setWikiText] = useState('')
+  // WikiText 동기화 로직 최적화: 린트 에러 해결을 위해 useEffect 대신 렌더링 시점에 값을 결정합니다.
   const [isEditing, setIsEditing] = useState(false)
+  const [editedWikiText, setEditedWikiText] = useState<string | null>(null)
 
-  // 위키 데이터 로드 시 초기값 설정 (최초 1회만 되도록 조건 추가)
-  useEffect(() => {
-    if (wikiData && !wikiText && !isEditing) {
-      setWikiText(wikiData.content)
-    }
-  }, [wikiData, wikiText, isEditing])
+  // 표시할 위키 텍스트: 수정 중이면 수정된 텍스트를, 아니면 서버 데이터를 보여줍니다.
+  const displayWikiText = editedWikiText !== null ? editedWikiText : wikiData?.content || ''
 
   useEffect(() => {
     if (apiId) {
@@ -127,7 +123,7 @@ export default function APIDetailPage() {
     }
   }, [apiId, fetchApiDetail, fetchWiki, fetchApiPricing])
 
-  // 수정됨: 비슷한 API 호출 (하드코딩 데이터의 태그도 인식하도록 수정)
+  // 비슷한 API 호출 (하드코딩 데이터의 태그도 인식하도록 수정)
   useEffect(() => {
     if (finalDetail && finalDetail.categories && finalDetail.categories.length > 0) {
       const categoryId = finalDetail.categories[0].categoryId
@@ -156,16 +152,17 @@ export default function APIDetailPage() {
   }, [apiId, isFavorited, toggle])
 
   const handleSaveWiki = async () => {
-    if (!wikiText.trim()) {
+    if (!displayWikiText.trim()) {
       alert('내용을 입력해주세요.')
       return
     }
     try {
       const currentVersion = wikiData?.version ?? 0
-      await saveWiki(apiId, { content: wikiText, version: currentVersion })
+      await saveWiki(apiId, { content: displayWikiText, version: currentVersion })
       alert('위키가 저장되었습니다!')
       await fetchWiki(apiId)
       setIsEditing(false)
+      setEditedWikiText(null) // 저장 성공 시 로컬 수정본 초기화
     } catch (e) {
       console.error(e)
       alert('위키 저장에 실패했습니다.')
@@ -174,9 +171,15 @@ export default function APIDetailPage() {
 
   const handleCancelEdit = () => {
     if (window.confirm('수정을 취소하시겠습니까? 작성 중인 내용은 사라집니다.')) {
-      setWikiText(wikiData?.content || '')
+      setEditedWikiText(null) // 취소 시 로컬 수정본 초기화
       setIsEditing(false)
     }
+  }
+
+  // 수정 시작 시 현재 내용을 로컬 상태로 복사
+  const handleStartEdit = () => {
+    setEditedWikiText(wikiData?.content || '')
+    setIsEditing(true)
   }
 
   // 하드코딩 데이터가 있으면 로딩/에러 무시하고 화면 표시
@@ -310,8 +313,8 @@ export default function APIDetailPage() {
               {isEditing ? (
                 <div data-color-mode="light">
                   <MDEditor
-                    value={wikiText}
-                    onChange={(val) => setWikiText(val || '')}
+                    value={displayWikiText}
+                    onChange={(val) => setEditedWikiText(val || '')}
                     height={500}
                     preview="edit"
                   />
@@ -345,7 +348,7 @@ export default function APIDetailPage() {
                   )}
                   <div className="flex justify-end mt-6 pt-4 border-t border-gray-100">
                     <button
-                      onClick={() => setIsEditing(true)}
+                      onClick={handleStartEdit}
                       className="px-6 py-2 border-2 border-brand-500 text-brand-500 font-bold rounded-lg hover:bg-brand-50 transition-colors"
                     >
                       위키 수정하기
