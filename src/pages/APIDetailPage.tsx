@@ -334,7 +334,7 @@ export default function APIDetailPage() {
                   </div>
                 </div>
               ) : (
-                <div data-color-mode="light" className='p-5'>
+                <div data-color-mode="light" className="p-5">
                   {wikiData?.content ? (
                     <MDEditor.Markdown
                       source={wikiData.content}
