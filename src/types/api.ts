@@ -63,6 +63,7 @@ export type AuthType =
   | 'JWT'
   | 'COOKIE'
   | 'BASIC'
+  | 'NONE'
 
 export type ProviderCompany =
   | 'KAKAO'
@@ -218,4 +219,26 @@ export interface ApiResponseApiPricing {
   code: string
   message: string
   result: ApiPricing
+}
+
+/**
+ * 북마크 데이터
+ */
+export interface ActivityItem {
+  apiId: number
+  name: string
+  summary: string
+  avgRating: number
+  reviewCount: number
+  viewCounts: number
+  pricingType: 'FREE' | 'PAID'
+  authType: 'OAUTH2' | 'API_KEY' | 'NONE'
+  providerCompany: 'KAKAO' | 'NAVER' | 'ETC'
+  isFavorited: boolean
+}
+
+export interface ActivityGroup {
+  date: string
+  count: number
+  activities: ActivityItem[]
 }

@@ -4,9 +4,10 @@ import APICard from '@/components/APICard'
 import SearchBar from '@/components/HomePage/SearchBar'
 import FilterModal from '@/components/modal/FilterModal'
 import type { FilterValues } from '@/components/modal/FilterModal'
-import { useApiList, useFavoriteToggle } from '@/hooks'
+import { useApiList } from '@/hooks'
 import type { ApiListParams, SortOption, ApiPreview } from '@/types/api'
-import { saveBookmarkDate, removeBookmarkDate } from '@/utils/bookmarkDate'
+import { usePostFavorite } from '@/hooks/mutations/usePostFavorite'
+
 import Filter from '@/assets/icons/action/ic_filter.svg'
 import ArrowDown from '@/assets/icons/action/ic_arrow_down.svg'
 
@@ -38,7 +39,7 @@ const ExplorePage = () => {
 
   // API 목록 + 즐겨찾기
   const { data: pageData, isLoading, error, fetchApiList } = useApiList()
-  const { toggle } = useFavoriteToggle()
+  const { mutate: toggleFavorite, isLoading: isToggling } = usePostFavorite()
 
   // 누적 카드 목록
   const [items, setItems] = useState<ApiPreview[]>([])
@@ -152,26 +153,20 @@ const ExplorePage = () => {
     setIsSortOpen(false)
   }, [])
 
-  // 즐겨찾기 토글 (낙관적 업데이트 + 날짜 저장)
   const handleToggleFavorite = useCallback(
-    (apiId: number) => {
-      // 낙관적 UI 업데이트
+    async (apiId: number) => {
+      if (isToggling) return
+
+      const result = await toggleFavorite(apiId)
+
+      // 서버 응답 기준으로 상태 반영
       setItems((prev) =>
         prev.map((item) =>
-          item.apiId === apiId ? { ...item, isFavorited: !item.isFavorited } : item
+          item.apiId === apiId ? { ...item, isFavorited: result.isFavorited } : item
         )
       )
-
-      // 서버 요청 및 날짜 저장/삭제
-      toggle(apiId, (result) => {
-        if (result.isFavorited) {
-          saveBookmarkDate(apiId)
-        } else {
-          removeBookmarkDate(apiId)
-        }
-      })
     },
-    [toggle]
+    [toggleFavorite, isToggling]
   )
 
   const currentSort = SORT_OPTIONS.find((o) => o.value === params.sort) ?? SORT_OPTIONS[0]

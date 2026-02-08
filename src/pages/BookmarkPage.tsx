@@ -1,6 +1,7 @@
 import APICard from '@/components/APICard'
 import BookmarkCarousel from '@/components/BookmarkCarousel'
 import { useBookmark } from '@/hooks/useBookmark'
+import { formatDate } from '@/utils/formatDate'
 
 /**
  * BookmarkPage
@@ -15,9 +16,7 @@ const BookmarkPage = () => {
       <div className="w-full min-h-screen pb-40 overflow-x-hidden mt-10">
         <div className="flex flex-col w-full max-w-[1440px] mx-auto">
           <div className="w-full flex justify-center mb-16">
-            <div className="text-slate-900 text-3xl font-medium font-['Pretendard_Variable'] tracking-widest">
-              Archive
-            </div>
+            <div className="text-slate-900 text-3xl font-medium tracking-widest">Archive</div>
           </div>
           <div className="flex items-center justify-center mt-20">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-slate-900"></div>
@@ -33,9 +32,7 @@ const BookmarkPage = () => {
       <div className="w-full min-h-screen pb-40 overflow-x-hidden mt-10">
         <div className="flex flex-col w-full max-w-[1440px] mx-auto">
           <div className="w-full flex justify-center mb-16">
-            <div className="text-slate-900 text-3xl font-medium font-['Pretendard_Variable'] tracking-widest">
-              Archive
-            </div>
+            <div className="text-slate-900 text-3xl font-medium tracking-widest">Archive</div>
           </div>
           <div className="flex flex-col items-center justify-center mt-20 text-red-500">
             <p className="text-xl">오류가 발생했습니다</p>
@@ -48,11 +45,9 @@ const BookmarkPage = () => {
 
   return (
     <div className="w-full min-h-screen pb-40 overflow-x-hidden mt-10">
-      <div className="flex flex-col w-full max-w-[1440px] mx-auto">
+      <div className="flex flex-col w-full max-w-[1444px] mx-auto">
         <div className="w-full flex justify-center mb-16">
-          <div className="text-slate-900 text-3xl font-medium font-['Pretendard_Variable'] tracking-widest">
-            Archive
-          </div>
+          <div className="text-slate-900 text-3xl font-medium tracking-widest">Archive</div>
         </div>
 
         {groupedByDate.length === 0 ? (
@@ -63,18 +58,22 @@ const BookmarkPage = () => {
         ) : (
           <div className="flex flex-col gap-10 px-4 md:px-10 lg:px-20">
             {groupedByDate.map((group) => (
-              <BookmarkCarousel key={group.date} date={group.date}>
-                {group.items.map((api) => (
-                  <APICard
-                    key={api.apiId}
-                    {...api}
-                    onToggleFavorite={async () => {
-                      if (!isToggling) {
-                        await toggleBookmark(api.apiId)
-                      }
-                    }}
-                  />
-                ))}
+              <BookmarkCarousel key={group.date} date={formatDate(group.date)}>
+                <div className="flex gap-5">
+                  {group.activities.map((api) => (
+                    <APICard
+                      key={api.apiId}
+                      {...api}
+                      isFavorited={api.isFavorited}
+                      onToggleFavorite={async () => {
+                        if (!isToggling) {
+                          api.isFavorited = !api.isFavorited
+                          await toggleBookmark(api.apiId)
+                        }
+                      }}
+                    />
+                  ))}
+                </div>
               </BookmarkCarousel>
             ))}
           </div>
