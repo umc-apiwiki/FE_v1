@@ -20,7 +20,7 @@ import {
   useApiList,
 } from '@/hooks'
 import { saveBookmarkDate, removeBookmarkDate } from '@/utils/bookmarkDate'
-import type { ApiDetail } from '@/types/api' // 타입 임포트
+import type { ApiDetail } from '@/types/api'
 
 const MENUS = [
   { key: 'A', label: '개요' },
@@ -35,7 +35,7 @@ const PRICING_LABEL: Record<string, string> = {
   MIXED: 'Free & Paid',
 }
 
-// ✅ [MVP 하드코딩] 상세 페이지용 가짜 데이터 (HomePage의 ID와 일치시킴)
+// ✅ MVP 하드코딩 상세 페이지용 가짜 데이터 (HomePage의 ID와 일치시킴)
 const MOCK_DATA: Record<number, ApiDetail & { pricingType?: string }> = {
   1: {
     apiId: 1,
@@ -46,12 +46,12 @@ const MOCK_DATA: Record<number, ApiDetail & { pricingType?: string }> = {
     officialUrl: 'https://developers.google.com/youtube/v3',
     avgRating: 4.8,
     viewCounts: 1200000000,
-    categories: [{ categoryId: 101, name: 'Video' }], // 태그 검색용 가짜 ID
-    logo: '/images/YouTube.svg', // 로컬 이미지
+    categories: [{ categoryId: 101, name: 'Video' }],
+    logo: '/images/YouTube.svg',
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
     isFavorited: false,
-    pricingType: 'FREE', // 상세페이지용 추가 필드
+    pricingType: 'FREE',
   },
   2: {
     apiId: 2,
@@ -69,14 +69,28 @@ const MOCK_DATA: Record<number, ApiDetail & { pricingType?: string }> = {
     isFavorited: false,
     pricingType: 'MIXED',
   },
-  // 3번(Google Login), 4번(Open AI)... 등등 필요한 만큼 추가하시면 됩니다.
+  3: {
+    apiId: 3,
+    name: 'Google Login',
+    summary: 'Google 계정을 사용하여 간편하고 안전하게 로그인할 수 있는 API입니다.',
+    longDescription:
+      'Google Identity Services를 통해 사용자가 Google 계정으로 빠르고 안전하게 로그인할 수 있도록 지원합니다. OAuth 2.0 및 OpenID Connect 프로토콜을 준수하며, 다양한 플랫폼에서 손쉽게 통합할 수 있습니다.',
+    officialUrl: 'https://developers.google.com/identity',
+    avgRating: 4.7,
+    viewCounts: 2100000000,
+    categories: [{ categoryId: 103, name: 'Auth' }],
+    logo: '/images/Google Login.svg',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    isFavorited: false,
+    pricingType: 'FREE',
+  },
 }
 
 export default function APIDetailPage() {
   const { id } = useParams()
   const apiId = Number(id)
   const [activeMenu, setActiveMenu] = useState<'A' | 'B' | 'C' | 'D'>('A')
-  const [isFavorited, setIsFavorited] = useState(false)
 
   // 서버 데이터 호출 (하드코딩 데이터가 없을 때를 대비해 호출은 유지)
   const { data: serverApiDetail, isLoading, error, fetchApiDetail } = useApiDetail()
@@ -86,12 +100,23 @@ export default function APIDetailPage() {
   const { data: pricingData, fetchApiPricing } = useApiPricing()
   const { data: similarApisData, fetchApiList } = useApiList()
 
-  // ✅ [핵심 수정] 하드코딩 데이터가 있으면 그걸 쓰고, 없으면 서버 데이터를 쓴다!
-  // any 타입 캐스팅은 MOCK_DATA에 pricingType을 섞어놨기 때문입니다.
+  // 핵심 수정: 하드코딩 데이터가 있으면 그걸 쓰고, 없으면 서버 데이터를 쓴다!
   const finalDetail = (MOCK_DATA[apiId] || serverApiDetail) as ApiDetail & { pricingType?: string }
 
+  // 별도의 isFavorited State를 만들지 않고 finalDetail에서 직접 값을 가져오거나, 로컬에서 바뀐 값만 추적합니다.
+  const [localFavorite, setLocalFavorite] = useState<boolean | null>(null)
+  const isFavorited = localFavorite !== null ? localFavorite : (finalDetail?.isFavorited ?? false)
+
+  // WikiText 동기화 로직 최적화: 처음 위키 데이터가 로드될 때 한 번만 text state를 초기화합니다.
   const [wikiText, setWikiText] = useState('')
   const [isEditing, setIsEditing] = useState(false)
+
+  // 위키 데이터 로드 시 초기값 설정 (최초 1회만 되도록 조건 추가)
+  useEffect(() => {
+    if (wikiData && !wikiText && !isEditing) {
+      setWikiText(wikiData.content)
+    }
+  }, [wikiData, wikiText, isEditing])
 
   useEffect(() => {
     if (apiId) {
@@ -102,7 +127,7 @@ export default function APIDetailPage() {
     }
   }, [apiId, fetchApiDetail, fetchWiki, fetchApiPricing])
 
-  // ✅ [수정됨] 비슷한 API 호출 (하드코딩 데이터의 태그도 인식하도록 수정)
+  // 수정됨: 비슷한 API 호출 (하드코딩 데이터의 태그도 인식하도록 수정)
   useEffect(() => {
     if (finalDetail && finalDetail.categories && finalDetail.categories.length > 0) {
       const categoryId = finalDetail.categories[0].categoryId
@@ -114,23 +139,12 @@ export default function APIDetailPage() {
     } else if (finalDetail) {
       fetchApiList({ size: 5, sort: 'POPULAR' })
     }
-  }, [finalDetail, fetchApiList]) // apiDetail -> finalDetail로 변경
+  }, [finalDetail, fetchApiList])
 
-  useEffect(() => {
-    if (finalDetail) {
-      setIsFavorited(finalDetail.isFavorited)
-    }
-  }, [finalDetail])
-
-  useEffect(() => {
-    if (wikiData) {
-      setWikiText(wikiData.content)
-    }
-  }, [wikiData])
-
+  // 찜하기 버튼 핸들러 수정
   const handleToggleFavorite = useCallback(() => {
-    const willBeFavorited = !isFavorited
-    setIsFavorited(willBeFavorited)
+    const nextStatus = !isFavorited
+    setLocalFavorite(nextStatus) // 로컬 상태 즉시 반영
 
     toggle(apiId, (result) => {
       if (result.isFavorited) {
