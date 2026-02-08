@@ -1,6 +1,6 @@
 // mutations/usePostFavorite.ts
 import { useState, useCallback } from 'react'
-import { toggleFavorite } from '@/services/toggleFavorite'
+import { toggleFavorite } from '@/services/favorite'
 import type { FavoriteToggle } from '@/types/api'
 
 export const usePostFavorite = () => {

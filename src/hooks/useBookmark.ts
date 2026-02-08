@@ -1,6 +1,6 @@
 import { useCallback, useEffect } from 'react'
 import { useApi } from './useApi'
-import { getMyActivities } from '@/services/bookmark'
+import { getMyActivities } from '@/services/activities'
 import { toggleFavorite } from '@/services/explore'
 import type { ActivityGroup } from '@/types/api'
 import type { FavoriteToggle } from '@/types/api'

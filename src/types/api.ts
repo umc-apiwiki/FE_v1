@@ -242,3 +242,7 @@ export interface ActivityGroup {
   count: number
   activities: ActivityItem[]
 }
+
+export interface MyProfile {
+  nickname: string
+}
