@@ -8,7 +8,6 @@ const ProfilePage = () => {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[calc(100vh-80px)] relative overflow-hidden pt-10 pb-20">
-
       {/* 컨텐츠 영역 */}
       <div className="z-10 flex flex-col items-center gap-10">
         {/* 1. Title */}

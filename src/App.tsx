@@ -1,5 +1,6 @@
 // src/App.tsx
 import { createBrowserRouter, RouterProvider, type RouteObject } from 'react-router-dom'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import Layout from './components/Layout/Layout'
 import NotFoundPage from './pages/NotFoundPage'
 import HomePage from './pages/HomePage'
@@ -8,9 +9,11 @@ import AboutPage from './pages/AboutPage'
 import BookmarkPage from './pages/BookmarkPage'
 import ProfilePage from './pages/ProfilePage'
 import HistoryPage from './pages/HistoryPage'
-import { BookmarkProvider } from './context/BookmarkContext' // [추가]
+import { BookmarkProvider } from './context/BookmarkContext'
 import APIDetailPage from './pages/APIDetailPage'
 import { AuthProvider } from './context/AuthProvider'
+
+const queryClient = new QueryClient()
 
 const publicRoutes: RouteObject[] = [
   {
@@ -33,11 +36,13 @@ const router = createBrowserRouter([...publicRoutes])
 
 function App() {
   return (
-    <AuthProvider>
-      <BookmarkProvider>
-        <RouterProvider router={router} />
-      </BookmarkProvider>
-    </AuthProvider>
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <BookmarkProvider>
+          <RouterProvider router={router} />
+        </BookmarkProvider>
+      </AuthProvider>
+    </QueryClientProvider>
   )
 }
 

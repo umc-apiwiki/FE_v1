@@ -246,3 +246,44 @@ export interface ActivityGroup {
 export interface MyProfile {
   nickname: string
 }
+
+// ===== Wiki Types =====
+
+/** * 사용자의 위키 편집 내역 항목
+ */
+export interface WikiHistoryItem {
+  requestId: number
+  apiId: number
+  apiName: string
+  editedAt: string
+}
+
+/**
+ * 위키 내용 조회 응답 데이터
+ * Schema: Content
+ */
+export interface WikiContent {
+  content: string
+  version: number
+}
+
+/**
+ * 위키 수정 요청 데이터
+ * Schema: EditContent
+ */
+export interface WikiUpdateRequest {
+  content: string
+  version: number
+}
+
+/** * 위키 편집 목록 조회 파라미터
+ */
+export type WikiHistoryParams = {
+  page?: number
+  size?: number
+}
+
+/**
+ * 위키 편집 목록 응답 타입
+ */
+export type MyWikiHistory = ApiResponse<PageResponse<WikiHistoryItem>>
