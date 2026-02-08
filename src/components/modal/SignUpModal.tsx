@@ -129,6 +129,9 @@ export default function SignUpModal({ onClose, onSwitchToSignIn }: SignUpModalPr
               isError={touched.password && !!errors.password}
               {...getInputProps('password')}
             />
+            {!touched.password && (
+              <p className="absolute text-[10px] text-[#B0B0B0] pl-5">영문+숫자 포함 8자 이상</p>
+            )}
             {touched.password && errors.password && (
               <p className="absolute text-xs text-error-dark pl-5">{errors.password}</p>
             )}
