@@ -15,7 +15,7 @@ export const useApiPricing = (apiId: number) => {
       try {
         setIsLoading(true)
         const response = await getApiPricing(apiId)
-        
+
         // 응답 데이터가 성공적이면 상태를 업데이트함
         if (response.result) {
           setPricing(response.result)

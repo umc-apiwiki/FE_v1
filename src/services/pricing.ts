@@ -1,4 +1,4 @@
-import { axiosInstance } from '@/apis/axios'
+import api from './api'
 import type { ApiResponse, ApiPricing } from '@/types/api'
 
 /**
@@ -6,7 +6,16 @@ import type { ApiResponse, ApiPricing } from '@/types/api'
  * GET /api/v1/apis/{apiId}/pricing
  */
 export const getApiPricing = async (apiId: number): Promise<ApiResponse<ApiPricing>> => {
-  // 해당 API의 요금 유형 및 상세 요금 정보를 조회함
-  const { data } = await axiosInstance.get<ApiResponse<ApiPricing>>(`/api/v1/apis/${apiId}/pricing`)
-  return data
+  try {
+    const response = await api.get(`/api/v1/apis/${apiId}/pricing`)
+    return response.data
+  } catch (error: unknown) {
+    if (error && typeof error === 'object' && 'response' in error) {
+      const axiosError = error as { response?: { data?: ApiResponse<ApiPricing> } }
+      if (axiosError.response?.data) {
+        return axiosError.response.data
+      }
+    }
+    throw error
+  }
 }
