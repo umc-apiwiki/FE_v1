@@ -98,6 +98,7 @@ export default function APIDetailPage() {
   const finalDetail = (MOCK_DATA[apiId] || serverApiDetail) as ApiDetail & { pricingType?: string }
 
   const isFavorited = finalDetail?.isFavorited ?? false
+  const [localFavorite, setLocalFavorite] = useState<boolean | null>(null)
 
   // WikiText 동기화 로직 최적화: 린트 에러 해결을 위해 useEffect 대신 렌더링 시점에 값을 결정합니다.
   const [isEditing, setIsEditing] = useState(false)
@@ -129,15 +130,24 @@ export default function APIDetailPage() {
     }
   }, [finalDetail, fetchApiList])
 
-  // 찜하기 버튼 핸들러 수정
+  // 찜하기 버튼 핸들러 수정 (낙관적 업데이트)
   const handleToggleFavorite = useCallback(async () => {
     if (isToggling) return
 
-    const result = await toggleFavorite(apiId)
+    const nextStatus = !isFavorited
+    setLocalFavorite(nextStatus) // 클릭 즉시 UI 반영
 
-    // 서버 응답 기준으로 상태 반영
-    finalDetail.isFavorited = result.isFavorited
-  }, [apiId, toggleFavorite, isToggling, finalDetail])
+    try {
+      const result = await toggleFavorite(apiId)
+      // 서버 응답이 다르면 롤백
+      if (result.isFavorited !== nextStatus) {
+        setLocalFavorite(result.isFavorited)
+      }
+    } catch (e) {
+      // 서버 실패 시 이전 상태로 복구
+      setLocalFavorite(!nextStatus)
+    }
+  }, [apiId, isFavorited, toggleFavorite, isToggling])
 
   const handleSaveWiki = async () => {
     if (!displayWikiText.trim()) {

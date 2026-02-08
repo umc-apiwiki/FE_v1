@@ -17,7 +17,6 @@ export const usePostFavorite = () => {
       if (!res.isSuccess || !res.result) {
         throw new Error(res.message || '좋아요 처리 실패')
       }
-      console.log(res.result)
       return res.result
     } finally {
       setIsLoading(false)
