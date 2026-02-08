@@ -1,12 +1,11 @@
 import Category from './Category'
+import type { CategoryItem } from '@/types/api'
 
-export default function PricingSection() {
-  const categories = [
-    { id: 1, name: '결제' },
-    { id: 2, name: '소셜로그인' },
-    { id: 3, name: '지도' },
-    { id: 4, name: '날씨' },
-  ]
+type PricingSectionProps = {
+  categories: CategoryItem[]
+}
+
+export default function PricingSection({ categories }: PricingSectionProps) {
   return (
     <div>
       {/* 요금제 */}
@@ -28,15 +27,16 @@ export default function PricingSection() {
         </p>
       </div>
       {/* 카테고리 */}
-      <div className="z-10">
-        <span className="text-[22px] font-medium text-info-darker">카테고리</span>
-
-        <div className="flex gap-3 mt-3 mb-6">
-          {categories.map((cat) => (
-            <Category key={cat.id} category={cat} />
-          ))}
+      {categories.length > 0 && (
+        <div className="z-10">
+          <span className="text-[22px] font-medium text-info-darker">카테고리</span>
+          <div className="flex gap-3 mt-3 mb-6">
+            {categories.map((cat) => (
+              <Category key={cat.categoryId} category={{ id: cat.categoryId, name: cat.name }} />
+            ))}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   )
 }

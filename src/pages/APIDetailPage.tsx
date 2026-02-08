@@ -265,7 +265,7 @@ export default function APIDetailPage() {
               categories={finalDetail.categories}
             />
           )}
-          {activeMenu === 'B' && <PricingSection />}
+          {activeMenu === 'B' && <PricingSection categories={finalDetail.categories} />}
           {activeMenu === 'C' && <ReviewSection />}
           {activeMenu === 'D' && <CodeExampleSection />}
         </div>
