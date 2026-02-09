@@ -242,3 +242,42 @@ export interface ActivityGroup {
   count: number
   activities: ActivityItem[]
 }
+
+// ===== Review API Types =====
+
+/** * 리뷰 작성 요청 데이터 
+ * Schema: PostReviewRequest
+ */
+export interface PostReviewRequest {
+  rating: number
+  comment: string
+}
+
+/** * 리뷰 작성 결과 데이터 
+ * Schema: PostReviewResult
+ */
+export interface PostReviewResult {
+  rating: number
+  comment: string
+}
+
+/** * 리뷰 목록 조회를 위한 개별 리뷰 데이터
+ */
+export interface ReviewItem {
+  reviewId: number
+  nickname: string
+  rating: number
+  comment: string
+  createdAt: string
+  updatedAt: string
+}
+
+/**
+ * 리뷰 작성 응답 타입
+ */
+export type PostReviewResponse = ApiResponse<PostReviewResult>
+
+/**
+ * 리뷰 목록 조회 응답 타입 (페이지네이션 적용 시)
+ */
+export type ReviewListResponse = ApiResponse<PageResponse<ReviewItem>>
