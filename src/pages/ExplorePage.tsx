@@ -52,17 +52,26 @@ const ExplorePage = () => {
   // 이전 API 호출 params 저장 (중복 호출 방지용)
   const prevParamsRef = useRef<string>('')
 
-  // pageData 수신 시 items 업데이트 (무한 스크롤 누적)
+  // ✅ [수정됨] pageData 수신 시 items 업데이트 (중복 제거 로직 추가)
   useEffect(() => {
     if (!pageData?.content) return
 
     /* eslint-disable react-hooks/set-state-in-effect */
     if (isResetRef.current) {
-      // 검색/필터/정렬 변경 → 교체
+      // 검색/필터/정렬 변경 시에는 목록을 아예 교체
       setItems(pageData.content)
     } else {
-      // 무한 스크롤 → 기존 목록에 추가
-      setItems((prev) => [...prev, ...pageData.content])
+      // 무한 스크롤 시에는 기존 목록에 추가 (단, 중복된 ID는 제거)
+      setItems((prev) => {
+        // 1. 기존에 이미 있는 ID들을 Set으로 저장 (빠른 검색용)
+        const existingIds = new Set(prev.map((item) => item.apiId))
+
+        // 2. 새로 들어온 데이터 중, 기존에 없는 것만 필터링
+        const newItems = pageData.content.filter((item) => !existingIds.has(item.apiId))
+
+        // 3. 기존 목록 뒤에 새로운 아이템만 붙임
+        return [...prev, ...newItems]
+      })
     }
     setHasMore(!pageData.last)
     setTotalElements(pageData.totalElements)

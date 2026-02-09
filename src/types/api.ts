@@ -159,6 +159,7 @@ export type CategoryItem = {
 
 /** API 상세 조회 */
 export type ApiDetail = {
+  pricingType: string | undefined
   apiId: number
   name: string
   summary: string
