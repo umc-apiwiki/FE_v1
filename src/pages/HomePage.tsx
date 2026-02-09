@@ -9,12 +9,12 @@ import NewsCard from '@/components/NewsCard'
 import type { ApiPreview } from '@/types/api'
 import { useApiList } from '@/hooks'
 
-// ... (1. 타겟 설정 및 2. 뉴스 데이터 부분은 기존과 동일하므로 생략하지 않고 전체 포함) ...
+// -------------------- 1. 타겟 설정 (화면에 보여줄 하드코딩 데이터) --------------------
 
 interface TargetConfig {
-  dbName: string
-  localImage: string
-  fallbackTitle: string
+  dbName: string // DB 매칭 시도용 이름
+  localImage: string // 로컬 이미지 경로
+  fallbackTitle: string // 화면에 보여줄 제목 (무조건 이거 사용)
   mockRating: number
   mockReviews: number
   mockPrice: string
@@ -49,7 +49,7 @@ const TARGET_POPULAR: TargetConfig[] = [
     dbName: 'OpenAI GPT-4',
     localImage: '/images/Open AI.svg',
     fallbackTitle: 'Open AI',
-    mockRating: 4.9,
+    mockRating: 4.2,
     mockReviews: 3400,
     mockPrice: 'Paid',
   },
@@ -57,7 +57,7 @@ const TARGET_POPULAR: TargetConfig[] = [
     dbName: 'Gmail_Fake',
     localImage: '/images/Gmail.svg',
     fallbackTitle: 'Gmail',
-    mockRating: 4.6,
+    mockRating: 4.9,
     mockReviews: 540,
     mockPrice: 'Free',
   },
@@ -68,7 +68,7 @@ const TARGET_SUGGEST: TargetConfig[] = [
     dbName: 'Map_Fake_1',
     localImage: '/images/국토부 2D지도API.svg',
     fallbackTitle: '국토부 2D지도',
-    mockRating: 4.3,
+    mockRating: 4.8,
     mockReviews: 120,
     mockPrice: 'Free',
   },
@@ -76,7 +76,7 @@ const TARGET_SUGGEST: TargetConfig[] = [
     dbName: 'Naver_Fake',
     localImage: '/images/Naver.svg',
     fallbackTitle: 'Naver',
-    mockRating: 4.5,
+    mockRating: 4.3,
     mockReviews: 890,
     mockPrice: 'Mixed',
   },
@@ -84,7 +84,7 @@ const TARGET_SUGGEST: TargetConfig[] = [
     dbName: 'KakaoPay_Fake',
     localImage: '/images/카카오페이.svg',
     fallbackTitle: '카카오페이',
-    mockRating: 4.2,
+    mockRating: 3.6,
     mockReviews: 320,
     mockPrice: 'Free',
   },
@@ -100,12 +100,13 @@ const TARGET_SUGGEST: TargetConfig[] = [
     dbName: 'NaverMap_Fake',
     localImage: '/images/네이버지도.svg',
     fallbackTitle: '네이버 지도',
-    mockRating: 4.4,
+    mockRating: 3.7,
     mockReviews: 670,
     mockPrice: 'Paid',
   },
 ]
 
+// -------------------- 2. 뉴스 데이터 --------------------
 interface NewsData {
   title: string
   publisher: string
@@ -119,28 +120,28 @@ const newsItems: NewsData[] = [
     thumb: '/images/쿠팡 중국인.svg',
   },
   {
-    title: 'AI가 코드 짜는 시대, 개발자의 역할은...',
+    title: 'AI가 코드 짜는 시대, ‘개발자’의 역할과 이름을 다시 ...',
     publisher: '/images/잇월드.svg',
     thumb: '/images/AI.svg',
   },
   {
-    title: '"대기업 꿈꾸다 이젠 해외로"',
+    title: '"대기업 꿈꾸다 이젠 해외로"…영어학원의 IT개발자들',
     publisher: '/images/노컷뉴스.svg',
     thumb: '/images/대기업.svg',
   },
   {
-    title: 'NIA-경기도경제과학진흥원, 업무협약',
+    title: 'NIA-경기도경제과학진흥원, AI 윤리 문화 업무협약',
     publisher: '/images/경북신문.svg',
     thumb: '/images/NIA.svg',
   },
   {
-    title: '업스테이지, 일본 AI시장 공략',
+    title: "업스테이지, 日 AI시장 '온프레미스'와 'API'로 공략",
     publisher: '/images/더일렉.svg',
     thumb: '/images/업스테이지.svg',
   },
 ]
 
-// -------------------- 3. ScrollableSection (버그 수정 완료) --------------------
+// -------------------- 3. ScrollableSection --------------------
 const ScrollableSection = ({
   title,
   data,
@@ -186,7 +187,6 @@ const ScrollableSection = ({
     document.body.style.userSelect = 'none'
     document.addEventListener('mousemove', onDragMove)
     document.addEventListener('mouseup', onDragEnd)
-    // 마우스가 화면 밖으로 나가버렸을 때를 대비해 mouseleave도 추가
     document.addEventListener('mouseleave', onDragEnd)
   }
 
@@ -237,8 +237,7 @@ const ScrollableSection = ({
         ref={scrollRef}
         onWheel={handleWheel}
         onMouseDown={(e) => onDragStart(e, 'content')}
-        // ✅ [핵심 수정] 브라우저 고유의 이미지 드래그 기능(Ghost Image)을 꺼버립니다.
-        // 이제 로고를 잡고 끌어도 "이미지 파일 이동"이 아니라 "스크롤"이 됩니다.
+        // 이미지 드래그 방지 (중요)
         onDragStart={(e) => e.preventDefault()}
         className={`flex overflow-x-auto gap-6 pb-4 no-scrollbar scroll-smooth ${
           isDragging.current && dragTarget.current === 'content' ? 'cursor-grabbing' : 'cursor-grab'
@@ -290,24 +289,31 @@ const HomePage = () => {
     fetchApiList({ sort: 'POPULAR', size: 100 })
   }, [fetchApiList])
 
+  // ✅ [수정된 로직] 화면은 하드코딩 데이터 강제 + 링크는 서버 ID 연결
   const mergeData = (targets: TargetConfig[], fetchedList: ApiPreview[] = []) => {
     return targets.map((target) => {
+      // 1. 실제 DB에 해당 API가 있는지 확인
       const realData = fetchedList.find((item) => item.name === target.dbName)
-      if (realData) {
-        return { ...realData, logo: target.localImage }
-      }
+
+      // 2. 링크 연결할 ID 결정 (중요!)
+      // - 진짜 데이터가 있으면 그 ID (예: 12)
+      // - 없으면? 서버 리스트의 "첫 번째 API ID"를 빌려옴 (예: 5) -> 이렇게 하면 404 안 뜸
+      // - 서버 리스트도 비었으면? 그냥 1번 (예비용)
+      const linkedApiId = realData?.apiId ?? fetchedList[0]?.apiId ?? 1
+
+      // 3. 리턴되는 데이터: 화면에 보여줄 내용은 무조건 target(하드코딩) 값 사용
       return {
-        apiId: 0,
-        name: target.fallbackTitle,
+        apiId: linkedApiId, // 클릭 시 이동할 ID (실제 존재하는 페이지로 납치)
+        name: target.fallbackTitle, // 이름은 하드코딩된 값 (예: Gmail)
         summary: '주요 기능을 제공하는 인기 API입니다.',
-        avgRating: target.mockRating,
-        reviewCount: target.mockReviews,
+        avgRating: target.mockRating, // 별점도 하드코딩
+        reviewCount: target.mockReviews, // 리뷰 수도 하드코딩
         viewCounts: target.mockReviews * 150,
         pricingType: target.mockPrice,
         authType: 'API_KEY',
         providerCompany: 'ETC',
         isFavorited: false,
-        logo: target.localImage,
+        logo: target.localImage, // 로고도 하드코딩
       } as unknown as ApiPreview
     })
   }
@@ -342,18 +348,24 @@ const HomePage = () => {
   return (
     <div className="w-full flex flex-col items-center justify-center min-h-screen">
       <div className="w-full flex flex-col items-center pt-24 pb-24 animate-slide-up">
+        {/* 뉴스 섹션 */}
         <ScrollableSection title="Latest News" data={newsItems} type="news" />
+
+        {/* Popular API (하드코딩 비주얼 + 실제 링크) */}
         <ScrollableSection
           title="Recent Popular"
           data={mergeData(TARGET_POPULAR, serverData?.content)}
           type="api"
         />
+
+        {/* Suggest API (하드코딩 비주얼 + 실제 링크) */}
         <ScrollableSection
           title="Suggest API"
           data={mergeData(TARGET_SUGGEST, serverData?.content)}
           type="api"
         />
       </div>
+
       <BottomButtonSection onClick={toggleView} isExpanded={true} />
     </div>
   )

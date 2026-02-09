@@ -13,7 +13,6 @@ import APICardSmall from '@/components/APICardSmall'
 
 import { useApiDetail, useWikiContent, useWikiUpdate, useApiList, useApiPricing } from '@/hooks'
 import { usePostFavorite } from '@/hooks/mutations/usePostFavorite'
-import type { ApiDetail } from '@/types/api'
 
 const MENUS = [
   { key: 'A', label: '개요' },
@@ -28,97 +27,19 @@ const PRICING_LABEL: Record<string, string> = {
   MIXED: 'Free & Paid',
 }
 
-// 1. 기존 목데이터
-const MOCK_DATA: Record<number, ApiDetail & { pricingType?: string }> = {
-  1: {
-    apiId: 1,
-    name: 'YouTube Data API',
-    summary: 'YouTube의 동영상, 채널, 재생목록 등을 관리할 수 있는 API입니다.',
-    longDescription:
-      'YouTube Data API를 사용하면 애플리케이션에 YouTube 기능을 통합할 수 있습니다...',
-    officialUrl: 'https://developers.google.com/youtube/v3',
-    avgRating: 4.8,
-    viewCounts: 1200000000,
-    categories: [{ categoryId: 101, name: 'Video' }],
-    logo: '/images/YouTube.svg',
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-    isFavorited: false,
-    pricingType: 'FREE',
-  },
-  2: {
-    apiId: 2,
-    name: 'OpenStreetMap',
-    summary: '전 세계의 무료 지도 데이터를 제공하는 오픈 소스 프로젝트입니다.',
-    longDescription: 'OpenStreetMap(OSM)은 누구나 편집할 수 있는 무료 지도 데이터베이스입니다...',
-    officialUrl: 'https://www.openstreetmap.org',
-    avgRating: 4.1,
-    viewCounts: 760000000,
-    categories: [{ categoryId: 102, name: 'Map' }],
-    logo: '/images/OpenStreetMap.svg',
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-    isFavorited: false,
-    pricingType: 'MIXED',
-  },
-  3: {
-    apiId: 3,
-    name: 'Google Login',
-    summary: 'Google 계정을 사용하여 간편하고 안전하게 로그인할 수 있는 API입니다.',
-    longDescription:
-      'Google Identity Services를 통해 사용자가 Google 계정으로 빠르고 안전하게 로그인할 수 있도록 지원합니다...',
-    officialUrl: 'https://developers.google.com/identity',
-    avgRating: 4.7,
-    viewCounts: 2100000000,
-    categories: [{ categoryId: 103, name: 'Auth' }],
-    logo: '/images/Google Login.svg',
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-    isFavorited: false,
-    pricingType: 'FREE',
-  },
-}
-
-// 2. 비상용 목데이터
-const FALLBACK_DETAIL: ApiDetail & { pricingType?: string } = {
-  apiId: 0,
-  name: 'API 정보 준비 중',
-  summary: '현재 해당 API에 대한 상세 정보를 업데이트하고 있습니다.',
-  longDescription:
-    '이 API는 아직 상세 정보가 등록되지 않았거나, 데이터베이스 연동이 준비 중입니다. 잠시 후 다시 시도해 주세요.',
-  officialUrl: '',
-  avgRating: 0,
-  viewCounts: 0,
-  categories: [{ categoryId: 0, name: 'Etc' }],
-  logo: '',
-  createdAt: new Date().toISOString(),
-  updatedAt: new Date().toISOString(),
-  isFavorited: false,
-  pricingType: 'FREE',
-}
-
 export default function APIDetailPage() {
   const { id } = useParams()
-  const apiId = Number(id)
+  const apiId = Number(id) || 0
   const [activeMenu, setActiveMenu] = useState<'A' | 'B' | 'C' | 'D'>('A')
 
-  const {
-    data: serverApiDetail,
-    isLoading: isDetailLoading,
-    error,
-    fetchApiDetail,
-  } = useApiDetail()
+  // ✅ 서버 데이터 가져오기 (가짜 데이터 로직 삭제됨)
+  const { data: finalDetail, isLoading: isDetailLoading, error, fetchApiDetail } = useApiDetail()
 
   const { mutate: toggleFavorite, isLoading: isToggling } = usePostFavorite()
   const { data: wikiData, fetchWiki } = useWikiContent()
   const { saveWiki } = useWikiUpdate()
   const { data: similarApisData, fetchApiList } = useApiList()
   const { pricing: pricingData } = useApiPricing(apiId)
-
-  // ✅ [수정 완료] 타입을 강제로 지정(as ...)하여 에러 해결!
-  const finalDetail = (serverApiDetail || MOCK_DATA[apiId] || FALLBACK_DETAIL) as ApiDetail & {
-    pricingType?: string
-  }
 
   const [localFavorite, setLocalFavorite] = useState<boolean | null>(null)
   const isFavorited = localFavorite ?? finalDetail?.isFavorited ?? false
@@ -160,10 +81,6 @@ export default function APIDetailPage() {
     if (!displayWikiText.trim()) return alert('내용을 입력해주세요.')
     try {
       const currentVersion = wikiData?.version ?? 0
-      if (apiId === 0) {
-        alert('준비 중인 API는 위키를 수정할 수 없습니다.')
-        return
-      }
       await saveWiki(apiId, { content: displayWikiText, version: currentVersion })
       alert('위키가 저장되었습니다!')
       await fetchWiki(apiId)
@@ -186,34 +103,40 @@ export default function APIDetailPage() {
     setIsEditing(true)
   }
 
-  // 로딩 화면
-  if (isDetailLoading && !finalDetail && apiId !== 0)
+  // ✅ 1. 로딩 중
+  if (isDetailLoading) {
     return (
       <div className="flex justify-center items-center min-h-[60vh]">
         <div className="w-8 h-8 border-4 border-brand-500 border-t-transparent rounded-full animate-spin" />
       </div>
     )
+  }
 
-  // 에러 화면
-  if (error && !finalDetail && apiId !== 0)
+  // ✅ 2. 에러가 있거나, 데이터가 없을 때 -> 에러 화면 출력
+  if (error || !finalDetail) {
     return (
-      <div className="text-center py-20 text-red-500 font-sans">
-        <p>{error}</p>
+      <div className="text-center py-20 text-red-500 font-sans mt-20">
+        <p className="text-xl font-bold mb-4">
+          {error ? '데이터를 불러오지 못했습니다.' : '존재하지 않는 API입니다.'}
+        </p>
+        <p className="mb-6 text-gray-600">{error || '요청하신 데이터를 찾을 수 없습니다.'}</p>
         <button
           type="button"
           onClick={() => fetchApiDetail(apiId)}
-          className="mt-4 px-6 py-2 bg-brand-500 text-white rounded-full text-sm"
+          className="px-6 py-2 bg-brand-500 text-white rounded-full text-sm hover:bg-brand-600 transition-colors"
         >
           다시 시도
         </button>
       </div>
     )
+  }
 
-  if (!finalDetail) return null
+  // ✅ 3. 가격 데이터 표시 로직
+  // 서버 값이 있으면 쓰고, 없으면 undefined/null 상태로 둠
+  const pricingType = finalDetail.pricingType || pricingData?.pricingType
 
-  // ✅ 이제 pricingType 에러가 안 날 겁니다!
-  const pricingType = finalDetail.pricingType || pricingData?.pricingType || 'FREE'
-  const displayPricing = PRICING_LABEL[pricingType] ?? pricingType
+  // 화면 표시: 값이 있으면 번역, 없으면 '-' 표시
+  const displayPricing = pricingType ? (PRICING_LABEL[pricingType] ?? pricingType) : '-'
 
   return (
     <div className="mx-auto px-16 mt-32 2xl:mx-44 font-['Pretendard_Variable']">
@@ -221,12 +144,14 @@ export default function APIDetailPage() {
         <div className="flex flex-col justify-center gap-2 mt-3 w-full md:w-auto">
           <h1 className="font-semibold text-[50px] text-info-darker mb-10">{finalDetail.name}</h1>
           <p className="font-medium text-2xl text-info-dark">
-            Star {finalDetail.avgRating.toFixed(1)}
+            Star {(finalDetail.avgRating || 0).toFixed(1)}
           </p>
           <p className="font-medium text-2xl text-info-dark mb-4">
-            {finalDetail.viewCounts.toLocaleString()} views
+            {(finalDetail.viewCounts || 0).toLocaleString()} views
           </p>
+          {/* 가격 정보 표시 (없으면 - 로 나옴) */}
           <div className="text-zinc-400 text-xl font-normal mb-6">{displayPricing}</div>
+
           {finalDetail.officialUrl && (
             <a
               href={finalDetail.officialUrl}
@@ -247,7 +172,7 @@ export default function APIDetailPage() {
             />
           ) : (
             <span className="text-brand-500 font-semibold text-6xl">
-              {finalDetail.name.charAt(0).toUpperCase()}
+              {finalDetail.name ? finalDetail.name.charAt(0).toUpperCase() : 'API'}
             </span>
           )}
         </div>
@@ -296,7 +221,7 @@ export default function APIDetailPage() {
         </div>
       </div>
 
-      {/* 위키 */}
+      {/* 위키 영역 */}
       <div className="mt-20">
         <div className="flex flex-col max-w-[1112px]">
           <div className="flex justify-between items-end mb-3">
@@ -356,7 +281,7 @@ export default function APIDetailPage() {
         </div>
       </div>
 
-      {/* 비슷한 API */}
+      {/* 비슷한 API 추천 */}
       <div className="mt-20 mb-20">
         <div className="mb-6">
           <span className="font-medium text-2xl text-info-darker">비슷한 API</span>
