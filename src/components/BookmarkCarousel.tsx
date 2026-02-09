@@ -18,7 +18,6 @@ export default function BookmarkCarousel({ date, children }: BookmarkCarouselPro
 
   const MAX_MOVE = 24
 
-  // 카드 위에서 휠을 굴릴 때 가로 스크롤로 강제 전환
   const handleWheel = (e: React.WheelEvent) => {
     if (scrollRef.current) {
       scrollRef.current.scrollLeft += e.deltaY
@@ -39,9 +38,12 @@ export default function BookmarkCarousel({ date, children }: BookmarkCarouselPro
     if (scrollRef.current) startScrollLeft.current = scrollRef.current.scrollLeft
     startIndicatorX.current = indicatorX
 
+    // eslint-disable-next-line
     document.body.style.userSelect = 'none'
     document.addEventListener('mousemove', onDragMove)
     document.addEventListener('mouseup', onDragEnd)
+    // 안전장치 추가
+    document.addEventListener('mouseleave', onDragEnd)
   }
 
   const onDragMove = (e: MouseEvent) => {
@@ -49,12 +51,11 @@ export default function BookmarkCarousel({ date, children }: BookmarkCarouselPro
     const deltaX = e.clientX - startX.current
 
     if (dragTarget.current === 'handle') {
-      let newX = Math.max(0, Math.min(startIndicatorX.current + deltaX, MAX_MOVE))
+      const newX = Math.max(0, Math.min(startIndicatorX.current + deltaX, MAX_MOVE))
       setIndicatorX(newX)
       const { scrollWidth, clientWidth } = scrollRef.current
       scrollRef.current.scrollLeft = (newX / MAX_MOVE) * (scrollWidth - clientWidth)
     } else {
-      // ✅ 드래그 중에는 부드러운 스크롤을 끄고 즉시 이동 (ref로 직접 제어)
       scrollRef.current.style.scrollBehavior = 'auto'
       scrollRef.current.scrollLeft = startScrollLeft.current - deltaX
     }
@@ -64,14 +65,15 @@ export default function BookmarkCarousel({ date, children }: BookmarkCarouselPro
     isDragging.current = false
     dragTarget.current = null
 
-    // ✅ 드래그 끝나면 다시 부드럽게 복구
     if (scrollRef.current) {
       scrollRef.current.style.scrollBehavior = 'smooth'
     }
 
+    // eslint-disable-next-line
     document.body.style.userSelect = ''
     document.removeEventListener('mousemove', onDragMove)
     document.removeEventListener('mouseup', onDragEnd)
+    document.removeEventListener('mouseleave', onDragEnd)
   }
 
   useEffect(() => {
@@ -87,6 +89,8 @@ export default function BookmarkCarousel({ date, children }: BookmarkCarouselPro
         ref={scrollRef}
         onWheel={handleWheel}
         onMouseDown={(e) => onDragStart(e, 'content')}
+        // ✅ [핵심] 여기서 기본 드래그 막음 (로고 드래그 시 스크롤 되도록)
+        onDragStart={(e) => e.preventDefault()}
         className={`flex gap-10 overflow-x-auto pb-4 pr-10 px-4 lg:px-0 no-scrollbar select-none ${
           isDragging.current && dragTarget.current === 'content' ? 'cursor-grabbing' : 'cursor-grab'
         }`}

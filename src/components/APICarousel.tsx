@@ -8,11 +8,11 @@ interface APICarouselProps {
 
 export default function APICarousel({ title, children }: APICarouselProps) {
   const scrollRef = useRef<HTMLDivElement>(null)
+
   const isDragging = useRef(false)
   const startX = useRef(0)
   const startScrollLeft = useRef(0)
 
-  // 가로 휠 스크롤 지원
   const handleWheel = (e: React.WheelEvent) => {
     if (scrollRef.current) {
       scrollRef.current.scrollLeft += e.deltaY
@@ -33,15 +33,16 @@ export default function APICarousel({ title, children }: APICarouselProps) {
     startX.current = e.clientX
     startScrollLeft.current = scrollRef.current.scrollLeft
 
+    // eslint-disable-next-line
     document.body.style.userSelect = 'none'
     document.addEventListener('mousemove', onDragMove)
     document.addEventListener('mouseup', onDragEnd)
+    document.addEventListener('mouseleave', onDragEnd)
   }
 
   const onDragMove = (e: MouseEvent) => {
     if (!isDragging.current || !scrollRef.current) return
     const deltaX = e.clientX - startX.current
-    // 드래그 중에는 smooth behavior를 끄기 위해 직접 scrollLeft 조절
     scrollRef.current.style.scrollBehavior = 'auto'
     scrollRef.current.scrollLeft = startScrollLeft.current - deltaX
   }
@@ -49,9 +50,12 @@ export default function APICarousel({ title, children }: APICarouselProps) {
   const onDragEnd = () => {
     isDragging.current = false
     if (scrollRef.current) scrollRef.current.style.scrollBehavior = 'smooth'
+
+    // eslint-disable-next-line
     document.body.style.userSelect = ''
     document.removeEventListener('mousemove', onDragMove)
     document.removeEventListener('mouseup', onDragEnd)
+    document.removeEventListener('mouseleave', onDragEnd)
   }
 
   return (
@@ -70,8 +74,10 @@ export default function APICarousel({ title, children }: APICarouselProps) {
 
         <div
           ref={scrollRef}
-          onWheel={handleWheel} // 휠 스크롤 추가
+          onWheel={handleWheel}
           onMouseDown={onDragStart}
+          // ✅ 브라우저 기본 이미지 드래그 방지
+          onDragStart={(e) => e.preventDefault()}
           className={`flex overflow-x-auto gap-6 no-scrollbar pb-4 scroll-smooth ${isDragging.current ? 'cursor-grabbing' : 'cursor-grab'}`}
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
