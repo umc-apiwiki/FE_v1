@@ -47,15 +47,32 @@ export default function ReviewSection() {
   const [newReview, setNewReview] = useState({ rating: 5, comment: '' })
   const { createReview, isLoading } = usePostReview()
 
+  /* reviewId와 isMine 여부를 포함한 데이터 예시 */
   const reviews = [
     {
+      reviewId: 101,
       name: '홍길동',
       score: 5,
       text: '너무조아요 밥도 맛잇고 우양ㅇ냘어ㅑㅇㄴ멀아ㅣㄴ멀아ㅣㄴ멀;ㅏ인;머라인ㅁ;ㅓ라인;머라ㅣ;엄나ㅣ렁니마;ㅓㄹ아ㅣㄴ멀아ㅣㄴㅁ;ㅓㄹ이ㅏㄴ머라ㅣㅇ넘리ㅏ어마ㅣ;ㅓㅇ리ㅏㅁ;ㅓㄹ이ㅏㄴ;ㅓㅁ라ㅣ;러;ㅣㄴㅁ아ㅓㄹ;ㅏㅣㅇㅇㄴㅁㄹㅇㄴㄻㄴㅁ',
       date: '2026년 01월 30일',
+      isMine: true, // 본인 리뷰 테스트용
     },
-    { name: '김철수', score: 4, text: '괜찮아요, 만족합니다.', date: '2026년 01월 28일' },
-    { name: '이영희', score: 3, text: '보통이에요, 기대보다는 아쉬움.', date: '2026년 01월 25일' },
+    {
+      reviewId: 102,
+      name: '김철수',
+      score: 4,
+      text: '괜찮아요, 만족합니다.',
+      date: '2026년 01월 28일',
+      isMine: false,
+    },
+    {
+      reviewId: 103,
+      name: '이영희',
+      score: 3,
+      text: '보통이에요, 기대보다는 아쉬움.',
+      date: '2026년 01월 25일',
+      isMine: false,
+    },
   ]
 
   const data: RatingSummary = {
@@ -84,12 +101,10 @@ export default function ReviewSection() {
 
   return (
     <div className="flex flex-col">
-      {/* 실사용자 후기 타이틀 */}
       <div className="mb-6">
         <span className="font-medium text-info-darker text-[22px]">실사용자 후기</span>
       </div>
 
-      {/* 별점 및 막대 그래프 영역 (기존 코드와 100% 동일) */}
       <div className="flex items-center h-60 mb-10">
         <div className="flex gap-12 items-start w-full">
           <div className="flex flex-col justify-center items-center h-full">
@@ -124,7 +139,6 @@ export default function ReviewSection() {
         </div>
       </div>
 
-      {/* 리뷰 작성 영역 (위키 스타일 적용) */}
       <div className="w-full max-w-[1140px] border border-brand-500 rounded-xl bg-white overflow-hidden p-6 mb-12">
         <div className="flex justify-between items-center mb-4">
           <span className="font-sans font-medium text-lg text-info-dark">리뷰 남기기</span>
@@ -163,20 +177,20 @@ export default function ReviewSection() {
         </div>
       </div>
 
-      {/* 리뷰 목록 영역 (기존 코드와 100% 동일) */}
       <div className="flex flex-col gap-8">
-        {reviews.map((review, index) => (
+        {reviews.map((review) => (
           <Review
-            key={index}
+            key={review.reviewId} // index 대신 고유 ID 사용
+            reviewId={review.reviewId}
             name={review.name}
             score={review.score}
             text={review.text}
             date={review.date}
+            isMine={review.isMine} // 본인 여부 전달
           />
         ))}
       </div>
 
-      {/* 리뷰 모두 보기 */}
       <div className="font-medium text-brand-500 text-[22px] mt-10 mb-10 cursor-pointer">
         리뷰 모두 보기
       </div>

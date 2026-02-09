@@ -1,5 +1,10 @@
 import { axiosInstance } from '@/apis/axios'
-import type { ApiResponse, PostReviewRequest, PostReviewResult } from '@/types/api'
+import type {
+  ApiResponse,
+  PostReviewRequest,
+  PostReviewResult,
+  DeleteReviewResult,
+} from '@/types/api'
 
 /**
  * 특정 API에 대한 리뷰 작성
@@ -17,16 +22,29 @@ export const postReview = async (
 }
 
 /**
- * 특정 API의 리뷰 목록 조회 (필요 시 활용)
+ * 특정 API의 리뷰 목록 조회
  * GET /api/v1/apis/{apiId}/reviews
  */
 export const getApiReviews = async (
   apiId: number,
   params?: { page?: number; size?: number }
 ): Promise<ApiResponse<any>> => {
-  const { data } = await axiosInstance.get<ApiResponse<any>>(
-    `/api/v1/apis/${apiId}/reviews`,
-    { params }
+  const { data } = await axiosInstance.get<ApiResponse<any>>(`/api/v1/apis/${apiId}/reviews`, {
+    params,
+  })
+  return data
+}
+
+/**
+ * 특정 API에 작성된 본인의 리뷰 삭제
+ * DELETE /api/v1/apis/{apiId}/reviews/{reviewId}
+ */
+export const deleteReview = async (
+  apiId: number,
+  reviewId: number
+): Promise<ApiResponse<DeleteReviewResult>> => {
+  const { data } = await axiosInstance.delete<ApiResponse<DeleteReviewResult>>(
+    `/api/v1/apis/${apiId}/reviews/${reviewId}`
   )
   return data
 }

@@ -245,7 +245,7 @@ export interface ActivityGroup {
 
 // ===== Review API Types =====
 
-/** * 리뷰 작성 요청 데이터 
+/** * 리뷰 작성 요청 데이터
  * Schema: PostReviewRequest
  */
 export interface PostReviewRequest {
@@ -253,7 +253,7 @@ export interface PostReviewRequest {
   comment: string
 }
 
-/** * 리뷰 작성 결과 데이터 
+/** * 리뷰 작성 결과 데이터
  * Schema: PostReviewResult
  */
 export interface PostReviewResult {
@@ -281,3 +281,25 @@ export type PostReviewResponse = ApiResponse<PostReviewResult>
  * 리뷰 목록 조회 응답 타입 (페이지네이션 적용 시)
  */
 export type ReviewListResponse = ApiResponse<PageResponse<ReviewItem>>
+
+// ===== Review Delete Types =====
+
+/** * 리뷰 삭제 경로 파라미터
+ */
+export interface DeleteReviewPathParams {
+  apiId: number
+  reviewId: number
+}
+
+/** * 리뷰 삭제 성공 시 결과 데이터
+ * Schema: PostReviewResult와 동일한 구조
+ */
+export interface DeleteReviewResult {
+  rating: number
+  comment: string
+}
+
+/**
+ * 리뷰 삭제 응답 타입
+ */
+export type DeleteReviewResponse = ApiResponse<DeleteReviewResult>
