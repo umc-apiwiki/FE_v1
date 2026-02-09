@@ -1,16 +1,22 @@
 import { motion } from 'framer-motion'
 import profileImg from '@/assets/default_profile.png'
 import editIcon from '@/assets/icons/common/ic_edit.svg'
+import { useMyProfile } from '@/hooks/useUser'
 
 const ProfilePage = () => {
+  const { profile, isLoading, error } = useMyProfile()
+
   const inputBaseStyle =
     'w-80 h-11 bg-white rounded-[30px] shadow-[0px_3px_5px_0px_rgba(224,224,233,0.25)] border border-zinc-200 outline-none focus:border-brand-500 transition-colors pl-6 text-base font-medium text-slate-900 placeholder:text-stone-300'
 
+  // 3. 로딩/에러 처리 (안 하면 데이터 없을 때 깨질 수 있음)
+  if (isLoading) return <div className="pt-40 text-center">로딩 중...</div>
+  if (error) return <div className="pt-40 text-center text-red-500">에러 발생</div>
+
   return (
     <div className="flex flex-col items-center justify-center min-h-[calc(100vh-80px)] relative overflow-hidden pt-10 pb-20">
-      {/* 컨텐츠 영역 */}
       <div className="z-10 flex flex-col items-center gap-10">
-        {/* 1. Title */}
+        {/* Title */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -19,7 +25,7 @@ const ProfilePage = () => {
           Profile
         </motion.div>
 
-        {/* 2. Profile Image & Icon Area */}
+        {/* Profile Image */}
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -30,7 +36,6 @@ const ProfilePage = () => {
             alt="Profile"
             className="w-full h-full rounded-full border border-brand-500 object-cover bg-white shadow-sm"
           />
-
           <motion.button
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
@@ -40,7 +45,7 @@ const ProfilePage = () => {
           </motion.button>
         </motion.div>
 
-        {/* 3. Inputs Section */}
+        {/* Inputs Section */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -48,7 +53,13 @@ const ProfilePage = () => {
           className="flex flex-col gap-6 items-center"
         >
           <div className="relative w-80 h-11">
-            <input type="text" placeholder="닉네임" className={inputBaseStyle} />
+            {/* 4. 여기에 실제 데이터를 꽂음 */}
+            <input
+              type="text"
+              placeholder="닉네임"
+              defaultValue={profile?.nickname}
+              className={inputBaseStyle}
+            />
             <button
               type="button"
               className="absolute -right-[100px] top-2 w-24 h-7 bg-white rounded-2xl border-[0.5px] border-brand-500 shadow-[0px_1px_2px_0px_rgba(33,150,243,0.25)] text-brand-500 text-sm font-medium hover:bg-brand-50 transition-colors flex items-center justify-center pb-0.5 cursor-pointer"
@@ -66,7 +77,7 @@ const ProfilePage = () => {
           </div>
         </motion.div>
 
-        {/* 4. Delete Account Button */}
+        {/* Delete Account */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
