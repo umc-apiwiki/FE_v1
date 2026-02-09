@@ -8,12 +8,6 @@ const ProfilePage = () => {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[calc(100vh-80px)] relative overflow-hidden pt-10 pb-20">
-      {/* [수정됨] 배경 위치 조정 
-        top-1/2 -> top-[40%] (홈페이지와 동일한 높이감)
-        -translate-y-1/2 제거 (top 기준 위치 사용)
-      */}
-      <div className="absolute top-[40%] left-1/2 -translate-x-1/2 w-[300px] h-[300px] bg-brand-500/50 rounded-full blur-[200px] pointer-events-none" />
-
       {/* 컨텐츠 영역 */}
       <div className="z-10 flex flex-col items-center gap-10">
         {/* 1. Title */}

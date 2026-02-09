@@ -269,11 +269,13 @@ export default function APIDetailPage() {
 
       {/* 위키 */}
       <div className="mt-20">
-        <div className="flex justify-between items-end mb-3">
-          <span className="font-sans font-medium text-2xl text-info-dark">API 위키</span>
-          <span className="text-gray-500 text-sm font-sans mr-4">
-            마지막 업데이트 버전: <span className="font-bold">{wikiData?.version ?? 0}</span>
-          </span>
+        <div className="flex flex-col max-w-[1112px]">
+          <div className="flex justify-between items-end mb-3">
+            <span className="font-sans font-medium text-2xl text-info-dark">API 위키</span>
+            <span className="text-gray-500 text-sm font-sans ">
+              마지막 업데이트 버전: <span className="font-bold">{wikiData?.version ?? 0}</span>
+            </span>
+          </div>
         </div>
         <div className="w-full max-w-[1112px] border border-brand-500 rounded-xl bg-white overflow-hidden p-4">
           {isEditing ? (
