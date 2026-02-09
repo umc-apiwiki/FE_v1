@@ -87,12 +87,17 @@ const Header = () => {
       <nav className="grid h-20 w-full grid-cols-3 items-center justify-between overflow-visible">
         {/* 좌측 로고 및 타이틀 영역 메인 페이지로 이동 */}
         <div className="flex justify-start">
-          <Link to="/" className="flex items-center pt-2 gap-[7px] sm:pl-8 md:pl-16 lg:pl-32">
+          {/* [수정 포인트] 
+            Link 대신 a 태그를 사용했습니다.
+            이렇게 하면 로고 클릭 시 브라우저가 주소를 새로 로딩(Refresh)하므로,
+            HomePage의 showMore 상태가 false(초기화면)로 리셋됩니다.
+          */}
+          <a href="/" className="flex items-center pt-2 gap-[7px] sm:pl-8 md:pl-16 lg:pl-32">
             <img src={HomeLogo} alt="Home Logo Icon" />
             <span className="font-mono antialiased text-[27px] font-medium tracking-[-3px] text-brand-500">
               API Wiki
             </span>
-          </Link>
+          </a>
         </div>
 
         {/* 중앙 메뉴 */}
