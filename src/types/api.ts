@@ -179,27 +179,7 @@ export type FavoriteToggle = {
   isFavorited: boolean
 }
 
-// ===== Wiki Types =====
-
-/**
- * 위키 내용 조회 응답 데이터
- * Schema: Content
- */
-export interface WikiContent {
-  content: string
-  version: number
-}
-
-/**
- * 위키 수정 요청 데이터
- * Schema: EditContent
- */
-export interface WikiUpdateRequest {
-  content: string
-  version: number
-}
-
-// ===== Pricing Types (상세 페이지 요금제 연동을 위해 추가됨) =====
+// ===== Pricing Types =====
 
 /**
  * Pricing API용 타입 정의
@@ -207,7 +187,7 @@ export interface WikiUpdateRequest {
  */
 export interface ApiPricing {
   apiId: number
-  pricingType: string // 'FREE' | 'PAID' | 'MIXED'
+  pricingType: string
   pricingInfoCsv: string
 }
 
@@ -221,9 +201,7 @@ export interface ApiResponseApiPricing {
   result: ApiPricing
 }
 
-/**
- * 북마크 데이터
- */
+/** 북마크 데이터 */
 export interface ActivityItem {
   apiId: number
   name: string
@@ -243,7 +221,7 @@ export interface ActivityGroup {
   activities: ActivityItem[]
 }
 
-// ===== Review API Types =====
+// ===== Review API Types  =====
 
 /** * 리뷰 작성 요청 데이터
  * Schema: PostReviewRequest
@@ -282,7 +260,7 @@ export type PostReviewResponse = ApiResponse<PostReviewResult>
  */
 export type ReviewListResponse = ApiResponse<PageResponse<ReviewItem>>
 
-// ===== Review Delete Types =====
+// ===== Review Delete Types  =====
 
 /** * 리뷰 삭제 경로 파라미터
  */
@@ -303,14 +281,31 @@ export interface DeleteReviewResult {
  * 리뷰 삭제 응답 타입
  */
 export type DeleteReviewResponse = ApiResponse<DeleteReviewResult>
+
+// ===== User Types (MyProfile) =====
+
 export interface MyProfile {
   nickname: string
 }
 
+/** 내 프로필 응답 타입 */
+export type MyProfileResponse = ApiResponse<MyProfile>
+
 // ===== Wiki Types =====
 
-/** * 사용자의 위키 편집 내역 항목
- */
+/** 위키 내용 조회 응답 데이터 */
+export interface WikiContent {
+  content: string
+  version: number
+}
+
+/** 위키 수정 요청 데이터 */
+export interface WikiUpdateRequest {
+  content: string
+  version: number
+}
+
+/** 사용자의 위키 편집 내역 항목 */
 export interface WikiHistoryItem {
   requestId: number
   apiId: number
@@ -318,32 +313,11 @@ export interface WikiHistoryItem {
   editedAt: string
 }
 
-/**
- * 위키 내용 조회 응답 데이터
- * Schema: Content
- */
-export interface WikiContent {
-  content: string
-  version: number
-}
-
-/**
- * 위키 수정 요청 데이터
- * Schema: EditContent
- */
-export interface WikiUpdateRequest {
-  content: string
-  version: number
-}
-
-/** * 위키 편집 목록 조회 파라미터
- */
+/** 위키 편집 목록 조회 파라미터 */
 export type WikiHistoryParams = {
   page?: number
   size?: number
 }
 
-/**
- * 위키 편집 목록 응답 타입
- */
+/** 위키 편집 목록 응답 타입 */
 export type MyWikiHistory = ApiResponse<PageResponse<WikiHistoryItem>>
