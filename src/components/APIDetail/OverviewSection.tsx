@@ -10,7 +10,7 @@ export default function OverviewSection({ longDescription, categories }: Overvie
   return (
     <div>
       {/* 설명 */}
-      <div className="mb-6">
+      <div className="mb-10">
         <span className="text-[22px] font-medium text-info-darker ">설명</span>
         <p className="text-xl font-medium text-info-dark mt-2">
           {longDescription || '설명이 없습니다.'}
