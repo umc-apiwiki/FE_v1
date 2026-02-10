@@ -214,25 +214,25 @@ const ExplorePageContent = () => {
   return (
     <>
       <MobileHeader />
-      <div className="mt-10 pb-20">
+      <div className="mt-14 xs:mt-16 md:mt-10 pb-16 xs:pb-20 md:pb-20">
       <SearchBar isOpen={isSearchOpen} setIsOpen={setIsSearchOpen} onSearch={handleSearch} />
 
-      <div className="mt-8">
+      <div className="mt-4 xs:mt-6 md:mt-8">
         {/* 카드 개수 및 필터/정렬 */}
-        <div className="flex whitespace-nowrap justify-between sm:pl-8 md:pl-16 lg:pl-20 xl:pl-28 2xl:pl-32">
-          <span className="font-sans text-sm text-[#B0B0B0]">
+        <div className="flex flex-col xs:flex-row whitespace-nowrap justify-between items-start xs:items-center gap-2 xs:gap-0 px-3 xs:px-4 sm:px-6 md:px-12 lg:px-16 xl:px-24 2xl:px-28">
+          <span className="font-sans text-xs xs:text-sm text-[#B0B0B0]">
             {totalElements !== null ? `${totalElements.toLocaleString()}개` : '-'}
           </span>
-          <div className="flex gap-6 sm:pr-8 md:pr-16 lg:pr-20 xl:pr-28 2xl:pr-32 font-sans text-lg font-medium text-info-dark">
+          <div className="flex gap-3 xs:gap-4 md:gap-6 font-sans text-base xs:text-lg font-medium text-info-dark">
             {/* 비교하기 버튼 */}
             {compareList.length > 0 && (
               <button
                 type="button"
                 onClick={openCompareModal}
-                className="flex items-center gap-2 hover:text-brand-500 transition-colors"
+                className="flex items-center gap-1 xs:gap-2 hover:text-brand-500 transition-colors text-sm xs:text-base"
               >
                 <span>비교하기</span>
-                <span className="text-sm bg-brand-500 text-white rounded-full w-6 h-6 flex items-center justify-center">
+                <span className="text-xs xs:text-sm bg-brand-500 text-white rounded-full w-5 h-5 xs:w-6 xs:h-6 flex items-center justify-center">
                   {compareList.length}
                 </span>
               </button>
@@ -241,10 +241,10 @@ const ExplorePageContent = () => {
             <button
               type="button"
               onClick={() => setIsFilterOpen(true)}
-              className="flex hover:text-brand-500"
+              className="flex hover:text-brand-500 text-sm xs:text-base"
             >
               <span>Filters</span>
-              <img src={Filter} alt="필터" />
+              <img src={Filter} alt="필터" className="w-5 h-5 xs:w-6 xs:h-6" />
             </button>
             {isFilterOpen && (
               <FilterModal
@@ -259,23 +259,23 @@ const ExplorePageContent = () => {
               <button
                 type="button"
                 onClick={() => setIsSortOpen((prev) => !prev)}
-                className="flex items-center hover:text-brand-500"
+                className="flex items-center hover:text-brand-500 text-sm xs:text-base"
               >
                 <span>{currentSort.label}</span>
                 <img
                   src={ArrowDown}
                   alt="정렬"
-                  className={`transition-transform ${isSortOpen ? 'rotate-180' : ''}`}
+                  className={`w-5 h-5 xs:w-6 xs:h-6 transition-transform ${isSortOpen ? 'rotate-180' : ''}`}
                 />
               </button>
               {isSortOpen && (
-                <div className="absolute right-0 top-full mt-2 bg-white rounded-lg shadow-lg border border-brand-500/20 z-20 min-w-[120px]">
+                <div className="absolute right-0 top-full mt-2 bg-white rounded-lg shadow-lg border border-brand-500/20 z-20 min-w-[100px] xs:min-w-[120px]">
                   {SORT_OPTIONS.map(({ label, value }) => (
                     <button
                       key={value}
                       type="button"
                       onClick={() => handleSortChange(value)}
-                      className={`block w-full text-left px-4 py-2 text-sm hover:bg-brand-500/10 transition-colors ${
+                      className={`block w-full text-left px-3 xs:px-4 py-1.5 xs:py-2 text-xs xs:text-sm hover:bg-brand-500/10 transition-colors ${
                         params.sort === value ? 'text-brand-500 font-semibold' : 'text-info-dark'
                       }`}
                     >
@@ -290,12 +290,12 @@ const ExplorePageContent = () => {
 
         {/* 에러 */}
         {error && !isLoading && (
-          <div className="text-center py-20 text-red-500 font-sans">
-            <p>{error}</p>
+          <div className="text-center py-12 xs:py-16 md:py-20 text-red-500 font-sans px-4">
+            <p className="text-sm xs:text-base">{error}</p>
             <button
               type="button"
               onClick={() => fetchApiList(params)}
-              className="mt-4 px-6 py-2 bg-brand-500 text-white rounded-full text-sm"
+              className="mt-3 xs:mt-4 px-4 xs:px-6 py-1.5 xs:py-2 bg-brand-500 text-white rounded-full text-xs xs:text-sm"
             >
               다시 시도
             </button>
@@ -304,18 +304,17 @@ const ExplorePageContent = () => {
 
         {/* 결과 없음 (데이터 수신 후 빈 결과일 때만 표시) */}
         {!isLoading && !error && items.length === 0 && totalElements !== null && (
-          <div className="text-center py-20 text-[#B0B0B0] font-sans">
-            <p className="text-lg">검색 결과가 없습니다.</p>
+          <div className="text-center py-12 xs:py-16 md:py-20 text-[#B0B0B0] font-sans px-4">
+            <p className="text-base xs:text-lg">검색 결과가 없습니다.</p>
           </div>
         )}
 
         {/* 카드 그리드 */}
         {items.length > 0 && (
           <div
-            className="mt-3 gap-10 grid grid-cols-1
-              sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4
-              sm:pl-8 md:pl-16 lg:pl-20 xl:pl-28 2xl:pl-32
-              sm:pr-8 md:pr-16 lg:pr-20 xl:pr-28 2xl:pr-32"
+            className="mt-3 gap-4 xs:gap-6 md:gap-8 lg:gap-10 grid grid-cols-1
+              md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4
+              px-3 xs:px-4 sm:px-6 md:px-12 lg:px-16 xl:px-24 2xl:px-28"
           >
             {items.map((api) => (
               <APICard

@@ -82,8 +82,8 @@ export const MobileBottomNavigation = () => {
   return (
     <>
       {/* 모바일 하단 네비게이션: 768px 미만에서만 표시 */}
-      <nav className="fixed bottom-0 left-0 right-0 w-full h-16 bg-white border-l border-r border-t border-sky-500 rounded-t-2xl z-50 box-border m-0 p-0 md:hidden">
-        <div className="flex justify-around items-center h-full w-full px-2 box-border">
+      <nav className="fixed bottom-0 left-0 right-0 w-full max-w-full h-14 xs:h-15 sm:h-16 bg-white border-l border-r border-t border-sky-500 rounded-t-xl xs:rounded-t-2xl z-50 box-border m-0 p-0 md:hidden mobile-safe-area-bottom">
+        <div className="flex justify-around items-center h-full w-full px-1 xs:px-2 box-border">
           {navItems.map(({ svg, href, id, onClick }) => {
             const active = isActive(href)
             const iconColor = active ? '#2196F3' : '#000000'
@@ -93,9 +93,9 @@ export const MobileBottomNavigation = () => {
                 <button
                   key={id}
                   onClick={onClick}
-                  className="flex flex-col items-center justify-center flex-1 h-full gap-1 no-underline transition-all duration-200 cursor-pointer bg-transparent border-none p-0 m-0 active:scale-95"
+                  className="flex flex-col items-center justify-center flex-1 h-full gap-0.5 xs:gap-1 no-underline transition-all duration-200 cursor-pointer bg-transparent border-none p-0 m-0 active:scale-95"
                 >
-                  <div className="flex items-center justify-center w-8 h-8 rounded-lg transition-all duration-200 active:bg-sky-500/10">
+                  <div className="flex items-center justify-center w-7 h-7 xs:w-8 xs:h-8 rounded-lg transition-all duration-200 active:bg-sky-500/10">
                     {svg(iconColor)}
                   </div>
                 </button>
@@ -106,9 +106,9 @@ export const MobileBottomNavigation = () => {
               <Link
                 key={id}
                 to={href}
-                className="flex flex-col items-center justify-center flex-1 h-full gap-1 no-underline transition-all duration-200 cursor-pointer active:scale-95"
+                className="flex flex-col items-center justify-center flex-1 h-full gap-0.5 xs:gap-1 no-underline transition-all duration-200 cursor-pointer active:scale-95"
               >
-                <div className="flex items-center justify-center w-8 h-8 rounded-lg transition-all duration-200 active:bg-sky-500/10">
+                <div className="flex items-center justify-center w-7 h-7 xs:w-8 xs:h-8 rounded-lg transition-all duration-200 active:bg-sky-500/10">
                   {svg(iconColor)}
                 </div>
               </Link>
@@ -118,42 +118,42 @@ export const MobileBottomNavigation = () => {
       </nav>
 
       {isLoginModalOpen && (
-        <div className="fixed inset-0 z-[9999] bg-black/50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-xl w-full max-w-md p-6 shadow-xl">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-xl font-bold text-gray-900">로그인</h2>
+        <div className="fixed inset-0 z-[9999] bg-black/50 flex items-center justify-center p-3 xs:p-4">
+          <div className="bg-white rounded-lg xs:rounded-xl w-full max-w-sm xs:max-w-md p-4 xs:p-5 sm:p-6 shadow-xl">
+            <div className="flex justify-between items-center mb-4 xs:mb-5 sm:mb-6">
+              <h2 className="text-lg xs:text-xl font-bold text-gray-900">로그인</h2>
               <button
                 onClick={() => setIsLoginModalOpen(false)}
-                className="flex items-center justify-center w-8 h-8 text-gray-500 hover:text-gray-700 bg-transparent border-none cursor-pointer"
+                className="flex items-center justify-center w-7 h-7 xs:w-8 xs:h-8 text-gray-500 hover:text-gray-700 bg-transparent border-none cursor-pointer text-2xl"
               >
                 ×
               </button>
             </div>
-            <div className="flex flex-col gap-4">
-              <div className="flex flex-col gap-2">
-                <label className="text-sm font-semibold text-gray-700">이메일</label>
+            <div className="flex flex-col gap-3 xs:gap-4">
+              <div className="flex flex-col gap-1.5 xs:gap-2">
+                <label className="text-xs xs:text-sm font-semibold text-gray-700">이메일</label>
                 <input
                   type="email"
-                  className="px-4 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10"
+                  className="px-3 xs:px-4 py-2 border border-gray-300 rounded-lg text-xs xs:text-sm outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10"
                   placeholder="이메일을 입력하세요"
                 />
               </div>
-              <div className="flex flex-col gap-2">
-                <label className="text-sm font-semibold text-gray-700">비밀번호</label>
+              <div className="flex flex-col gap-1.5 xs:gap-2">
+                <label className="text-xs xs:text-sm font-semibold text-gray-700">비밀번호</label>
                 <input
                   type="password"
-                  className="px-4 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10"
+                  className="px-3 xs:px-4 py-2 border border-gray-300 rounded-lg text-xs xs:text-sm outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10"
                   placeholder="비밀번호를 입력하세요"
                 />
               </div>
             </div>
-            <div className="flex flex-col gap-2 mt-6">
-              <button className="px-6 py-2 bg-blue-500 text-white rounded-lg text-base font-semibold text-center transition-all hover:bg-blue-600 active:scale-98">
+            <div className="flex flex-col gap-2 mt-4 xs:mt-5 sm:mt-6">
+              <button className="px-5 xs:px-6 py-2 bg-blue-500 text-white rounded-lg text-sm xs:text-base font-semibold text-center transition-all hover:bg-blue-600 active:scale-98">
                 로그인
               </button>
               <button
                 onClick={handleSwitchToSignup}
-                className="px-2 py-1 bg-transparent text-gray-600 text-center cursor-pointer hover:text-gray-900"
+                className="px-2 py-1 bg-transparent text-xs xs:text-sm text-gray-600 text-center cursor-pointer hover:text-gray-900"
               >
                 회원가입으로
               </button>
@@ -162,42 +162,42 @@ export const MobileBottomNavigation = () => {
         </div>
       )}
       {isSignupModalOpen && (
-        <div className="fixed inset-0 z-[9999] bg-black/50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-xl w-full max-w-md p-6 shadow-xl">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-xl font-bold text-gray-900">회원가입</h2>
+        <div className="fixed inset-0 z-[9999] bg-black/50 flex items-center justify-center p-3 xs:p-4">
+          <div className="bg-white rounded-lg xs:rounded-xl w-full max-w-sm xs:max-w-md p-4 xs:p-5 sm:p-6 shadow-xl">
+            <div className="flex justify-between items-center mb-4 xs:mb-5 sm:mb-6">
+              <h2 className="text-lg xs:text-xl font-bold text-gray-900">회원가입</h2>
               <button
                 onClick={() => setIsSignupModalOpen(false)}
-                className="flex items-center justify-center w-8 h-8 text-gray-500 hover:text-gray-700 bg-transparent border-none cursor-pointer"
+                className="flex items-center justify-center w-7 h-7 xs:w-8 xs:h-8 text-gray-500 hover:text-gray-700 bg-transparent border-none cursor-pointer text-2xl"
               >
                 ×
               </button>
             </div>
-            <div className="flex flex-col gap-4">
-              <div className="flex flex-col gap-2">
-                <label className="text-sm font-semibold text-gray-700">이메일</label>
+            <div className="flex flex-col gap-3 xs:gap-4">
+              <div className="flex flex-col gap-1.5 xs:gap-2">
+                <label className="text-xs xs:text-sm font-semibold text-gray-700">이메일</label>
                 <input
                   type="email"
-                  className="px-4 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10"
+                  className="px-3 xs:px-4 py-2 border border-gray-300 rounded-lg text-xs xs:text-sm outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10"
                   placeholder="이메일을 입력하세요"
                 />
               </div>
-              <div className="flex flex-col gap-2">
-                <label className="text-sm font-semibold text-gray-700">비밀번호</label>
+              <div className="flex flex-col gap-1.5 xs:gap-2">
+                <label className="text-xs xs:text-sm font-semibold text-gray-700">비밀번호</label>
                 <input
                   type="password"
-                  className="px-4 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10"
+                  className="px-3 xs:px-4 py-2 border border-gray-300 rounded-lg text-xs xs:text-sm outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10"
                   placeholder="비밀번호를 입력하세요"
                 />
               </div>
             </div>
-            <div className="flex flex-col gap-2 mt-6">
-              <button className="px-6 py-2 bg-blue-500 text-white rounded-lg text-base font-semibold text-center transition-all hover:bg-blue-600 active:scale-98">
+            <div className="flex flex-col gap-2 mt-4 xs:mt-5 sm:mt-6">
+              <button className="px-5 xs:px-6 py-2 bg-blue-500 text-white rounded-lg text-sm xs:text-base font-semibold text-center transition-all hover:bg-blue-600 active:scale-98">
                 회원가입
               </button>
               <button
                 onClick={handleSwitchToLogin}
-                className="px-2 py-1 bg-transparent text-gray-600 text-center cursor-pointer hover:text-gray-900"
+                className="px-2 py-1 bg-transparent text-xs xs:text-sm text-gray-600 text-center cursor-pointer hover:text-gray-900"
               >
                 로그인으로
               </button>

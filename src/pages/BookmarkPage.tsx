@@ -15,55 +15,63 @@ const BookmarkPage = () => {
   // 로딩 상태
   if (isLoading) {
     return (
-      <div className="w-full min-h-screen pb-40 overflow-x-hidden mt-10">
-        <div className="flex flex-col w-full max-w-[1440px] mx-auto">
-          <div className="w-full flex justify-center mb-16">
-            <div className="text-slate-900 text-3xl font-medium tracking-widest">Archive</div>
-          </div>
-          <div className="flex items-center justify-center mt-20">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-slate-900"></div>
+      <>
+        <MobileHeader />
+        <div className="w-full min-h-screen pb-32 xs:pb-40 overflow-x-hidden mt-14 xs:mt-16 md:mt-10">
+          <div className="flex flex-col w-full max-w-[1440px] mx-auto px-3 xs:px-4">
+            <div className="w-full flex justify-center mb-10 xs:mb-12 md:mb-16">
+              <div className="text-slate-900 text-2xl xs:text-3xl font-medium tracking-widest">Archive</div>
+            </div>
+            <div className="flex items-center justify-center mt-12 xs:mt-16 md:mt-20">
+              <div className="animate-spin rounded-full h-10 w-10 xs:h-12 xs:w-12 border-b-2 border-slate-900"></div>
+            </div>
           </div>
         </div>
-      </div>
+        <MobileBottomNavigation />
+      </>
     )
   }
 
   // 에러 상태
   if (error) {
     return (
-      <div className="w-full min-h-screen pb-40 overflow-x-hidden mt-10">
-        <div className="flex flex-col w-full max-w-[1440px] mx-auto">
-          <div className="w-full flex justify-center mb-16">
-            <div className="text-slate-900 text-3xl font-medium tracking-widest">Archive</div>
-          </div>
-          <div className="flex flex-col items-center justify-center mt-20 text-red-500">
-            <p className="text-xl">오류가 발생했습니다</p>
-            <p className="text-sm mt-2">{error}</p>
+      <>
+        <MobileHeader />
+        <div className="w-full min-h-screen pb-32 xs:pb-40 overflow-x-hidden mt-14 xs:mt-16 md:mt-10">
+          <div className="flex flex-col w-full max-w-[1440px] mx-auto px-3 xs:px-4">
+            <div className="w-full flex justify-center mb-10 xs:mb-12 md:mb-16">
+              <div className="text-slate-900 text-2xl xs:text-3xl font-medium tracking-widest">Archive</div>
+            </div>
+            <div className="flex flex-col items-center justify-center mt-12 xs:mt-16 md:mt-20 text-red-500">
+              <p className="text-lg xs:text-xl">오류가 발생했습니다</p>
+              <p className="text-xs xs:text-sm mt-2">{error}</p>
+            </div>
           </div>
         </div>
-      </div>
+        <MobileBottomNavigation />
+      </>
     )
   }
 
   return (
     <>
       <MobileHeader />
-      <div className="w-full min-h-screen pb-40 overflow-x-hidden mt-10">
+      <div className="w-full min-h-screen pb-32 xs:pb-40 overflow-x-hidden mt-14 xs:mt-16 md:mt-10">
       <div className="flex flex-col w-full max-w-[1444px] mx-auto">
-        <div className="w-full flex justify-center mb-16">
-          <div className="text-slate-900 text-3xl font-medium tracking-widest">Archive</div>
+        <div className="w-full flex justify-center mb-10 xs:mb-12 md:mb-16">
+          <div className="text-slate-900 text-2xl xs:text-3xl font-medium tracking-widest">Archive</div>
         </div>
 
         {groupedByDate.length === 0 ? (
-          <div className="flex flex-col items-center justify-center mt-20 text-gray-400">
-            <p className="text-xl">아직 찜한 API가 없습니다.</p>
-            <p className="text-sm mt-2">Explore 페이지에서 하트를 눌러보세요!</p>
+          <div className="flex flex-col items-center justify-center mt-12 xs:mt-16 md:mt-20 text-gray-400 px-4">
+            <p className="text-lg xs:text-xl">아직 쳜한 API가 없습니다.</p>
+            <p className="text-xs xs:text-sm mt-2">Explore 페이지에서 하트를 눌러보세요!</p>
           </div>
         ) : (
-          <div className="flex flex-col gap-10 px-4 md:px-10 lg:px-20">
+          <div className="flex flex-col gap-6 xs:gap-8 md:gap-10 px-3 xs:px-4 sm:px-6 md:px-10 lg:px-20">
             {groupedByDate.map((group) => (
               <BookmarkCarousel key={group.date} date={formatDate(group.date)}>
-                <div className="flex gap-5">
+                <div className="flex gap-3 xs:gap-4 md:gap-5">
                   {group.activities.map((api) => (
                     <APICard
                       key={api.apiId}

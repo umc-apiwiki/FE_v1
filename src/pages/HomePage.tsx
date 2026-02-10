@@ -6,15 +6,9 @@ import SearchTagSection from '@/components/HomePage/SearchTagSection'
 import BottomButtonSection from '@/components/HomePage/BottomButtonSection'
 import APICardSmall from '@/components/APICardSmall'
 import NewsCard from '@/components/NewsCard'
+import { MobileHomePage } from '@/components/mobile'
 import type { ApiPreview } from '@/types/api'
-import { useApiList } from '@/hooks'
-
-// 모바일 디바이스 감지
-const isMobileDevice = () => {
-  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-    navigator.userAgent
-  )
-}
+import { useApiList, useDeviceDetect } from '@/hooks'
 
 // -------------------- 1. 타겟 설정 (화면에 보여줄 하드코딩 데이터) --------------------
 
@@ -291,13 +285,14 @@ const HomePage = () => {
   const [showMore, setShowMore] = useState(false)
 
   const { data: serverData, fetchApiList } = useApiList()
+  
+  // 디바이스 타입 감지
+  const { isMobile } = useDeviceDetect()
 
-  // 모바일 디바이스 감지 및 리다이렉트
-  useEffect(() => {
-    if (isMobileDevice()) {
-      navigate('/mobile')
-    }
-  }, [navigate])
+  // 모바일 디바이스에서는 MobileHomePage 렌더링
+  if (isMobile) {
+    return <MobileHomePage />
+  }
 
   useEffect(() => {
     fetchApiList({ sort: 'POPULAR', size: 100 })
