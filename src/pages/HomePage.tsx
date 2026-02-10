@@ -9,12 +9,11 @@ import NewsCard from '@/components/NewsCard'
 import type { ApiPreview } from '@/types/api'
 import { useApiList } from '@/hooks'
 
-// -------------------- 1. 타겟 설정 (화면에 보여줄 하드코딩 데이터) --------------------
-
+// -------------------- 1. 타겟 설정 --------------------
 interface TargetConfig {
-  dbName: string // DB 매칭 시도용 이름
-  localImage: string // 로컬 이미지 경로
-  fallbackTitle: string // 화면에 보여줄 제목 (무조건 이거 사용)
+  dbName: string
+  localImage: string
+  fallbackTitle: string
   mockRating: number
   mockReviews: number
   mockPrice: string
@@ -153,8 +152,6 @@ const ScrollableSection = ({
 }) => {
   const scrollRef = useRef<HTMLDivElement>(null)
   const [indicatorX, setIndicatorX] = useState(0)
-
-  // 드래그 상태 관리
   const isDragging = useRef(false)
   const dragTarget = useRef<'handle' | 'content' | null>(null)
   const startX = useRef(0)
@@ -163,11 +160,10 @@ const ScrollableSection = ({
 
   const MAX_MOVE = 24
 
-  const handleWheel = (e: React.WheelEvent) => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollLeft += e.deltaY
-    }
-  }
+  /** * 🚫 [제거됨] handleWheel:
+   * 세로 휠을 가로 스크롤로 바꾸는 로직을 제거하여
+   * 마우스 휠 사용 시 페이지 전체 스크롤만 작동하도록 수정했습니다.
+   */
 
   const handleScroll = () => {
     if (!scrollRef.current || dragTarget.current === 'handle') return
@@ -182,8 +178,6 @@ const ScrollableSection = ({
     startX.current = e.clientX
     if (scrollRef.current) startScrollLeft.current = scrollRef.current.scrollLeft
     startIndicatorX.current = indicatorX
-
-    // eslint-disable-next-line
     document.body.style.userSelect = 'none'
     document.addEventListener('mousemove', onDragMove)
     document.addEventListener('mouseup', onDragEnd)
@@ -193,7 +187,6 @@ const ScrollableSection = ({
   const onDragMove = (e: MouseEvent) => {
     if (!isDragging.current || !scrollRef.current) return
     const deltaX = e.clientX - startX.current
-
     if (dragTarget.current === 'handle') {
       const newX = Math.max(0, Math.min(startIndicatorX.current + deltaX, MAX_MOVE))
       setIndicatorX(newX)
@@ -209,8 +202,6 @@ const ScrollableSection = ({
     isDragging.current = false
     dragTarget.current = null
     if (scrollRef.current) scrollRef.current.style.scrollBehavior = 'smooth'
-
-    // eslint-disable-next-line
     document.body.style.userSelect = ''
     document.removeEventListener('mousemove', onDragMove)
     document.removeEventListener('mouseup', onDragEnd)
@@ -235,9 +226,8 @@ const ScrollableSection = ({
 
       <div
         ref={scrollRef}
-        onWheel={handleWheel}
+        /** 🚫 [수정] onWheel={handleWheel} 삭제: 휠 간섭 현상 방지 */
         onMouseDown={(e) => onDragStart(e, 'content')}
-        // 이미지 드래그 방지 (중요)
         onDragStart={(e) => e.preventDefault()}
         className={`flex overflow-x-auto gap-6 pb-4 no-scrollbar scroll-smooth ${
           isDragging.current && dragTarget.current === 'content' ? 'cursor-grabbing' : 'cursor-grab'
@@ -246,11 +236,12 @@ const ScrollableSection = ({
       >
         {type === 'api'
           ? (data as ApiPreview[]).map((api, index) => (
-              <APICardSmall key={api.apiId || index} {...api} />
+              /** ✅ [유지] 고유 키 조합 */
+              <APICardSmall key={`api-${title}-${api.apiId}-${index}`} {...api} />
             ))
           : (data as NewsData[]).map((news, i) => (
               <NewsCard
-                key={i}
+                key={`news-${title}-${i}`}
                 title={news.title}
                 publisherLogoUrl={news.publisher}
                 thumbnailUrl={news.thumb}
@@ -277,43 +268,32 @@ const ScrollableSection = ({
 }
 
 // -------------------- 4. HomePage Component --------------------
-
 const HomePage = () => {
   const navigate = useNavigate()
   const [isSearchOpen, setIsSearchOpen] = useState(false)
   const [showMore, setShowMore] = useState(false)
-
   const { data: serverData, fetchApiList } = useApiList()
 
   useEffect(() => {
     fetchApiList({ sort: 'POPULAR', size: 100 })
   }, [fetchApiList])
 
-  // ✅ [수정된 로직] 화면은 하드코딩 데이터 강제 + 링크는 서버 ID 연결
   const mergeData = (targets: TargetConfig[], fetchedList: ApiPreview[] = []) => {
     return targets.map((target) => {
-      // 1. 실제 DB에 해당 API가 있는지 확인
       const realData = fetchedList.find((item) => item.name === target.dbName)
-
-      // 2. 링크 연결할 ID 결정 (중요!)
-      // - 진짜 데이터가 있으면 그 ID (예: 12)
-      // - 없으면? 서버 리스트의 "첫 번째 API ID"를 빌려옴 (예: 5) -> 이렇게 하면 404 안 뜸
-      // - 서버 리스트도 비었으면? 그냥 1번 (예비용)
       const linkedApiId = realData?.apiId ?? fetchedList[0]?.apiId ?? 1
-
-      // 3. 리턴되는 데이터: 화면에 보여줄 내용은 무조건 target(하드코딩) 값 사용
       return {
-        apiId: linkedApiId, // 클릭 시 이동할 ID (실제 존재하는 페이지로 납치)
-        name: target.fallbackTitle, // 이름은 하드코딩된 값 (예: Gmail)
+        apiId: linkedApiId,
+        name: target.fallbackTitle,
         summary: '주요 기능을 제공하는 인기 API입니다.',
-        avgRating: target.mockRating, // 별점도 하드코딩
-        reviewCount: target.mockReviews, // 리뷰 수도 하드코딩
+        avgRating: target.mockRating,
+        reviewCount: target.mockReviews,
         viewCounts: target.mockReviews * 150,
         pricingType: target.mockPrice,
         authType: 'API_KEY',
         providerCompany: 'ETC',
         isFavorited: false,
-        logo: target.localImage, // 로고도 하드코딩
+        logo: target.localImage,
       } as unknown as ApiPreview
     })
   }
@@ -348,24 +328,18 @@ const HomePage = () => {
   return (
     <div className="w-full flex flex-col items-center justify-center min-h-screen">
       <div className="w-full flex flex-col items-center pt-24 pb-24 animate-slide-up">
-        {/* 뉴스 섹션 */}
         <ScrollableSection title="Latest News" data={newsItems} type="news" />
-
-        {/* Popular API (하드코딩 비주얼 + 실제 링크) */}
         <ScrollableSection
           title="Recent Popular"
           data={mergeData(TARGET_POPULAR, serverData?.content)}
           type="api"
         />
-
-        {/* Suggest API (하드코딩 비주얼 + 실제 링크) */}
         <ScrollableSection
           title="Suggest API"
           data={mergeData(TARGET_SUGGEST, serverData?.content)}
           type="api"
         />
       </div>
-
       <BottomButtonSection onClick={toggleView} isExpanded={true} />
     </div>
   )
