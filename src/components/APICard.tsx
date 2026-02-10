@@ -124,7 +124,7 @@ export default function APICard({
               }`}
             >
               <span
-                className={`text-xl font-medium transition-colors duration-300 pb-1 ${
+                className={`text-base xs:text-lg sm:text-xl font-medium transition-colors duration-300 pb-1 ${
                   isInCompare ? 'text-white' : 'text-brand-500 group-hover/btn:text-white'
                 }`}
               >

@@ -3,9 +3,26 @@ import type { Config } from 'tailwindcss'
 const config: Config = {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx,mdx}'],
   theme: {
+    // 반응형 브레이크포인트 명시 (모바일 우선)
+    screens: {
+      xs: '375px', // 소형 모바일
+      sm: '640px', // 모바일
+      md: '768px', // 태블릿
+      lg: '1024px', // 데스크탑
+      xl: '1280px', // 대형 데스크탑
+      '2xl': '1536px', // 초대형 데스크탑
+    },
     container: {
       center: true,
-      padding: '7.5rem', // 120px -> 7.5rem
+      // 반응형 padding 설정
+      padding: {
+        DEFAULT: '1rem', // 16px (모바일)
+        sm: '2rem', // 32px (작은 화면)
+        md: '3rem', // 48px (태블릿)
+        lg: '4rem', // 64px (데스크탑)
+        xl: '5rem', // 80px (대형)
+        '2xl': '7.5rem', // 120px (초대형)
+      },
     },
     extend: {
       colors: {

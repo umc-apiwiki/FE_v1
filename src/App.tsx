@@ -12,6 +12,7 @@ import HistoryPage from './pages/HistoryPage'
 import { BookmarkProvider } from './context/BookmarkContext'
 import APIDetailPage from './pages/APIDetailPage'
 import { AuthProvider } from './context/AuthProvider'
+import { MobileHomePage } from './components/mobile'
 
 const queryClient = new QueryClient()
 
@@ -29,6 +30,11 @@ const publicRoutes: RouteObject[] = [
       { path: 'history', element: <HistoryPage /> },
       { path: 'apis/:id', element: <APIDetailPage /> },
     ],
+  },
+  // 모바일 전용 라우트 (레이아웃 없음)
+  {
+    path: '/mobile',
+    element: <MobileHomePage />,
   },
 ]
 

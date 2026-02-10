@@ -24,6 +24,52 @@ npm run test:ui    # Vitest UI 모드
 npm run test:coverage  # 테스트 커버리지 확인
 ```
 
+## 프로젝트 구조
+
+### 주요 디렉토리
+
+```
+src/
+├── components/        # React 컴포넌트
+│   ├── mobile/       # 모바일 전용 컴포넌트 (신규)
+│   ├── Layout/       # 레이아웃 컴포넌트
+│   └── ...
+├── hooks/            # Custom Hooks (로직 분리)
+│   ├── useMobileHome.ts       # 모바일 홈 페이지 로직
+│   ├── useMobileSearch.ts     # 모바일 검색 로직
+│   ├── useMobileNavigation.ts # 모바일 네비게이션 로직
+│   └── ...
+├── types/            # TypeScript 타입 정의
+│   ├── api.ts        # API 타입 (MobileAPI, MobileNewsItem 포함)
+│   └── ...
+├── pages/            # 페이지 컴포넌트
+└── context/          # React Context
+```
+
+### 모바일 컴포넌트
+
+Next.js 기반 베타 버전에서 Vite + React로 마이그레이션된 모바일 전용 컴포넌트:
+
+- **MobileHomePage**: 모바일 메인 페이지
+  - 검색 기능, 카테고리 캐러셀
+  - API 추천, 인기 API, 최신 뉴스 섹션
+  - 스크롤 기반 인터랙션
+- **MobileSearchModal**: 전체 화면 검색 모달
+  - 최근 검색어 저장 (localStorage)
+  - 자동완성 제안
+  - Pull-down 제스처로 닫기
+- **MobileBottomNavigation**: 하단 고정 네비게이션 바
+  - 홈, 탐색, 커뮤니티, 프로필
+  - 인증 상태에 따른 동적 라우팅
+- **MobileAPICard**: API 카드 컴포넌트
+- **MobileNewsCard**: 뉴스 카드 컴포넌트
+- **MobileHeader**: 모바일 헤더
+- **MobileTagNavigation**: 태그 네비게이션
+
+**아키텍처 원칙**: 모든 모바일 컴포넌트는 **로직과 뷰를 완전히 분리**하여 Custom Hook에서 상태 관리 및 비즈니스 로직을 처리합니다.
+
+**라우팅**: `/mobile` 경로에서 모바일 홈페이지 접근 가능
+
 ## 코드 품질 관리
 
 ### 린팅 & 포맷팅

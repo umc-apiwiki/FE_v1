@@ -322,3 +322,25 @@ export type WikiHistoryParams = {
 
 /** 위키 편집 목록 응답 타입 */
 export type MyWikiHistory = ApiResponse<PageResponse<WikiHistoryItem>>
+
+// ===== Mobile Component Types =====
+
+/** 모바일용 API 카드 타입 */
+export type MobileAPI = {
+  id: number
+  name: string
+  description: string
+  logo?: string
+  rating?: number
+  users?: string
+  price: 'free' | 'paid' | 'mixed'
+}
+
+/** 모바일용 뉴스 아이템 타입 */
+export type MobileNewsItem = {
+  id: string
+  title: string
+  content: string
+  author: string
+  date: string
+}

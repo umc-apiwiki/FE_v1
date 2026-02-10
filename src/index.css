@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+/* 반응형 폰트 크기 및 기본 설정 */
 :root {
   font-family: 'Pretendard Variable';
   font-weight: 400;
@@ -9,14 +10,79 @@
   background-color: #f9fbfe;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
+  /* 모바일 텍스트 크기 조정 방지 */
+  -webkit-text-size-adjust: 100%;
+  -moz-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 @layer base {
+  /* 기본 html 설정 */
+  html {
+    @apply min-h-screen;
+    /* 부드러운 스크롤 */
+    scroll-behavior: smooth;
+    /* 모바일에서 가로 스크롤 방지 */
+    overflow-x: hidden;
+  }
+
   body {
     @apply min-h-screen bg-slate-50 text-slate-900 antialiased;
+    /* 모바일에서 가로 스크롤 방지 */
+    overflow-x: hidden;
+    /* 모바일 터치 스크롤 개선 */
+    -webkit-overflow-scrolling: touch;
   }
 
   #root {
     @apply min-h-screen;
+    /* 모바일에서 가로 스크롤 방지 */
+    overflow-x: hidden;
+  }
+
+  /* 모바일 입력 필드 확대 방지 */
+  input,
+  textarea,
+  select {
+    font-size: 16px;
+  }
+
+  /* 태블릿 이상에서는 기본 크기 */
+  @media (min-width: 768px) {
+    input,
+    textarea,
+    select {
+      font-size: 1rem;
+    }
+  }
+}
+
+/* 모바일 네비게이션 숨김 클래스 */
+body.hide-mobile-nav nav {
+  display: none !important;
+}
+
+/* 스크롤바 숨김 유틸리티 */
+@layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* 모바일 전용 유틸리티 클래스 */
+  .mobile-container {
+    @apply w-full max-w-screen-sm mx-auto px-4;
+  }
+
+  .mobile-safe-area-top {
+    padding-top: env(safe-area-inset-top);
+  }
+
+  .mobile-safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
   }
 }

@@ -93,14 +93,16 @@ export default function BookmarkCarousel({ date, children }: BookmarkCarouselPro
   }, [])
 
   return (
-    <div className="flex flex-col gap-6 w-full mb-10">
-      <div className="text-sky-900 text-2xl font-medium pl-4 lg:pl-0">{date}</div>
+    <div className="flex flex-col gap-4 xs:gap-5 md:gap-6 w-full mb-6 xs:mb-8 md:mb-10">
+      <div className="text-sky-900 text-base xs:text-lg md:text-xl lg:text-2xl font-medium pl-4 lg:pl-0">
+        {date}
+      </div>
       <div
         ref={scrollRef}
         onMouseDown={(e) => onDragStart(e, 'content')}
         // ✅ [핵심] 여기서 기본 드래그 막음 (로고 드래그 시 스크롤 되도록)
         onDragStart={(e) => e.preventDefault()}
-        className={`flex gap-10 overflow-x-auto pb-4 pr-10 px-4 lg:px-0 no-scrollbar select-none ${
+        className={`flex gap-4 xs:gap-6 md:gap-8 lg:gap-10 overflow-x-auto pb-3 xs:pb-4 pr-4 xs:pr-6 md:pr-10 px-4 lg:px-0 no-scrollbar select-none ${
           activeTarget === 'content' ? 'cursor-grabbing' : 'cursor-grab'
         }`}
         style={{
@@ -111,15 +113,15 @@ export default function BookmarkCarousel({ date, children }: BookmarkCarouselPro
       >
         {children}
       </div>
-      <div className="w-full flex justify-center mt-2 pr-10">
+      <div className="w-full flex justify-center mt-1 xs:mt-2 pr-4 xs:pr-6 md:pr-10">
         <div
-          className="relative w-20 h-6 flex items-center justify-center cursor-pointer"
+          className="relative w-16 xs:w-20 h-5 xs:h-6 flex items-center justify-center cursor-pointer"
           onMouseDown={(e) => onDragStart(e, 'handle')}
         >
-          <div className="relative w-20 mt-1 pointer-events-none">
-            <div className="absolute inset-0 w-20 h-1 bg-[#D9D9D9] rounded-3xl" />
+          <div className="relative w-full mt-1 pointer-events-none">
+            <div className="absolute inset-0 w-full h-0.5 xs:h-1 bg-[#D9D9D9] rounded-3xl" />
             <div
-              className="absolute inset-0 w-14 h-1 bg-brand-500 rounded-3xl"
+              className="absolute inset-0 w-[70%] h-0.5 xs:h-1 bg-brand-500 rounded-3xl"
               style={{
                 transform: `translateX(${indicatorX}px)`,
                 transition: 'transform 0.1s ease-out',
