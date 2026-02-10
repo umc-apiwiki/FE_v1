@@ -43,9 +43,7 @@ export default function APIDetailPage() {
   const [activeMenu, setActiveMenu] = useState<'A' | 'B' | 'C' | 'D'>('A')
   const { isMobile } = useDeviceDetect()
 
-  // ✅ 서버 데이터 가져오기 (가짜 데이터 로직 삭제됨)
   const { data: finalDetail, isLoading: isDetailLoading, error, fetchApiDetail } = useApiDetail()
-
   const { mutate: toggleFavorite, isLoading: isToggling } = usePostFavorite()
   const { data: wikiData, fetchWiki } = useWikiContent()
   const { saveWiki } = useWikiUpdate()
@@ -66,11 +64,12 @@ export default function APIDetailPage() {
     }
   }, [apiId, fetchApiDetail, fetchWiki])
 
+  // ✅ 수정 포인트 1: 데이터 개수를 6개로 늘려 요청 (나 자신 제외 대비)
   useEffect(() => {
     if (finalDetail?.categories?.length && finalDetail.categories[0].categoryId !== 0) {
-      fetchApiList({ categoryId: finalDetail.categories[0].categoryId, size: 5, sort: 'POPULAR' })
+      fetchApiList({ categoryId: finalDetail.categories[0].categoryId, size: 6, sort: 'POPULAR' })
     } else if (finalDetail) {
-      fetchApiList({ size: 5, sort: 'POPULAR' })
+      fetchApiList({ size: 6, sort: 'POPULAR' })
     }
   }, [finalDetail, fetchApiList])
 
@@ -114,7 +113,6 @@ export default function APIDetailPage() {
     setIsEditing(true)
   }
 
-  // ✅ 1. 로딩 중
   if (isDetailLoading) {
     return (
       <>
@@ -127,7 +125,6 @@ export default function APIDetailPage() {
     )
   }
 
-  // ✅ 2. 에러가 있거나, 데이터가 없을 때 -> 에러 화면 출력
   if (error || !finalDetail) {
     return (
       <>
@@ -152,11 +149,7 @@ export default function APIDetailPage() {
     )
   }
 
-  // ✅ 3. 가격 데이터 표시 로직
-  // 서버 값이 있으면 쓰고, 없으면 undefined/null 상태로 둠
   const pricingType = finalDetail.pricingType || pricingData?.pricingType
-
-  // 화면 표시: 값이 있으면 번역, 없으면 '-' 표시
   const displayPricing = pricingType ? (PRICING_LABEL[pricingType] ?? pricingType) : '-'
 
   return (
@@ -174,7 +167,6 @@ export default function APIDetailPage() {
             <p className="font-medium text-sm xs:text-base md:text-lg lg:text-xl text-info-dark mb-2 xs:mb-3 md:mb-4">
               {(finalDetail.viewCounts || 0).toLocaleString()} views
             </p>
-            {/* 가격 정보 표시 (없으면 - 로 나옴) */}
             <div className="text-zinc-400 text-sm xs:text-base md:text-lg font-normal mb-3 xs:mb-4 md:mb-6">
               {displayPricing}
             </div>
@@ -205,7 +197,6 @@ export default function APIDetailPage() {
           </div>
         </div>
 
-        {/* 하트 및 공유 */}
         <div className="m-2 flex gap-3 xs:gap-4 mb-6 xs:mb-8 md:mb-10">
           <img
             src={isFavorited ? HeartFill : HeartLine}
@@ -216,7 +207,6 @@ export default function APIDetailPage() {
           <img src={Share} alt="공유" className="w-6 h-6 xs:w-7 xs:h-7 md:w-8 md:h-8" />
         </div>
 
-        {/* 탭 메뉴 */}
         <div>
           <div className="flex gap-3 xs:gap-4 md:gap-6 font-sans font-medium pb-4 xs:pb-5 md:pb-6 border-b border-[#EEEEEE] overflow-x-auto">
             {MENUS.map(({ key, label }) => (
@@ -248,7 +238,6 @@ export default function APIDetailPage() {
           </div>
         </div>
 
-        {/* 위키 영역 */}
         <div className="mt-12 xs:mt-16 md:mt-20">
           <div className="flex flex-col max-w-full md:max-w-[1112px]">
             <div className="flex flex-col xs:flex-row justify-between items-start xs:items-end mb-2 xs:mb-3 gap-2 xs:gap-0">
@@ -320,8 +309,11 @@ export default function APIDetailPage() {
             </span>
           </div>
           <div className="flex gap-4 xs:gap-5 md:gap-6 overflow-x-auto pb-4 xs:pb-5 md:pb-6 scroll-smooth scrollbar-hide">
-            {similarApisData?.content?.length ? (
-              similarApisData.content.map((api) => <APICardSmall key={api.apiId} {...api} />)
+            {/* ✅ 수정 포인트 2: .filter()를 추가하여 현재 apiId와 동일한 아이템을 제외합니다. */}
+            {similarApisData?.content?.filter((api) => api.apiId !== apiId).length ? (
+              similarApisData.content
+                .filter((api) => api.apiId !== apiId)
+                .map((api) => <APICardSmall key={api.apiId} {...api} />)
             ) : (
               <div className="text-gray-400 text-base xs:text-lg py-8 xs:py-10 w-full text-center">
                 비슷한 API가 없습니다.
