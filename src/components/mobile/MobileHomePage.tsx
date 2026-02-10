@@ -22,17 +22,20 @@ export const MobileHomePage = () => {
       <main className="flex flex-col items-center justify-center min-h-[calc(100vh-140px)] px-4 xs:px-5 sm:px-6 pt-14">
         {/* 로고 */}
         <motion.div
-          className="mb-4 xs:mb-5 sm:mb-6"
+          className="mb-4 xs:mb-5 sm:mb-6 flex flex-col items-center"
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5 }}
         >
-          <img src={BrandLogo} alt="API Wiki Logo" className="w-16 h-16 xs:w-18 xs:h-18 sm:w-20 sm:h-20" />
+          <img src={BrandLogo} alt="API Wiki Logo" className="w-12 h-12 xs:w-14 xs:h-14 sm:w-16 sm:h-16" />
+          <h1 className="font-mono font-medium text-3xl xs:text-4xl sm:text-5xl text-brand-800 tracking-[-2px] xs:tracking-[-3px]">
+            API Wiki
+          </h1>
         </motion.div>
 
         {/* 설명 텍스트 */}
         <motion.p
-          className="text-center text-gray-700 text-sm xs:text-base sm:text-lg mb-4 xs:mb-5 sm:mb-6 leading-relaxed px-4"
+          className="text-center text-brand-900 text-sm xs:text-base sm:text-lg mb-5 xs:mb-6 sm:mb-7 leading-relaxed px-4 font-sans font-medium"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
@@ -44,15 +47,15 @@ export const MobileHomePage = () => {
 
         {/* 검색바 */}
         <motion.div
-          className="w-full max-w-md mb-4 xs:mb-5 sm:mb-6 cursor-pointer"
+          className="w-full max-w-md mb-5 xs:mb-6 sm:mb-7 cursor-pointer px-2 xs:px-0"
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5, delay: 0.2 }}
           onClick={() => setIsSearchModalOpen(true)}
         >
-          <div className="flex items-center justify-between px-3 xs:px-4 py-2.5 xs:py-3 bg-white rounded-lg xs:rounded-xl shadow-md border border-gray-200 hover:border-blue-500 transition-colors">
-            <span className="text-gray-400 text-xs xs:text-sm sm:text-base">궁금한 API를 검색해보세요</span>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="text-gray-400">
+          <div className="flex items-center justify-between px-4 xs:px-5 py-2.5 xs:py-3 bg-white rounded-[25px] xs:rounded-[30px] shadow-[1px_1px_5px_2px_var(--tw-shadow-color)] shadow-brand-500/25 border border-brand-500/25 hover:border-brand-500/50 transition-all">
+            <span className="text-slate-400 text-xs xs:text-sm sm:text-base font-medium">궁금한 API를 검색해보세요</span>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="text-slate-400">
               <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="2" />
               <path d="M16 16L21 21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
             </svg>
@@ -61,7 +64,7 @@ export const MobileHomePage = () => {
 
         {/* 카테고리 캐러셀 */}
         <motion.div
-          className="w-full max-w-md"
+          className="w-full max-w-md px-2 xs:px-0"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.3 }}
@@ -69,13 +72,13 @@ export const MobileHomePage = () => {
           <div
             ref={scrollRef}
             onScroll={handleScroll}
-            className="flex gap-2 overflow-x-auto scrollbar-hide pb-2"
+            className="flex gap-2 xs:gap-3 overflow-x-auto scrollbar-hide pb-3"
           >
             {categories.map((category, index) => (
               <motion.button
                 key={category}
                 onClick={() => handleCategoryClick(category)}
-                className="flex-shrink-0 px-3 xs:px-4 py-1.5 xs:py-2 bg-white rounded-full shadow-sm border border-gray-200 hover:border-blue-500 hover:bg-blue-50 transition-all text-xs xs:text-sm font-medium text-gray-700 whitespace-nowrap"
+                className="flex-shrink-0 px-3 xs:px-4 py-1.5 xs:py-2 bg-white rounded-[20px] xs:rounded-[25px] shadow-[1px_1px_5px_1px_var(--tw-shadow-color)] shadow-brand-500/10 border border-brand-500/25 hover:bg-brand-500 hover:text-white transition-all text-xs xs:text-sm sm:text-base font-medium text-brand-500 whitespace-nowrap"
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.3, delay: 0.4 + index * 0.03 }}
@@ -86,9 +89,9 @@ export const MobileHomePage = () => {
           </div>
 
           {/* 프로그레스 인디케이터 */}
-          <div className="relative w-full h-1 mt-3 xs:mt-4 bg-gray-200 rounded-full overflow-hidden">
+          <div className="relative w-full h-1 mt-3 xs:mt-4 bg-[#D9D9D9] rounded-full overflow-hidden">
             <div
-              className="absolute top-0 w-2 xs:w-3 h-full bg-blue-600 rounded-full transition-all duration-200"
+              className="absolute top-0 w-2 xs:w-3 h-full bg-brand-500 rounded-full transition-all duration-200"
               style={{ left: `calc((100% - 0.5rem) * ${scrollProgress / 100})` }}
             />
           </div>
