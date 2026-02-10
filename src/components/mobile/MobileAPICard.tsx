@@ -103,7 +103,9 @@ export const MobileAPICard = ({ api }: MobileAPICardProps) => {
               )}
 
               {/* Paid/Free Badge */}
-              <span className={`px-2 py-0.5 rounded-full font-medium ${getPriceBadgeStyle(api.pricingType)}`}>
+              <span
+                className={`px-2 py-0.5 rounded-full font-medium ${getPriceBadgeStyle(api.pricingType)}`}
+              >
                 {formatPrice(api.pricingType)}
               </span>
             </div>
@@ -111,7 +113,9 @@ export const MobileAPICard = ({ api }: MobileAPICardProps) => {
         </div>
 
         {/* Description */}
-        {api.summary && <div className="mt-3 text-sm text-gray-600 line-clamp-2">{api.summary}</div>}
+        {api.summary && (
+          <div className="mt-3 text-sm text-gray-600 line-clamp-2">{api.summary}</div>
+        )}
       </div>
     </Link>
   )

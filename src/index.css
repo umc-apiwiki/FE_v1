@@ -46,7 +46,7 @@
   select {
     font-size: 16px;
   }
-  
+
   /* 태블릿 이상에서는 기본 크기 */
   @media (min-width: 768px) {
     input,
@@ -68,7 +68,7 @@ body.hide-mobile-nav nav {
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
-  
+
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }

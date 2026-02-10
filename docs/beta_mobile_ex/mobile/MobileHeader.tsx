@@ -1,8 +1,8 @@
 // src/components/mobile/MobileHeader.tsx
-'use client';
+'use client'
 
-import Image from 'next/image';
-import Link from 'next/link';
+import Image from 'next/image'
+import Link from 'next/link'
 
 export default function MobileHeader() {
   return (
@@ -17,5 +17,5 @@ export default function MobileHeader() {
         </Link>
       </div>
     </header>
-  );
+  )
 }

@@ -40,7 +40,9 @@ export default function CodeExampleSection() {
       <div className="w-full max-w-[1112px] h-auto bg-[#111827] border border-brand-500/70 rounded-[10px] p-4 xs:p-6 md:p-8 lg:p-10 mb-6 xs:mb-8 md:mb-10 overflow-x-auto">
         {/* 코드 */}
         <div>
-          <pre className="font-mono font-normal text-xs xs:text-sm md:text-base text-white">{exampleCode.코드}</pre>
+          <pre className="font-mono font-normal text-xs xs:text-sm md:text-base text-white">
+            {exampleCode.코드}
+          </pre>
         </div>
       </div>
     </div>

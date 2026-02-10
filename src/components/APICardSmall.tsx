@@ -59,7 +59,9 @@ export default function APICardSmall({
             <h3 className="text-info-darker font-medium leading-tight text-base xs:text-lg sm:text-xl pb-1 xs:pb-2 line-clamp-1">
               {name}
             </h3>
-            <p className="text-xs xs:text-sm font-medium text-info-dark">Star {avgRating.toFixed(1)}</p>
+            <p className="text-xs xs:text-sm font-medium text-info-dark">
+              Star {avgRating.toFixed(1)}
+            </p>
             <p className="text-xs xs:text-sm font-medium text-info-dark">{reviewCount} reviews</p>
             <p className="text-[#B0B0B0] text-[10px] xs:text-xs mt-0.5">
               {PRICING_LABEL[pricingType] ?? pricingType}

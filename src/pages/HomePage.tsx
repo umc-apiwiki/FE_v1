@@ -293,18 +293,18 @@ const HomePage = () => {
   const [showMore, setShowMore] = useState(false)
 
   const { data: serverData, fetchApiList } = useApiList()
-  
+
   // 디바이스 타입 감지
   const { isMobile } = useDeviceDetect()
+
+  useEffect(() => {
+    fetchApiList({ sort: 'POPULAR', size: 100 })
+  }, [fetchApiList])
 
   // 모바일 디바이스에서는 MobileHomePage 렌더링
   if (isMobile) {
     return <MobileHomePage />
   }
-
-  useEffect(() => {
-    fetchApiList({ sort: 'POPULAR', size: 100 })
-  }, [fetchApiList])
 
   // ✅ [수정된 로직] 화면은 하드코딩 데이터 강제 + 링크는 서버 ID 연결
   const mergeData = (targets: TargetConfig[], fetchedList: ApiPreview[] = []) => {

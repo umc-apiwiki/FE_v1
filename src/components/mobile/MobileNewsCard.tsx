@@ -24,7 +24,10 @@ export const MobileNewsCard = ({ news }: MobileNewsCardProps) => {
   }
 
   return (
-    <Link to={`/news/${news.id}`} className="block w-full h-full bg-white rounded-xl shadow-sm border border-blue-500 transition-all hover:shadow-md hover:-translate-y-1">
+    <Link
+      to={`/news/${news.id}`}
+      className="block w-full h-full bg-white rounded-xl shadow-sm border border-blue-500 transition-all hover:shadow-md hover:-translate-y-1"
+    >
       <div className="p-4">
         {/* 제목 */}
         <h3 className="text-base font-semibold text-gray-900 line-clamp-2 mb-2">{news.title}</h3>

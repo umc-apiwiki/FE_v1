@@ -34,7 +34,8 @@ function StarRating({ score }: { score: number }) {
     <div className="flex gap-0.5">
       {Array.from({ length: MAX_SCORE }).map((_, idx) => {
         const diff = score - idx
-        if (diff >= 1) return <img key={idx} src={StarFilled} className="w-4 h-4 xs:w-5 xs:h-5 md:w-6 md:h-6" />
+        if (diff >= 1)
+          return <img key={idx} src={StarFilled} className="w-4 h-4 xs:w-5 xs:h-5 md:w-6 md:h-6" />
         if (diff > 0) return <PartialStar key={idx} ratio={diff} />
         return <img key={idx} src={StarEmpty} className="w-4 h-4 xs:w-5 xs:h-5 md:w-6 md:h-6" />
       })}
@@ -102,7 +103,9 @@ export default function ReviewSection() {
   return (
     <div className="flex flex-col">
       <div className="mb-4 xs:mb-5 md:mb-6">
-        <span className="font-medium text-info-darker text-base xs:text-lg md:text-xl lg:text-[22px]">실사용자 후기</span>
+        <span className="font-medium text-info-darker text-base xs:text-lg md:text-xl lg:text-[22px]">
+          실사용자 후기
+        </span>
       </div>
 
       <div className="flex flex-col md:flex-row items-start md:items-center h-auto md:h-60 mb-6 xs:mb-8 md:mb-10">
@@ -125,7 +128,9 @@ export default function ReviewSection() {
               const percentage = (item.count / data.totalCount) * 100
               return (
                 <div key={item.score} className="flex items-center gap-2 xs:gap-3 md:gap-4">
-                  <span className="text-sm xs:text-base md:text-lg lg:text-xl font-medium text-black min-w-[1rem]">{item.score}</span>
+                  <span className="text-sm xs:text-base md:text-lg lg:text-xl font-medium text-black min-w-[1rem]">
+                    {item.score}
+                  </span>
                   <div className="flex-1 h-3 xs:h-3.5 md:h-4 bg-[#E8EAED] rounded-full overflow-hidden max-w-[945px]">
                     <div
                       className="h-full bg-[#3B82F6] rounded-full"
@@ -141,7 +146,9 @@ export default function ReviewSection() {
 
       <div className="w-full max-w-[1140px] border border-brand-500 rounded-xl bg-white overflow-hidden p-3 xs:p-4 md:p-6 mb-8 xs:mb-10 md:mb-12">
         <div className="flex justify-between items-center mb-3 xs:mb-4">
-          <span className="font-sans font-medium text-sm xs:text-base md:text-lg text-info-dark">리뷰 남기기</span>
+          <span className="font-sans font-medium text-sm xs:text-base md:text-lg text-info-dark">
+            리뷰 남기기
+          </span>
           <div className="flex gap-0.5 xs:gap-1">
             {Array.from({ length: 5 }).map((_, idx) => (
               <button

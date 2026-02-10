@@ -16,7 +16,9 @@ export const MobileHeader = () => {
           <div className="relative w-6 h-6 xs:w-7 xs:h-7 sm:w-8 sm:h-8">
             <img src={BrandLogo} alt="API Wiki Logo" className="w-full h-full object-contain" />
           </div>
-          <span className="text-base xs:text-lg sm:text-xl font-mono font-medium text-brand-500 tracking-tight">API Wiki</span>
+          <span className="text-base xs:text-lg sm:text-xl font-mono font-medium text-brand-500 tracking-tight">
+            API Wiki
+          </span>
         </Link>
       </div>
     </header>

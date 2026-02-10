@@ -12,7 +12,15 @@ import { MobileHeader } from './MobileHeader'
 import BrandLogo from '@/assets/icons/common/ic_brand_logo.svg'
 
 export const MobileHomePage = () => {
-  const { isSearchModalOpen, categories, scrollRef, scrollProgress, handleScroll, handleCategoryClick, setIsSearchModalOpen } = useMobileHome()
+  const {
+    isSearchModalOpen,
+    categories,
+    scrollRef,
+    scrollProgress,
+    handleScroll,
+    handleCategoryClick,
+    setIsSearchModalOpen,
+  } = useMobileHome()
 
   return (
     <div className="relative w-full min-h-screen max-w-full overflow-x-hidden bg-gradient-to-b from-blue-50 to-white pb-20">
@@ -27,7 +35,11 @@ export const MobileHomePage = () => {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5 }}
         >
-          <img src={BrandLogo} alt="API Wiki Logo" className="w-12 h-12 xs:w-14 xs:h-14 sm:w-16 sm:h-16" />
+          <img
+            src={BrandLogo}
+            alt="API Wiki Logo"
+            className="w-12 h-12 xs:w-14 xs:h-14 sm:w-16 sm:h-16"
+          />
           <h1 className="font-mono font-medium text-3xl xs:text-4xl sm:text-5xl text-brand-800 tracking-[-2px] xs:tracking-[-3px]">
             API Wiki
           </h1>
@@ -54,7 +66,9 @@ export const MobileHomePage = () => {
           onClick={() => setIsSearchModalOpen(true)}
         >
           <div className="flex items-center justify-between px-4 xs:px-5 py-2.5 xs:py-3 bg-white rounded-[25px] xs:rounded-[30px] shadow-[1px_1px_5px_2px_var(--tw-shadow-color)] shadow-brand-500/25 border border-brand-500/25 hover:border-brand-500/50 transition-all">
-            <span className="text-slate-400 text-xs xs:text-sm sm:text-base font-medium">궁금한 API를 검색해보세요</span>
+            <span className="text-slate-400 text-xs xs:text-sm sm:text-base font-medium">
+              궁금한 API를 검색해보세요
+            </span>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="text-slate-400">
               <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="2" />
               <path d="M16 16L21 21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />

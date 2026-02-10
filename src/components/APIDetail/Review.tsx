@@ -40,7 +40,9 @@ export default function Review({ reviewId, name, score, text, date, isMine }: Re
             alt="사용자 프로필"
             className="w-10 h-10 xs:w-12 xs:h-12 md:w-14 md:h-14 rounded-full object-cover"
           />
-          <span className="font-semibold text-black text-sm xs:text-base md:text-lg lg:text-[22px]">{name}</span>
+          <span className="font-semibold text-black text-sm xs:text-base md:text-lg lg:text-[22px]">
+            {name}
+          </span>
         </div>
 
         {/* 본인 리뷰일 때만 삭제 버튼 표시 */}
@@ -77,7 +79,9 @@ export default function Review({ reviewId, name, score, text, date, isMine }: Re
 
       {/* 피드백 영역 */}
       <div className="flex flex-col xs:flex-row gap-2 xs:gap-4">
-        <span className="font-normal text-[#b0b0b0] text-xs xs:text-sm md:text-base lg:text-xl">이 리뷰가 유용했나요?</span>
+        <span className="font-normal text-[#b0b0b0] text-xs xs:text-sm md:text-base lg:text-xl">
+          이 리뷰가 유용했나요?
+        </span>
         <div className="flex gap-2">
           <button
             type="button"

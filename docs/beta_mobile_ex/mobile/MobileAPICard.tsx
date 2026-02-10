@@ -1,23 +1,23 @@
 // src/components/mobile/MobileAPICard.tsx
-'use client';
+'use client'
 
-import Link from 'next/link';
-import { API } from '@/types';
+import Link from 'next/link'
+import { API } from '@/types'
 
 interface MobileAPICardProps {
-  api: API;
+  api: API
 }
 
 export default function MobileAPICard({ api }: MobileAPICardProps) {
   // 사용자 수 포맷팅
   const formatUsers = (users?: string) => {
-    if (!users) return 'N/A';
-    const num = parseFloat(users.replace(/[^\d.]/g, ''));
-    if (users.includes('B')) return `${num}B`;
-    if (users.includes('M')) return `${num}M`;
-    if (users.includes('K')) return `${num}K`;
-    return users;
-  };
+    if (!users) return 'N/A'
+    const num = parseFloat(users.replace(/[^\d.]/g, ''))
+    if (users.includes('B')) return `${num}B`
+    if (users.includes('M')) return `${num}M`
+    if (users.includes('K')) return `${num}K`
+    return users
+  }
 
   return (
     <Link
@@ -35,7 +35,6 @@ export default function MobileAPICard({ api }: MobileAPICardProps) {
               api.logo.startsWith('http') ||
               api.logo.startsWith('/') ||
               api.logo.startsWith('data:') ? (
-                // eslint-disable-next-line @next/next/no-img-element
                 <img src={api.logo} alt={api.name} className="w-full h-full object-contain" />
               ) : (
                 <span className="text-xl">{api.logo}</span>
@@ -79,5 +78,5 @@ export default function MobileAPICard({ api }: MobileAPICardProps) {
         </div>
       </div>
     </Link>
-  );
+  )
 }

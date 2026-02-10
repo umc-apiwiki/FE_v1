@@ -38,7 +38,10 @@ export const MobileSearchModal = ({ isOpen, onClose, onSearch }: MobileSearchMod
           exit={{ opacity: 0 }}
           transition={{ duration: 0.2 }}
         >
-          <div className="w-full max-w-sm xs:max-w-md sm:max-w-lg md:max-w-2xl mx-3 xs:mx-4 bg-white rounded-[25px] xs:rounded-[30px] sm:rounded-[34px] shadow-[1px_1px_5px_2px_var(--tw-shadow-color)] shadow-brand-500/25 border border-brand-500/25 overflow-hidden" ref={modalRef}>
+          <div
+            className="w-full max-w-sm xs:max-w-md sm:max-w-lg md:max-w-2xl mx-3 xs:mx-4 bg-white rounded-[25px] xs:rounded-[30px] sm:rounded-[34px] shadow-[1px_1px_5px_2px_var(--tw-shadow-color)] shadow-brand-500/25 border border-brand-500/25 overflow-hidden"
+            ref={modalRef}
+          >
             {/* 검색바 */}
             <div className="p-3 xs:p-4 sm:p-5">
               <div className="relative">
@@ -72,7 +75,9 @@ export const MobileSearchModal = ({ isOpen, onClose, onSearch }: MobileSearchMod
                   {suggestions.length > 0 && (
                     <div>
                       <div className="mb-2 xs:mb-3 px-2 xs:px-3">
-                        <span className="text-sm xs:text-base font-medium text-brand-800 tracking-[-1px]">추천 API</span>
+                        <span className="text-sm xs:text-base font-medium text-brand-800 tracking-[-1px]">
+                          추천 API
+                        </span>
                       </div>
                       <div className="space-y-1">
                         {suggestions.map((item, idx) => (
@@ -112,7 +117,9 @@ export const MobileSearchModal = ({ isOpen, onClose, onSearch }: MobileSearchMod
                 recentSearches.length > 0 && (
                   <div>
                     <div className="mb-2 xs:mb-3 px-2 xs:px-3">
-                      <span className="text-sm xs:text-base font-medium text-brand-800 tracking-[-1px]">Recent</span>
+                      <span className="text-sm xs:text-base font-medium text-brand-800 tracking-[-1px]">
+                        Recent
+                      </span>
                     </div>
 
                     <div className="space-y-1">
@@ -124,9 +131,17 @@ export const MobileSearchModal = ({ isOpen, onClose, onSearch }: MobileSearchMod
                         >
                           <div className="flex items-center gap-2 xs:gap-3 flex-1 min-w-0">
                             <div className="flex-shrink-0">
-                              <img src={SearchHistory} alt="Recent" width={16} height={16} className="xs:w-5 xs:h-5 opacity-60" />
+                              <img
+                                src={SearchHistory}
+                                alt="Recent"
+                                width={16}
+                                height={16}
+                                className="xs:w-5 xs:h-5 opacity-60"
+                              />
                             </div>
-                            <span className="text-info-darker truncate text-xs xs:text-sm sm:text-base font-medium">{item}</span>
+                            <span className="text-info-darker truncate text-xs xs:text-sm sm:text-base font-medium">
+                              {item}
+                            </span>
                           </div>
                           <button
                             onClick={(e) => {

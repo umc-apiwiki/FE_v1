@@ -21,9 +21,7 @@ type DeviceDetectResult = {
  * 모바일 디바이스 감지 (User Agent 기반)
  */
 const isMobileDevice = (): boolean => {
-  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-    navigator.userAgent
-  )
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
 }
 
 /**
@@ -41,17 +39,17 @@ const getDeviceType = (width: number): DeviceType => {
 
 /**
  * 디바이스 타입과 화면 크기를 추적하는 Hook
- * 
+ *
  * @returns 디바이스 정보 객체
- * 
+ *
  * @example
  * ```tsx
  * const { isMobile, isDesktop, windowWidth } = useDeviceDetect()
- * 
+ *
  * if (isMobile) {
  *   return <MobileView />
  * }
- * 
+ *
  * return <DesktopView />
  * ```
  */

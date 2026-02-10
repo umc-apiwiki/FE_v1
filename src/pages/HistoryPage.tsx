@@ -73,65 +73,69 @@ const HistoryPage = () => {
 
               {/* Table Body */}
               <div className="flex w-full min-w-[800px] xs:min-w-[900px] md:min-w-[1000px] px-4 xs:px-6 md:px-8 lg:px-12 flex-col gap-4 xs:gap-6 md:gap-8">
-              {isLoading ? (
-                <div className="py-8 xs:py-10 text-center text-sky-900 text-sm xs:text-base">데이터를 불러오는 중입니다...</div>
-              ) : isError ? (
-                <div className="py-8 xs:py-10 text-center text-red-500 text-sm xs:text-base">
-                  데이터를 불러오는 데 실패했습니다.
-                </div>
-              ) : wikiHistoryList.length === 0 ? (
-                <div className="py-8 xs:py-10 text-center text-zinc-400 text-sm xs:text-base">편집 내역이 없습니다.</div>
-              ) : (
-                wikiHistoryList.map((item: WikiHistoryItem) => (
-                  <div
-                    key={item.requestId}
-                    className="grid grid-cols-5 items-center text-center rounded-lg py-1 hover:bg-sky-50/50 transition-colors"
-                  >
-                    <div className="truncate px-2 text-sm xs:text-base md:text-lg font-medium text-sky-900 font-['Pretendard_Variable']">
-                      {item.apiName}
-                    </div>
-                    <div className="text-sm xs:text-base md:text-lg font-medium text-sky-900 font-['Pretendard_Variable']">
-                      {new Date(item.editedAt).toLocaleDateString()}
-                    </div>
-                    <div className="text-sm xs:text-base md:text-lg font-medium text-sky-900 font-['Pretendard_Variable']">
-                      -
-                    </div>
-                    <div className="text-sm xs:text-base md:text-lg font-medium text-sky-900 font-['Pretendard_Variable']">
-                      -
-                    </div>
-                    <div className="text-sm xs:text-base md:text-lg font-medium text-sky-900 font-['Pretendard_Variable']">
-                      -
-                    </div>
+                {isLoading ? (
+                  <div className="py-8 xs:py-10 text-center text-sky-900 text-sm xs:text-base">
+                    데이터를 불러오는 중입니다...
                   </div>
-                ))
+                ) : isError ? (
+                  <div className="py-8 xs:py-10 text-center text-red-500 text-sm xs:text-base">
+                    데이터를 불러오는 데 실패했습니다.
+                  </div>
+                ) : wikiHistoryList.length === 0 ? (
+                  <div className="py-8 xs:py-10 text-center text-zinc-400 text-sm xs:text-base">
+                    편집 내역이 없습니다.
+                  </div>
+                ) : (
+                  wikiHistoryList.map((item: WikiHistoryItem) => (
+                    <div
+                      key={item.requestId}
+                      className="grid grid-cols-5 items-center text-center rounded-lg py-1 hover:bg-sky-50/50 transition-colors"
+                    >
+                      <div className="truncate px-2 text-sm xs:text-base md:text-lg font-medium text-sky-900 font-['Pretendard_Variable']">
+                        {item.apiName}
+                      </div>
+                      <div className="text-sm xs:text-base md:text-lg font-medium text-sky-900 font-['Pretendard_Variable']">
+                        {new Date(item.editedAt).toLocaleDateString()}
+                      </div>
+                      <div className="text-sm xs:text-base md:text-lg font-medium text-sky-900 font-['Pretendard_Variable']">
+                        -
+                      </div>
+                      <div className="text-sm xs:text-base md:text-lg font-medium text-sky-900 font-['Pretendard_Variable']">
+                        -
+                      </div>
+                      <div className="text-sm xs:text-base md:text-lg font-medium text-sky-900 font-['Pretendard_Variable']">
+                        -
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+
+              {/* 5. 페이지네이션 컨트롤 (버튼 추가됨) */}
+              {!isLoading && !isError && wikiHistoryList.length > 0 && (
+                <div className="mt-6 xs:mt-7 md:mt-8 flex gap-3 xs:gap-4 items-center">
+                  <button
+                    onClick={handlePrevPage}
+                    className="rounded px-3 xs:px-4 py-1.5 xs:py-2 text-sky-900 transition-colors hover:bg-sky-100 cursor-pointer text-sm xs:text-base"
+                  >
+                    &lt; 이전
+                  </button>
+                  <span className="flex items-center text-sky-900 text-sm xs:text-base">
+                    {page + 1} / {totalPage}
+                  </span>
+                  <button
+                    onClick={handleNextPage}
+                    className="rounded px-3 xs:px-4 py-1.5 xs:py-2 text-sky-900 transition-colors hover:bg-sky-100 cursor-pointer text-sm xs:text-base"
+                  >
+                    다음 &gt;
+                  </button>
+                </div>
               )}
             </div>
-
-            {/* 5. 페이지네이션 컨트롤 (버튼 추가됨) */}
-            {!isLoading && !isError && wikiHistoryList.length > 0 && (
-              <div className="mt-6 xs:mt-7 md:mt-8 flex gap-3 xs:gap-4 items-center">
-                <button
-                  onClick={handlePrevPage}
-                  className="rounded px-3 xs:px-4 py-1.5 xs:py-2 text-sky-900 transition-colors hover:bg-sky-100 cursor-pointer text-sm xs:text-base"
-                >
-                  &lt; 이전
-                </button>
-                <span className="flex items-center text-sky-900 text-sm xs:text-base">
-                  {page + 1} / {totalPage}
-                </span>
-                <button
-                  onClick={handleNextPage}
-                  className="rounded px-3 xs:px-4 py-1.5 xs:py-2 text-sky-900 transition-colors hover:bg-sky-100 cursor-pointer text-sm xs:text-base"
-                >
-                  다음 &gt;
-                </button>
-              </div>
-            )}
           </div>
         </div>
       </div>
-    </div>
-    <MobileBottomNavigation />
+      <MobileBottomNavigation />
     </>
   )
 }

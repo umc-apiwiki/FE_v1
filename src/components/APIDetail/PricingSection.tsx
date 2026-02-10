@@ -30,7 +30,10 @@ const PricingSection = ({ pricing }: PricingSectionProps) => {
           {/* Table Header */}
           <div className="mb-4 xs:mb-5 md:mb-6 grid w-[calc(100%-2rem)] xs:w-[calc(100%-3rem)] md:w-[90%] grid-cols-4 text-center">
             {headers.map((header, index) => (
-              <div key={index} className="text-xs xs:text-sm md:text-base lg:text-lg font-medium text-sky-900 uppercase tracking-wider">
+              <div
+                key={index}
+                className="text-xs xs:text-sm md:text-base lg:text-lg font-medium text-sky-900 uppercase tracking-wider"
+              >
                 {header.trim()}
               </div>
             ))}
@@ -48,7 +51,10 @@ const PricingSection = ({ pricing }: PricingSectionProps) => {
               return (
                 <div key={rowIndex} className="grid grid-cols-4 items-center text-center">
                   {columns.map((col, colIndex) => (
-                    <div key={colIndex} className="text-xs xs:text-sm md:text-base lg:text-lg font-medium text-sky-900">
+                    <div
+                      key={colIndex}
+                      className="text-xs xs:text-sm md:text-base lg:text-lg font-medium text-sky-900"
+                    >
                       {col.replace(/"/g, '').trim()}
                     </div>
                   ))}

@@ -181,7 +181,7 @@ export const useMobileSearch = ({
     const term = searchTerm || query
     if (term.trim()) {
       saveRecentSearch(term.trim())
-      
+
       // 커스텀 onSearch 콜백이 있으면 사용, 없으면 기본 네비게이션
       if (onSearch) {
         onSearch(term.trim())

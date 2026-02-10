@@ -1,42 +1,42 @@
 // src/components/mobile/MobileBottomNavigation.tsx
-'use client';
+'use client'
 
-import { useState } from 'react';
-import Link from 'next/link';
-import { useRouter, usePathname } from 'next/navigation';
-import { useAuth } from '@/hooks/useAuth';
-import LoginModal from '@/components/LoginModal';
-import SignupModal from '@/components/SignupModal';
-import styles from './MobileBottomNavigation.module.css';
+import { useState } from 'react'
+import Link from 'next/link'
+import { useRouter, usePathname } from 'next/navigation'
+import { useAuth } from '@/hooks/useAuth'
+import LoginModal from '@/components/LoginModal'
+import SignupModal from '@/components/SignupModal'
+import styles from './MobileBottomNavigation.module.css'
 
 export default function MobileBottomNavigation() {
-  const pathname = usePathname();
-  const router = useRouter();
-  const { isAuthenticated } = useAuth();
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-  const [isSignupModalOpen, setIsSignupModalOpen] = useState(false);
+  const pathname = usePathname()
+  const router = useRouter()
+  const { isAuthenticated } = useAuth()
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false)
+  const [isSignupModalOpen, setIsSignupModalOpen] = useState(false)
 
   const handleProfileClick = (e: React.MouseEvent) => {
-    e.preventDefault();
+    e.preventDefault()
 
     if (isAuthenticated) {
       // 로그인 되어 있으면 프로필 페이지로 이동
-      router.push('/profile');
+      router.push('/profile')
     } else {
       // 로그인 안 되어 있으면 로그인 모달 표시
-      setIsLoginModalOpen(true);
+      setIsLoginModalOpen(true)
     }
-  };
+  }
 
   const handleSwitchToSignup = () => {
-    setIsLoginModalOpen(false);
-    setIsSignupModalOpen(true);
-  };
+    setIsLoginModalOpen(false)
+    setIsSignupModalOpen(true)
+  }
 
   const handleSwitchToLogin = () => {
-    setIsSignupModalOpen(false);
-    setIsLoginModalOpen(true);
-  };
+    setIsSignupModalOpen(false)
+    setIsLoginModalOpen(true)
+  }
 
   const navItems = [
     {
@@ -96,29 +96,29 @@ export default function MobileBottomNavigation() {
       ),
       onClick: handleProfileClick,
     },
-  ];
+  ]
 
   return (
     <>
       <nav className={styles.navigation}>
         <div className={styles.navContainer}>
           {navItems.map(({ svg, href, id, onClick }) => {
-            const isActive = pathname === href || (href !== '/' && pathname.startsWith(href));
-            const iconColor = isActive ? '#2196F3' : '#000000';
+            const isActive = pathname === href || (href !== '/' && pathname.startsWith(href))
+            const iconColor = isActive ? '#2196F3' : '#000000'
 
             if (onClick) {
               return (
                 <button key={id} onClick={onClick} className={styles.navItem}>
                   <div className={styles.iconWrapper}>{svg(iconColor)}</div>
                 </button>
-              );
+              )
             }
 
             return (
               <Link key={id} href={href} className={styles.navItem}>
                 <div className={styles.iconWrapper}>{svg(iconColor)}</div>
               </Link>
-            );
+            )
           })}
         </div>
       </nav>
@@ -135,5 +135,5 @@ export default function MobileBottomNavigation() {
         onSwitchToLogin={handleSwitchToLogin}
       />
     </>
-  );
+  )
 }

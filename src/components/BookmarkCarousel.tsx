@@ -94,7 +94,9 @@ export default function BookmarkCarousel({ date, children }: BookmarkCarouselPro
 
   return (
     <div className="flex flex-col gap-4 xs:gap-5 md:gap-6 w-full mb-6 xs:mb-8 md:mb-10">
-      <div className="text-sky-900 text-base xs:text-lg md:text-xl lg:text-2xl font-medium pl-4 lg:pl-0">{date}</div>
+      <div className="text-sky-900 text-base xs:text-lg md:text-xl lg:text-2xl font-medium pl-4 lg:pl-0">
+        {date}
+      </div>
       <div
         ref={scrollRef}
         onMouseDown={(e) => onDragStart(e, 'content')}

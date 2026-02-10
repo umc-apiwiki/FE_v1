@@ -1,31 +1,31 @@
 // src/components/mobile/MobileHomePage.tsx
-'use client';
+'use client'
 
-import { useRef, useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { useRouter } from 'next/navigation';
-import Image from 'next/image';
-import MobileBottomNavigation from '@/components/mobile/MobileBottomNavigation';
-import MobileSearchModal from '@/components/mobile/MobileSearchModal';
-import MobileAPICard from '@/components/mobile/MobileAPICard';
-import MobileNewsCard from '@/components/mobile/MobileNewsCard';
-import { API, NewsItem } from '@/types';
-import { useAuth } from '@/hooks/useAuth';
-import { supabase } from '@/lib/supabaseClient';
-import styles from './MobileHomePage.module.css';
+import { useRef, useState, useEffect } from 'react'
+import { motion, AnimatePresence } from 'motion/react'
+import { useRouter } from 'next/navigation'
+import Image from 'next/image'
+import MobileBottomNavigation from '@/components/mobile/MobileBottomNavigation'
+import MobileSearchModal from '@/components/mobile/MobileSearchModal'
+import MobileAPICard from '@/components/mobile/MobileAPICard'
+import MobileNewsCard from '@/components/mobile/MobileNewsCard'
+import { API, NewsItem } from '@/types'
+import { useAuth } from '@/hooks/useAuth'
+import { supabase } from '@/lib/supabaseClient'
+import styles from './MobileHomePage.module.css'
 
 export default function MobileHomePage() {
-  const router = useRouter();
-  const { isAuthenticated, user } = useAuth();
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const scrollContentRef = useRef<HTMLDivElement>(null);
-  const [scrollProgress, setScrollProgress] = useState(0);
-  const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
-  const [isActive, setIsActive] = useState(false);
-  const [popularAPIs, setPopularAPIs] = useState<API[]>([]);
-  const [suggestedAPIs, setSuggestedAPIs] = useState<API[]>([]);
-  const [newsItems, setNewsItems] = useState<NewsItem[]>([]);
-  const [categories, setCategories] = useState<string[]>([]);
+  const router = useRouter()
+  const { isAuthenticated, user } = useAuth()
+  const scrollRef = useRef<HTMLDivElement>(null)
+  const scrollContentRef = useRef<HTMLDivElement>(null)
+  const [scrollProgress, setScrollProgress] = useState(0)
+  const [isSearchModalOpen, setIsSearchModalOpen] = useState(false)
+  const [isActive, setIsActive] = useState(false)
+  const [popularAPIs, setPopularAPIs] = useState<API[]>([])
+  const [suggestedAPIs, setSuggestedAPIs] = useState<API[]>([])
+  const [newsItems, setNewsItems] = useState<NewsItem[]>([])
+  const [categories, setCategories] = useState<string[]>([])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -34,22 +34,22 @@ export default function MobileHomePage() {
           fetch('/api/apis?sort=popular&limit=4'),
           fetch('/api/apis?status=approved&limit=4'),
           supabase.from('categories').select('name').order('name'),
-        ]);
+        ])
 
         if (popularRes.ok) {
-          const popularData = await popularRes.json();
-          setPopularAPIs(popularData.slice(0, 4));
+          const popularData = await popularRes.json()
+          setPopularAPIs(popularData.slice(0, 4))
         }
 
         if (suggestedRes.ok) {
-          const suggestedData = await suggestedRes.json();
-          setSuggestedAPIs(suggestedData.slice(0, 4));
+          const suggestedData = await suggestedRes.json()
+          setSuggestedAPIs(suggestedData.slice(0, 4))
         }
 
-        // @ts-ignore
+        // @ts-expect-error - categoriesRes type mismatch
         if (categoriesRes.data) {
-          // @ts-ignore
-          setCategories(categoriesRes.data.map((c) => c.name));
+          // @ts-expect-error - category type mismatch
+          setCategories(categoriesRes.data.map((c) => c.name))
         }
 
         // Mock news data
@@ -82,76 +82,76 @@ export default function MobileHomePage() {
             author: '서울특별 라디오 | 나우어 모바일',
             date: new Date().toISOString(),
           },
-        ]);
+        ])
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error('Error fetching data:', error)
       }
-    };
+    }
 
-    fetchData();
-  }, []);
+    fetchData()
+  }, [])
 
   const handleScroll = () => {
     if (scrollRef.current) {
-      const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
-      const maxScroll = scrollWidth - clientWidth;
-      const progress = maxScroll > 0 ? (scrollLeft / maxScroll) * 100 : 0;
-      setScrollProgress(progress);
+      const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current
+      const maxScroll = scrollWidth - clientWidth
+      const progress = maxScroll > 0 ? (scrollLeft / maxScroll) * 100 : 0
+      setScrollProgress(progress)
     }
-  };
+  }
 
   const handleScrollToTop = () => {
-    setIsActive(true);
-  };
+    setIsActive(true)
+  }
 
   // 스크롤 컨텐츠에서 상단 스크롤 감지 (맨 위에서 더 위로 올리려고 시도)
   useEffect(() => {
-    if (!isActive || !scrollContentRef.current) return;
+    if (!isActive || !scrollContentRef.current) return
 
-    let startY = 0;
-    let isDragging = false;
+    let startY = 0
+    let isDragging = false
 
     const handleTouchStart = (e: TouchEvent) => {
-      if (!scrollContentRef.current) return;
-      const scrollTop = scrollContentRef.current.scrollTop;
+      if (!scrollContentRef.current) return
+      const scrollTop = scrollContentRef.current.scrollTop
 
       // 맨 위에 있을 때만 감지 시작
       if (scrollTop === 0) {
-        startY = e.touches[0].clientY;
-        isDragging = true;
+        startY = e.touches[0].clientY
+        isDragging = true
       }
-    };
+    }
 
     const handleTouchMove = (e: TouchEvent) => {
-      if (!isDragging || !scrollContentRef.current) return;
+      if (!isDragging || !scrollContentRef.current) return
 
-      const scrollTop = scrollContentRef.current.scrollTop;
-      const currentY = e.touches[0].clientY;
-      const deltaY = currentY - startY;
+      const scrollTop = scrollContentRef.current.scrollTop
+      const currentY = e.touches[0].clientY
+      const deltaY = currentY - startY
 
       // 맨 위에서 아래로 당기는 동작 (50px 이상)
       if (scrollTop === 0 && deltaY > 50) {
-        setIsActive(false);
-        isDragging = false;
+        setIsActive(false)
+        isDragging = false
       }
-    };
+    }
 
     const handleTouchEnd = () => {
-      isDragging = false;
-      startY = 0;
-    };
+      isDragging = false
+      startY = 0
+    }
 
-    const scrollElement = scrollContentRef.current;
-    scrollElement.addEventListener('touchstart', handleTouchStart);
-    scrollElement.addEventListener('touchmove', handleTouchMove);
-    scrollElement.addEventListener('touchend', handleTouchEnd);
+    const scrollElement = scrollContentRef.current
+    scrollElement.addEventListener('touchstart', handleTouchStart)
+    scrollElement.addEventListener('touchmove', handleTouchMove)
+    scrollElement.addEventListener('touchend', handleTouchEnd)
 
     return () => {
-      scrollElement.removeEventListener('touchstart', handleTouchStart);
-      scrollElement.removeEventListener('touchmove', handleTouchMove);
-      scrollElement.removeEventListener('touchend', handleTouchEnd);
-    };
-  }, [isActive]);
+      scrollElement.removeEventListener('touchstart', handleTouchStart)
+      scrollElement.removeEventListener('touchmove', handleTouchMove)
+      scrollElement.removeEventListener('touchend', handleTouchEnd)
+    }
+  }, [isActive])
 
   return (
     <div className={styles.container}>
@@ -299,14 +299,14 @@ export default function MobileHomePage() {
                 <div
                   className={styles.scrollableSection}
                   onScroll={(e) => {
-                    const target = e.currentTarget;
+                    const target = e.currentTarget
                     const progress =
-                      (target.scrollLeft / (target.scrollWidth - target.clientWidth)) * 100;
+                      (target.scrollLeft / (target.scrollWidth - target.clientWidth)) * 100
                     const indicator = target.nextElementSibling?.querySelector(
                       `.${styles.progressIndicator}`
-                    ) as HTMLElement;
+                    ) as HTMLElement
                     if (indicator) {
-                      indicator.style.left = `calc((100% - 0.6rem) * ${progress / 100})`;
+                      indicator.style.left = `calc((100% - 0.6rem) * ${progress / 100})`
                     }
                   }}
                 >
@@ -327,14 +327,14 @@ export default function MobileHomePage() {
                 <div
                   className={styles.scrollableSection}
                   onScroll={(e) => {
-                    const target = e.currentTarget;
+                    const target = e.currentTarget
                     const progress =
-                      (target.scrollLeft / (target.scrollWidth - target.clientWidth)) * 100;
+                      (target.scrollLeft / (target.scrollWidth - target.clientWidth)) * 100
                     const indicator = target.nextElementSibling?.querySelector(
                       `.${styles.progressIndicator}`
-                    ) as HTMLElement;
+                    ) as HTMLElement
                     if (indicator) {
-                      indicator.style.left = `calc((100% - 0.6rem) * ${progress / 100})`;
+                      indicator.style.left = `calc((100% - 0.6rem) * ${progress / 100})`
                     }
                   }}
                 >
@@ -355,14 +355,14 @@ export default function MobileHomePage() {
                 <div
                   className={styles.scrollableSection}
                   onScroll={(e) => {
-                    const target = e.currentTarget;
+                    const target = e.currentTarget
                     const progress =
-                      (target.scrollLeft / (target.scrollWidth - target.clientWidth)) * 100;
+                      (target.scrollLeft / (target.scrollWidth - target.clientWidth)) * 100
                     const indicator = target.nextElementSibling?.querySelector(
                       `.${styles.progressIndicator}`
-                    ) as HTMLElement;
+                    ) as HTMLElement
                     if (indicator) {
-                      indicator.style.left = `calc((100% - 0.6rem) * ${progress / 100})`;
+                      indicator.style.left = `calc((100% - 0.6rem) * ${progress / 100})`
                     }
                   }}
                 >
@@ -387,5 +387,5 @@ export default function MobileHomePage() {
       {/* 검색 모달 */}
       <MobileSearchModal isOpen={isSearchModalOpen} onClose={() => setIsSearchModalOpen(false)} />
     </div>
-  );
+  )
 }

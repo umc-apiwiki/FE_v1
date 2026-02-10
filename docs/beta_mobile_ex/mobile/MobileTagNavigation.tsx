@@ -1,14 +1,14 @@
 // src/components/mobile/MobileTagNavigation.tsx
-'use client';
+'use client'
 
-import { motion } from 'motion/react';
-import Link from 'next/link';
+import { motion } from 'motion/react'
+import Link from 'next/link'
 
 interface Tag {
-  id: string;
-  name: string;
-  icon?: string;
-  color?: string;
+  id: string
+  name: string
+  icon?: string
+  color?: string
 }
 
 const tags: Tag[] = [
@@ -18,7 +18,7 @@ const tags: Tag[] = [
   { id: 'translate', name: '번역', icon: '🌍', color: 'bg-pink-50 text-pink-600' },
   { id: 'ai', name: 'AI', icon: '🤖', color: 'bg-indigo-50 text-indigo-600' },
   { id: 'finance', name: '금융', icon: '💰', color: 'bg-yellow-50 text-yellow-600' },
-];
+]
 
 export default function MobileTagNavigation() {
   return (
@@ -54,5 +54,5 @@ export default function MobileTagNavigation() {
         }
       `}</style>
     </div>
-  );
+  )
 }

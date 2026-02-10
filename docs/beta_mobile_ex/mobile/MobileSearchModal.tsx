@@ -1,175 +1,174 @@
 // src/components/mobile/MobileSearchModal.tsx
-'use client';
+'use client'
 
-import { useState, useEffect, useRef } from 'react';
-import { useRouter } from 'next/navigation';
-import Image from 'next/image';
-import { motion, AnimatePresence } from 'motion/react';
-import styles from './MobileSearchModal.module.css';
+import { useState, useEffect, useRef } from 'react'
+import { useRouter } from 'next/navigation'
+import Image from 'next/image'
+import { motion, AnimatePresence } from 'motion/react'
+import styles from './MobileSearchModal.module.css'
 
 interface MobileSearchModalProps {
-  isOpen: boolean;
-  onClose: () => void;
+  isOpen: boolean
+  onClose: () => void
 }
 
-const RECENT_SEARCHES_KEY = 'recent_searches';
-const MAX_RECENT_SEARCHES = 5;
+const RECENT_SEARCHES_KEY = 'recent_searches'
+const MAX_RECENT_SEARCHES = 5
 
 export default function MobileSearchModal({ isOpen, onClose }: MobileSearchModalProps) {
-  const [query, setQuery] = useState('');
-  const [recentSearches, setRecentSearches] = useState<string[]>([]);
-  const [suggestions, setSuggestions] = useState<string[]>([]);
-  const router = useRouter();
-  const modalRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const stored = localStorage.getItem(RECENT_SEARCHES_KEY);
+  const [query, setQuery] = useState('')
+  const [recentSearches, setRecentSearches] = useState<string[]>(() => {
+    const stored = localStorage.getItem(RECENT_SEARCHES_KEY)
     if (stored) {
       try {
-        const parsed = JSON.parse(stored);
+        const parsed = JSON.parse(stored)
         if (Array.isArray(parsed)) {
-          setRecentSearches(parsed);
+          return parsed
         }
       } catch (error) {
-        console.error('Failed to parse recent searches:', error);
+        console.error('Failed to parse recent searches:', error)
       }
     }
-  }, []);
+    return []
+  })
+  const [suggestions, setSuggestions] = useState<string[]>([])
+  const router = useRouter()
+  const modalRef = useRef<HTMLDivElement>(null)
 
   // Fetch suggestions with debounce
   useEffect(() => {
     const fetchSuggestions = async () => {
       if (!query || query.trim().length < 1) {
-        setSuggestions([]);
-        return;
+        setSuggestions([])
+        return
       }
 
       try {
-        const response = await fetch(`/api/apis?q=${encodeURIComponent(query)}&limit=5`);
+        const response = await fetch(`/api/apis?q=${encodeURIComponent(query)}&limit=5`)
         if (response.ok) {
-          const result = await response.json();
-          const names = result.map((api: { name: string }) => api.name);
-          setSuggestions(names);
+          const result = await response.json()
+          const names = result.map((api: { name: string }) => api.name)
+          setSuggestions(names)
         }
       } catch (error) {
-        console.error('Failed to fetch suggestions:', error);
+        console.error('Failed to fetch suggestions:', error)
       }
-    };
+    }
 
     const debounceTimer = setTimeout(() => {
-      fetchSuggestions();
-    }, 300);
+      fetchSuggestions()
+    }, 300)
 
-    return () => clearTimeout(debounceTimer);
-  }, [query]);
+    return () => clearTimeout(debounceTimer)
+  }, [query])
 
   // 뒤로가기 감지 및 하단 네비게이션 숨김
   useEffect(() => {
-    if (!isOpen) return;
+    if (!isOpen) return
 
     // 하단 네비게이션 숨김을 위해 body에 클래스 추가
-    document.body.classList.add('hide-mobile-nav');
+    document.body.classList.add('hide-mobile-nav')
 
     const handlePopState = () => {
-      onClose();
-    };
+      onClose()
+    }
 
     // 모달이 열릴 때 히스토리에 상태 추가
-    window.history.pushState({ modalOpen: true }, '');
+    window.history.pushState({ modalOpen: true }, '')
 
-    window.addEventListener('popstate', handlePopState);
+    window.addEventListener('popstate', handlePopState)
 
     return () => {
-      window.removeEventListener('popstate', handlePopState);
+      window.removeEventListener('popstate', handlePopState)
       // 하단 네비게이션 다시 표시
-      document.body.classList.remove('hide-mobile-nav');
-    };
-  }, [isOpen, onClose]);
+      document.body.classList.remove('hide-mobile-nav')
+    }
+  }, [isOpen, onClose])
 
   // 스크롤 감지 (아래로 스크롤 시 닫기 - 제거)
   // 맨 위에서 pull-down 동작 감지
   useEffect(() => {
-    if (!isOpen || !modalRef.current) return;
+    if (!isOpen || !modalRef.current) return
 
-    let startY = 0;
-    let isDragging = false;
+    let startY = 0
+    let isDragging = false
 
     const handleTouchStart = (e: TouchEvent) => {
-      if (!modalRef.current) return;
-      const scrollTop = modalRef.current.scrollTop;
+      if (!modalRef.current) return
+      const scrollTop = modalRef.current.scrollTop
 
       // 맨 위에 있을 때만 감지 시작
       if (scrollTop === 0) {
-        startY = e.touches[0].clientY;
-        isDragging = true;
+        startY = e.touches[0].clientY
+        isDragging = true
       }
-    };
+    }
 
     const handleTouchMove = (e: TouchEvent) => {
-      if (!isDragging || !modalRef.current) return;
+      if (!isDragging || !modalRef.current) return
 
-      const scrollTop = modalRef.current.scrollTop;
-      const currentY = e.touches[0].clientY;
-      const deltaY = currentY - startY;
+      const scrollTop = modalRef.current.scrollTop
+      const currentY = e.touches[0].clientY
+      const deltaY = currentY - startY
 
       // 맨 위에서 아래로 당기는 동작 (50px 이상)
       if (scrollTop === 0 && deltaY > 50) {
-        onClose();
-        isDragging = false;
+        onClose()
+        isDragging = false
       }
-    };
+    }
 
     const handleTouchEnd = () => {
-      isDragging = false;
-      startY = 0;
-    };
+      isDragging = false
+      startY = 0
+    }
 
-    const modalElement = modalRef.current;
-    modalElement.addEventListener('touchstart', handleTouchStart);
-    modalElement.addEventListener('touchmove', handleTouchMove);
-    modalElement.addEventListener('touchend', handleTouchEnd);
+    const modalElement = modalRef.current
+    modalElement.addEventListener('touchstart', handleTouchStart)
+    modalElement.addEventListener('touchmove', handleTouchMove)
+    modalElement.addEventListener('touchend', handleTouchEnd)
 
     return () => {
-      modalElement.removeEventListener('touchstart', handleTouchStart);
-      modalElement.removeEventListener('touchmove', handleTouchMove);
-      modalElement.removeEventListener('touchend', handleTouchEnd);
-    };
-  }, [isOpen, onClose]);
+      modalElement.removeEventListener('touchstart', handleTouchStart)
+      modalElement.removeEventListener('touchmove', handleTouchMove)
+      modalElement.removeEventListener('touchend', handleTouchEnd)
+    }
+  }, [isOpen, onClose])
 
   const saveRecentSearch = (searchTerm: string) => {
-    if (!searchTerm.trim()) return;
+    if (!searchTerm.trim()) return
 
     const updated = [searchTerm, ...recentSearches.filter((s) => s !== searchTerm)].slice(
       0,
       MAX_RECENT_SEARCHES
-    );
+    )
 
-    setRecentSearches(updated);
-    localStorage.setItem(RECENT_SEARCHES_KEY, JSON.stringify(updated));
-  };
+    setRecentSearches(updated)
+    localStorage.setItem(RECENT_SEARCHES_KEY, JSON.stringify(updated))
+  }
 
   const handleSearch = (searchTerm?: string) => {
-    const term = searchTerm || query;
+    const term = searchTerm || query
     if (term.trim()) {
-      saveRecentSearch(term.trim());
-      router.push(`/explore?q=${encodeURIComponent(term)}`);
+      saveRecentSearch(term.trim())
+      router.push(`/explore?q=${encodeURIComponent(term)}`)
     } else {
-      router.push('/explore');
+      router.push('/explore')
     }
-    onClose();
-  };
+    onClose()
+  }
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
-      handleSearch();
+      handleSearch()
     }
-  };
+  }
 
   const removeRecentSearch = (searchTerm: string) => {
-    const updated = recentSearches.filter((s) => s !== searchTerm);
-    setRecentSearches(updated);
-    localStorage.setItem(RECENT_SEARCHES_KEY, JSON.stringify(updated));
-  };
+    const updated = recentSearches.filter((s) => s !== searchTerm)
+    setRecentSearches(updated)
+    localStorage.setItem(RECENT_SEARCHES_KEY, JSON.stringify(updated))
+  }
 
   return (
     <AnimatePresence>
@@ -268,8 +267,8 @@ export default function MobileSearchModal({ isOpen, onClose }: MobileSearchModal
                           <span className={styles.recentText}>{item}</span>
                           <button
                             onClick={(e) => {
-                              e.stopPropagation();
-                              removeRecentSearch(item);
+                              e.stopPropagation()
+                              removeRecentSearch(item)
                             }}
                             className={styles.removeButton}
                             aria-label="삭제"
@@ -292,5 +291,5 @@ export default function MobileSearchModal({ isOpen, onClose }: MobileSearchModal
         </motion.div>
       )}
     </AnimatePresence>
-  );
+  )
 }

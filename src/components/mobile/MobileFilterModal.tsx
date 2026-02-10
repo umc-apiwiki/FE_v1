@@ -32,7 +32,12 @@ const MENUS = [
   { key: 'D', label: '제공 문서' },
 ] as const
 
-export const MobileFilterModal = ({ isOpen, onClose, onApply, initialFilters }: MobileFilterModalProps) => {
+export const MobileFilterModal = ({
+  isOpen,
+  onClose,
+  onApply,
+  initialFilters,
+}: MobileFilterModalProps) => {
   const [activeMenu, setActiveMenu] = useState<'A' | 'B' | 'C' | 'D'>('A')
   const [filters, setFilters] = useState<FilterValues>({
     pricingTypes: initialFilters?.pricingTypes ?? [],
