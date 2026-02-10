@@ -13,6 +13,7 @@ const MAX_RECENT_SEARCHES = 5
 type UseMobileSearchProps = {
   isOpen: boolean
   onClose: () => void
+  onSearch?: (query: string) => void
 }
 
 type UseMobileSearchReturn = {
@@ -29,6 +30,7 @@ type UseMobileSearchReturn = {
 export const useMobileSearch = ({
   isOpen,
   onClose,
+  onSearch,
 }: UseMobileSearchProps): UseMobileSearchReturn => {
   const [query, setQuery] = useState('')
   const [suggestions, setSuggestions] = useState<string[]>([])
@@ -95,7 +97,25 @@ export const useMobileSearch = ({
       document.body.classList.remove('hide-mobile-nav')
     }
   }, [isOpen, onClose])
+  // 외부 클릭 감지
+  useEffect(() => {
+    if (!isOpen) return
 
+    const handleClickOutside = (event: MouseEvent) => {
+      if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+        onClose()
+      }
+    }
+
+    // 클릭 이벤트 리스너를 다음 틀에 추가하여 모달이 열린 후에 바로 닫히지 않도록 함
+    setTimeout(() => {
+      document.addEventListener('mousedown', handleClickOutside)
+    }, 0)
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [isOpen, onClose])
   // 맨 위에서 pull-down 동작 감지
   useEffect(() => {
     if (!isOpen || !modalRef.current) return
@@ -161,9 +181,19 @@ export const useMobileSearch = ({
     const term = searchTerm || query
     if (term.trim()) {
       saveRecentSearch(term.trim())
-      navigate(`/explore?q=${encodeURIComponent(term)}`)
+      
+      // 커스텀 onSearch 콜백이 있으면 사용, 없으면 기본 네비게이션
+      if (onSearch) {
+        onSearch(term.trim())
+      } else {
+        navigate(`/explore?q=${encodeURIComponent(term)}`)
+      }
     } else {
-      navigate('/explore')
+      if (onSearch) {
+        onSearch('')
+      } else {
+        navigate('/explore')
+      }
     }
     onClose()
   }

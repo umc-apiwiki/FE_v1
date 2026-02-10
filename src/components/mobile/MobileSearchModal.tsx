@@ -10,9 +10,10 @@ import { useMobileSearch } from '../../hooks/useMobileSearch'
 type MobileSearchModalProps = {
   isOpen: boolean
   onClose: () => void
+  onSearch?: (query: string) => void
 }
 
-export const MobileSearchModal = ({ isOpen, onClose }: MobileSearchModalProps) => {
+export const MobileSearchModal = ({ isOpen, onClose, onSearch }: MobileSearchModalProps) => {
   const {
     query,
     recentSearches,
@@ -22,7 +23,7 @@ export const MobileSearchModal = ({ isOpen, onClose }: MobileSearchModalProps) =
     handleSearch,
     handleKeyPress,
     removeRecentSearch,
-  } = useMobileSearch({ isOpen, onClose })
+  } = useMobileSearch({ isOpen, onClose, onSearch })
 
   return (
     <AnimatePresence>
@@ -113,9 +114,9 @@ export const MobileSearchModal = ({ isOpen, onClose }: MobileSearchModalProps) =
 
                     <div className="space-y-0.5 xs:space-y-1">
                       {recentSearches.map((item, idx) => (
-                        <button
+                        <div
                           key={`recent-${idx}`}
-                          className="w-full flex items-center justify-between gap-2 xs:gap-3 px-3 xs:px-4 py-2 xs:py-3 hover:bg-gray-50 rounded-lg xs:rounded-xl transition-colors text-left"
+                          className="w-full flex items-center justify-between gap-2 xs:gap-3 px-3 xs:px-4 py-2 xs:py-3 hover:bg-gray-50 rounded-lg xs:rounded-xl transition-colors text-left cursor-pointer"
                           onClick={() => handleSearch(item)}
                         >
                           <div className="flex items-center gap-2 xs:gap-3 flex-1 min-w-0">
@@ -140,7 +141,7 @@ export const MobileSearchModal = ({ isOpen, onClose }: MobileSearchModalProps) =
                               className="xs:w-4 xs:h-4"
                             />
                           </button>
-                        </button>
+                        </div>
                       ))}
                     </div>
                   </div>

@@ -1,7 +1,9 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import APICard from '@/components/APICard'
+import { MobileAPICard } from '@/components/mobile/MobileAPICard'
 import SearchBar from '@/components/HomePage/SearchBar'
+import { MobileSearchModal } from '@/components/mobile/MobileSearchModal'
 import FilterModal from '@/components/modal/FilterModal'
 import CompareModal from '@/components/modal/CompareModal'
 import type { FilterValues } from '@/components/modal/FilterModal'
@@ -10,6 +12,7 @@ import type { ApiListParams, SortOption, ApiPreview } from '@/types/api'
 import { usePostFavorite } from '@/hooks/mutations/usePostFavorite'
 import { CompareProvider } from '@/context/CompareProvider'
 import { useCompare } from '@/hooks/useCompare'
+import { useDeviceDetect } from '@/hooks/useDeviceDetect'
 import { MobileHeader } from '@/components/mobile/MobileHeader'
 import { MobileBottomNavigation } from '@/components/mobile/MobileBottomNavigation'
 
@@ -29,6 +32,9 @@ const ExplorePageContent = () => {
   const [isSortOpen, setIsSortOpen] = useState(false)
   const sortRef = useRef<HTMLDivElement>(null)
   const sentinelRef = useRef<HTMLDivElement>(null)
+  
+  // 디바이스 감지
+  const { isMobile } = useDeviceDetect()
 
   // 비교 기능
   const {
@@ -215,7 +221,33 @@ const ExplorePageContent = () => {
     <>
       <MobileHeader />
       <div className="mt-14 xs:mt-16 md:mt-10 pb-16 xs:pb-20 md:pb-20">
-      <SearchBar isOpen={isSearchOpen} setIsOpen={setIsSearchOpen} onSearch={handleSearch} />
+      {/* 모바일 검색 모달 */}
+      {isMobile && (
+        <MobileSearchModal
+          isOpen={isSearchOpen}
+          onClose={() => setIsSearchOpen(false)}
+          onSearch={handleSearch}
+        />
+      )}
+      
+      {/* 데스크톱 검색바 */}
+      {!isMobile && (
+        <SearchBar isOpen={isSearchOpen} setIsOpen={setIsSearchOpen} onSearch={handleSearch} />
+      )}
+      
+      {/* 모바일 검색 버튼 */}
+      {isMobile && (
+        <div className="px-3 xs:px-4 sm:px-6">
+          <button
+            type="button"
+            onClick={() => setIsSearchOpen(true)}
+            className="w-full bg-gray-100 rounded-lg xs:rounded-xl px-3 xs:px-4 py-2 xs:py-2.5 sm:py-3 flex items-center gap-2 text-left text-gray-400 text-xs xs:text-sm sm:text-base"
+          >
+            <img src="/mingcute_search-line.svg" alt="Search" width={20} height={20} />
+            <span>궁금한 API를 검색해보세요</span>
+          </button>
+        </div>
+      )}
 
       <div className="mt-4 xs:mt-6 md:mt-8">
         {/* 카드 개수 및 필터/정렬 */}
@@ -316,15 +348,19 @@ const ExplorePageContent = () => {
               md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4
               px-3 xs:px-4 sm:px-6 md:px-12 lg:px-16 xl:px-24 2xl:px-28"
           >
-            {items.map((api) => (
-              <APICard
-                key={api.apiId}
-                {...api}
-                onToggleFavorite={handleToggleFavorite}
-                onToggleCompare={handleToggleCompare}
-                isInCompare={isInCompare(api.apiId)}
-              />
-            ))}
+            {items.map((api) =>
+              isMobile ? (
+                <MobileAPICard key={api.apiId} api={api} />
+              ) : (
+                <APICard
+                  key={api.apiId}
+                  {...api}
+                  onToggleFavorite={handleToggleFavorite}
+                  onToggleCompare={handleToggleCompare}
+                  isInCompare={isInCompare(api.apiId)}
+                />
+              )
+            )}
           </div>
         )}
 
