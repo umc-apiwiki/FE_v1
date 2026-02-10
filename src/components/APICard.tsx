@@ -98,10 +98,10 @@ export default function APICard({
             <h3 className="text-info-darker font-medium leading-tight text-xl pb-4">{name}</h3>
             <p className="text-info-dark text-sm font-medium">Star {avgRating.toFixed(1)}</p>
             <p className="text-info-dark text-sm font-medium">
-              {reviewCount} reviews · {viewCounts.toLocaleString()} views
+              {viewCounts.toLocaleString()} views
             </p>
             <p className="text-[#B0B0B0] text-xs mt-0.5">
-              {PRICING_LABEL[pricingType] ?? pricingType} · {providerCompany}
+              {PRICING_LABEL[pricingType] ?? pricingType}
             </p>
           </div>
         </div>
