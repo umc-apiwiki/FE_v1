@@ -154,7 +154,10 @@ const ScrollableSection = ({
   const scrollRef = useRef<HTMLDivElement>(null)
   const [indicatorX, setIndicatorX] = useState(0)
 
-  // 드래그 상태 관리
+  // 드래그 상태 관리 (Lint 에러 해결을 위해 State로 관리)
+  const [isDragActive, setIsDragActive] = useState(false)
+  const [activeTarget, setActiveTarget] = useState<'handle' | 'content' | null>(null)
+
   const isDragging = useRef(false)
   const dragTarget = useRef<'handle' | 'content' | null>(null)
   const startX = useRef(0)
@@ -163,11 +166,17 @@ const ScrollableSection = ({
 
   const MAX_MOVE = 24
 
-  const handleWheel = (e: React.WheelEvent) => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollLeft += e.deltaY
+  // [Lint 해결] document.body 직접 수정을 useEffect로 이동
+  useEffect(() => {
+    if (isDragActive) {
+      document.body.style.userSelect = 'none'
+    } else {
+      document.body.style.userSelect = ''
     }
-  }
+    return () => {
+      document.body.style.userSelect = ''
+    }
+  }, [isDragActive])
 
   const handleScroll = () => {
     if (!scrollRef.current || dragTarget.current === 'handle') return
@@ -178,13 +187,13 @@ const ScrollableSection = ({
 
   const onDragStart = (e: React.MouseEvent, target: 'handle' | 'content') => {
     isDragging.current = true
+    setIsDragActive(true)
+    setActiveTarget(target)
     dragTarget.current = target
     startX.current = e.clientX
     if (scrollRef.current) startScrollLeft.current = scrollRef.current.scrollLeft
     startIndicatorX.current = indicatorX
 
-    // eslint-disable-next-line
-    document.body.style.userSelect = 'none'
     document.addEventListener('mousemove', onDragMove)
     document.addEventListener('mouseup', onDragEnd)
     document.addEventListener('mouseleave', onDragEnd)
@@ -207,11 +216,11 @@ const ScrollableSection = ({
 
   const onDragEnd = () => {
     isDragging.current = false
+    setIsDragActive(false)
+    setActiveTarget(null)
     dragTarget.current = null
     if (scrollRef.current) scrollRef.current.style.scrollBehavior = 'smooth'
 
-    // eslint-disable-next-line
-    document.body.style.userSelect = ''
     document.removeEventListener('mousemove', onDragMove)
     document.removeEventListener('mouseup', onDragEnd)
     document.removeEventListener('mouseleave', onDragEnd)
@@ -235,22 +244,21 @@ const ScrollableSection = ({
 
       <div
         ref={scrollRef}
-        onWheel={handleWheel}
         onMouseDown={(e) => onDragStart(e, 'content')}
         // 이미지 드래그 방지 (중요)
         onDragStart={(e) => e.preventDefault()}
         className={`flex overflow-x-auto gap-6 pb-4 no-scrollbar scroll-smooth ${
-          isDragging.current && dragTarget.current === 'content' ? 'cursor-grabbing' : 'cursor-grab'
+          activeTarget === 'content' ? 'cursor-grabbing' : 'cursor-grab'
         }`}
         style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
       >
         {type === 'api'
           ? (data as ApiPreview[]).map((api, index) => (
-              <APICardSmall key={api.apiId || index} {...api} />
+              <APICardSmall key={`api-${title}-${api.apiId}-${index}`} {...api} />
             ))
           : (data as NewsData[]).map((news, i) => (
               <NewsCard
-                key={i}
+                key={`news-${title}-${i}`}
                 title={news.title}
                 publisherLogoUrl={news.publisher}
                 thumbnailUrl={news.thumb}
