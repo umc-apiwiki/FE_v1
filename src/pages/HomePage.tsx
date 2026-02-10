@@ -152,6 +152,10 @@ const ScrollableSection = ({
 }) => {
   const scrollRef = useRef<HTMLDivElement>(null)
   const [indicatorX, setIndicatorX] = useState(0)
+
+  // ✅ 린트 에러 해결을 위한 드래그 활성화 상태 추가
+  const [isDragActive, setIsDragActive] = useState(false)
+
   const isDragging = useRef(false)
   const dragTarget = useRef<'handle' | 'content' | null>(null)
   const startX = useRef(0)
@@ -160,10 +164,17 @@ const ScrollableSection = ({
 
   const MAX_MOVE = 24
 
-  /** * 🚫 [제거됨] handleWheel:
-   * 세로 휠을 가로 스크롤로 바꾸는 로직을 제거하여
-   * 마우스 휠 사용 시 페이지 전체 스크롤만 작동하도록 수정했습니다.
-   */
+  // ✅ [린트 해결] document.body 조작은 useEffect에서 처리
+  useEffect(() => {
+    if (isDragActive) {
+      document.body.style.userSelect = 'none'
+    } else {
+      document.body.style.userSelect = ''
+    }
+    return () => {
+      document.body.style.userSelect = ''
+    }
+  }, [isDragActive])
 
   const handleScroll = () => {
     if (!scrollRef.current || dragTarget.current === 'handle') return
@@ -174,11 +185,12 @@ const ScrollableSection = ({
 
   const onDragStart = (e: React.MouseEvent, target: 'handle' | 'content') => {
     isDragging.current = true
+    setIsDragActive(true) // 드래그 상태 활성화 (Effect 트리거)
     dragTarget.current = target
     startX.current = e.clientX
     if (scrollRef.current) startScrollLeft.current = scrollRef.current.scrollLeft
     startIndicatorX.current = indicatorX
-    document.body.style.userSelect = 'none'
+
     document.addEventListener('mousemove', onDragMove)
     document.addEventListener('mouseup', onDragEnd)
     document.addEventListener('mouseleave', onDragEnd)
@@ -200,9 +212,10 @@ const ScrollableSection = ({
 
   const onDragEnd = () => {
     isDragging.current = false
+    setIsDragActive(false) // 드래그 상태 해제 (Effect 트리거)
     dragTarget.current = null
     if (scrollRef.current) scrollRef.current.style.scrollBehavior = 'smooth'
-    document.body.style.userSelect = ''
+
     document.removeEventListener('mousemove', onDragMove)
     document.removeEventListener('mouseup', onDragEnd)
     document.removeEventListener('mouseleave', onDragEnd)
@@ -226,7 +239,6 @@ const ScrollableSection = ({
 
       <div
         ref={scrollRef}
-        /** 🚫 [수정] onWheel={handleWheel} 삭제: 휠 간섭 현상 방지 */
         onMouseDown={(e) => onDragStart(e, 'content')}
         onDragStart={(e) => e.preventDefault()}
         className={`flex overflow-x-auto gap-6 pb-4 no-scrollbar scroll-smooth ${
@@ -236,7 +248,6 @@ const ScrollableSection = ({
       >
         {type === 'api'
           ? (data as ApiPreview[]).map((api, index) => (
-              /** ✅ [유지] 고유 키 조합 */
               <APICardSmall key={`api-${title}-${api.apiId}-${index}`} {...api} />
             ))
           : (data as NewsData[]).map((news, i) => (
