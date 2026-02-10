@@ -6,6 +6,8 @@ import type { ApiPreview } from '@/types/api'
 
 type APICardProps = ApiPreview & {
   onToggleFavorite?: (apiId: number) => void
+  onToggleCompare?: (api: ApiPreview) => void
+  isInCompare?: boolean
 }
 
 const PRICING_LABEL: Record<string, string> = {
@@ -24,15 +26,33 @@ export default function APICard({
   reviewCount,
   viewCounts,
   pricingType,
+  authType,
   providerCompany,
   isFavorited,
   logo,
   onToggleFavorite,
+  onToggleCompare,
+  isInCompare = false,
 }: APICardProps) {
   const navigate = useNavigate()
   const [imgError, setImgError] = useState(false)
   // logo prop이 있으면 사용, 없으면 기본 경로 사용
   const logoUrl = logo ?? `${LOGO_BASE}/api_${apiId}.png`
+
+  // 전체 카드 데이터를 생성
+  const apiData: ApiPreview = {
+    apiId,
+    name,
+    summary,
+    avgRating,
+    reviewCount,
+    viewCounts,
+    pricingType,
+    authType,
+    providerCompany,
+    isFavorited,
+    logo,
+  }
 
   return (
     <div
@@ -93,10 +113,22 @@ export default function APICard({
           <div className="mx-auto w-[133px] h-8 relative rounded-[20px] shadow-[0px_2px_4px_0px_rgba(33,150,243,0.25)] border border-sky-500 overflow-hidden cursor-pointer">
             <button
               type="button"
-              className="w-full h-full bg-white flex items-center justify-center hover:bg-brand-500 group/btn transition-colors duration-300"
+              onClick={(e) => {
+                e.stopPropagation()
+                onToggleCompare?.(apiData)
+              }}
+              className={`w-full h-full flex items-center justify-center transition-colors duration-300 ${
+                isInCompare
+                  ? 'bg-brand-500 hover:bg-brand-600'
+                  : 'bg-white hover:bg-brand-500 group/btn'
+              }`}
             >
-              <span className="text-brand-500 text-xl font-medium group-hover/btn:text-white transition-colors duration-300 pb-1">
-                compare
+              <span
+                className={`text-xl font-medium transition-colors duration-300 pb-1 ${
+                  isInCompare ? 'text-white' : 'text-brand-500 group-hover/btn:text-white'
+                }`}
+              >
+                {isInCompare ? '비교중' : 'compare'}
               </span>
             </button>
           </div>

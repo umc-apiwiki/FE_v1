@@ -3,10 +3,13 @@ import { useSearchParams } from 'react-router-dom'
 import APICard from '@/components/APICard'
 import SearchBar from '@/components/HomePage/SearchBar'
 import FilterModal from '@/components/modal/FilterModal'
+import CompareModal from '@/components/modal/CompareModal'
 import type { FilterValues } from '@/components/modal/FilterModal'
 import { useApiList } from '@/hooks'
 import type { ApiListParams, SortOption, ApiPreview } from '@/types/api'
 import { usePostFavorite } from '@/hooks/mutations/usePostFavorite'
+import { CompareProvider } from '@/context/CompareProvider'
+import { useCompare } from '@/hooks/useCompare'
 
 import Filter from '@/assets/icons/action/ic_filter.svg'
 import ArrowDown from '@/assets/icons/action/ic_arrow_down.svg'
@@ -17,13 +20,27 @@ const SORT_OPTIONS: { label: string; value: SortOption }[] = [
   { label: '리뷰순', value: 'MOST_REVIEWED' },
 ]
 
-const ExplorePage = () => {
+const ExplorePageContent = () => {
   const [searchParams, setSearchParams] = useSearchParams()
   const [isSearchOpen, setIsSearchOpen] = useState(false)
   const [isFilterOpen, setIsFilterOpen] = useState(false)
   const [isSortOpen, setIsSortOpen] = useState(false)
   const sortRef = useRef<HTMLDivElement>(null)
   const sentinelRef = useRef<HTMLDivElement>(null)
+
+  // 비교 기능
+  const {
+    compareList,
+    isCompareModalOpen,
+    pricingData,
+    isLoadingPricing,
+    addToCompare,
+    removeFromCompare,
+    clearCompare,
+    isInCompare,
+    openCompareModal,
+    closeCompareModal,
+  } = useCompare()
 
   // API 조회 파라미터
   const [params, setParams] = useState<ApiListParams>({
@@ -178,6 +195,18 @@ const ExplorePage = () => {
     [toggleFavorite, isToggling]
   )
 
+  // 비교 목록 토글
+  const handleToggleCompare = useCallback(
+    (api: ApiPreview) => {
+      if (isInCompare(api.apiId)) {
+        removeFromCompare(api.apiId)
+      } else {
+        addToCompare(api)
+      }
+    },
+    [isInCompare, removeFromCompare, addToCompare]
+  )
+
   const currentSort = SORT_OPTIONS.find((o) => o.value === params.sort) ?? SORT_OPTIONS[0]
 
   return (
@@ -191,6 +220,19 @@ const ExplorePage = () => {
             {totalElements !== null ? `${totalElements.toLocaleString()}개` : '-'}
           </span>
           <div className="flex gap-6 sm:pr-8 md:pr-16 lg:pr-20 xl:pr-28 2xl:pr-32 font-sans text-lg font-medium text-info-dark">
+            {/* 비교하기 버튼 */}
+            {compareList.length > 0 && (
+              <button
+                type="button"
+                onClick={openCompareModal}
+                className="flex items-center gap-2 hover:text-brand-500 transition-colors"
+              >
+                <span>비교하기</span>
+                <span className="text-sm bg-brand-500 text-white rounded-full w-6 h-6 flex items-center justify-center">
+                  {compareList.length}
+                </span>
+              </button>
+            )}
             {/* 필터 */}
             <button
               type="button"
@@ -272,7 +314,13 @@ const ExplorePage = () => {
               sm:pr-8 md:pr-16 lg:pr-20 xl:pr-28 2xl:pr-32"
           >
             {items.map((api) => (
-              <APICard key={api.apiId} {...api} onToggleFavorite={handleToggleFavorite} />
+              <APICard
+                key={api.apiId}
+                {...api}
+                onToggleFavorite={handleToggleFavorite}
+                onToggleCompare={handleToggleCompare}
+                isInCompare={isInCompare(api.apiId)}
+              />
             ))}
           </div>
         )}
@@ -287,7 +335,27 @@ const ExplorePage = () => {
           </div>
         )}
       </div>
+
+      {/* 비교 모달 */}
+      <CompareModal
+        isOpen={isCompareModalOpen}
+        onClose={closeCompareModal}
+        compareList={compareList}
+        pricingData={pricingData}
+        isLoading={isLoadingPricing}
+        onRemove={removeFromCompare}
+        onClear={clearCompare}
+      />
     </div>
+  )
+}
+
+// Provider로 감싸서 export
+const ExplorePage = () => {
+  return (
+    <CompareProvider maxCompare={3}>
+      <ExplorePageContent />
+    </CompareProvider>
   )
 }
 
