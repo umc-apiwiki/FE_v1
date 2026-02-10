@@ -101,7 +101,7 @@ export default function APICard({
               {viewCounts.toLocaleString()} views
             </p>
             <p className="text-[#B0B0B0] text-xs mt-0.5">
-              {PRICING_LABEL[pricingType] ?? pricingType} · {providerCompany}
+              {PRICING_LABEL[pricingType] ?? pricingType}
             </p>
           </div>
         </div>
