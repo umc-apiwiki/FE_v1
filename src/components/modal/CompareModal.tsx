@@ -29,13 +29,7 @@ const LOGO_BASE = 'https://api-wiki-api-logos.s3.ap-northeast-2.amazonaws.com/ap
 
 /** 닫기 아이콘 SVG 컴포넌트 */
 const CloseIcon = () => (
-  <svg
-    width="24"
-    height="24"
-    viewBox="0 0 24 24"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path
       d="M18 6L6 18M6 6L18 18"
       stroke="currentColor"
@@ -61,7 +55,11 @@ const csvToMarkdown = (csv: string): string => {
 
   // 마크다운 테이블 생성
   let markdown = header + '\n'
-  markdown += header.split(',').map(() => '---').join(' | ') + '\n'
+  markdown +=
+    header
+      .split(',')
+      .map(() => '---')
+      .join(' | ') + '\n'
   rows.forEach((row) => {
     markdown += row + '\n'
   })
