@@ -95,7 +95,7 @@ export default function SignUpModal({ onClose, onSwitchToSignIn }: SignUpModalPr
         </div>
 
         {/* 입력 영역 */}
-        <div className="flex flex-col gap-5 mb-3">
+        <form className="flex flex-col gap-5 mb-3">
           {/* 닉네임 입력 */}
           <div>
             <ModalInput
@@ -153,7 +153,7 @@ export default function SignUpModal({ onClose, onSwitchToSignIn }: SignUpModalPr
           <ModalButton onClick={handleSubmit} disabled={!isFormValid || isLoading}>
             회원가입
           </ModalButton>
-        </div>
+        </form>
 
         {/* 하단 링크 */}
         <div
