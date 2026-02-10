@@ -6,7 +6,6 @@
 
 import { Link } from 'react-router-dom'
 import { useMobileNavigation } from '../../hooks/useMobileNavigation'
-import styles from './MobileBottomNavigation.module.scss'
 
 export const MobileBottomNavigation = () => {
   const {
@@ -82,8 +81,9 @@ export const MobileBottomNavigation = () => {
 
   return (
     <>
-      <nav className={styles['bottom-nav']}>
-        <div className={styles['bottom-nav__container']}>
+      {/* 모바일 하단 네비게이션: 768px 미만에서만 표시 */}
+      <nav className="fixed bottom-0 left-0 right-0 w-full h-16 bg-white border-l border-r border-t border-sky-500 rounded-t-2xl z-50 box-border m-0 p-0 md:hidden">
+        <div className="flex justify-around items-center h-full w-full px-2 box-border">
           {navItems.map(({ svg, href, id, onClick }) => {
             const active = isActive(href)
             const iconColor = active ? '#2196F3' : '#000000'
@@ -93,11 +93,11 @@ export const MobileBottomNavigation = () => {
                 <button
                   key={id}
                   onClick={onClick}
-                  className={`${styles['bottom-nav__item']} ${
-                    active ? styles['bottom-nav__item--active'] : ''
-                  }`}
+                  className="flex flex-col items-center justify-center flex-1 h-full gap-1 no-underline transition-all duration-200 cursor-pointer bg-transparent border-none p-0 m-0 active:scale-95"
                 >
-                  <div className={styles['bottom-nav__icon']}>{svg(iconColor)}</div>
+                  <div className="flex items-center justify-center w-8 h-8 rounded-lg transition-all duration-200 active:bg-sky-500/10">
+                    {svg(iconColor)}
+                  </div>
                 </button>
               )
             }
@@ -106,56 +106,54 @@ export const MobileBottomNavigation = () => {
               <Link
                 key={id}
                 to={href}
-                className={`${styles['bottom-nav__item']} ${
-                  active ? styles['bottom-nav__item--active'] : ''
-                }`}
+                className="flex flex-col items-center justify-center flex-1 h-full gap-1 no-underline transition-all duration-200 cursor-pointer active:scale-95"
               >
-                <div className={styles['bottom-nav__icon']}>{svg(iconColor)}</div>
+                <div className="flex items-center justify-center w-8 h-8 rounded-lg transition-all duration-200 active:bg-sky-500/10">
+                  {svg(iconColor)}
+                </div>
               </Link>
             )
           })}
         </div>
       </nav>
 
-      {/* TODO: LoginModal과 SignupModal 컴포넌트 추가 필요 */}
-      {/* 현재 프로젝트에 해당 모달이 있다면 import하여 사용 */}
       {isLoginModalOpen && (
-        <div className={styles['modal-overlay']}>
-          <div className={styles['modal']}>
-            <div className={styles['modal__header']}>
-              <h2 className={styles['modal__title']}>로그인</h2>
+        <div className="fixed inset-0 z-[9999] bg-black/50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-xl w-full max-w-md p-6 shadow-xl">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-xl font-bold text-gray-900">로그인</h2>
               <button
                 onClick={() => setIsLoginModalOpen(false)}
-                className={styles['modal__close']}
+                className="flex items-center justify-center w-8 h-8 text-gray-500 hover:text-gray-700 bg-transparent border-none cursor-pointer"
               >
                 ×
               </button>
             </div>
-            <div className={styles['modal__body']}>
-              <div className={styles['modal__input-group']}>
-                <label className={styles['modal__label']}>이메일</label>
+            <div className="flex flex-col gap-4">
+              <div className="flex flex-col gap-2">
+                <label className="text-sm font-semibold text-gray-700">이메일</label>
                 <input
                   type="email"
-                  className={styles['modal__input']}
+                  className="px-4 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10"
                   placeholder="이메일을 입력하세요"
                 />
               </div>
-              <div className={styles['modal__input-group']}>
-                <label className={styles['modal__label']}>비밀번호</label>
+              <div className="flex flex-col gap-2">
+                <label className="text-sm font-semibold text-gray-700">비밀번호</label>
                 <input
                   type="password"
-                  className={styles['modal__input']}
+                  className="px-4 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10"
                   placeholder="비밀번호를 입력하세요"
                 />
               </div>
             </div>
-            <div className={styles['modal__footer']}>
-              <button className={`${styles['modal__button']} ${styles['modal__button--primary']}`}>
+            <div className="flex flex-col gap-2 mt-6">
+              <button className="px-6 py-2 bg-blue-500 text-white rounded-lg text-base font-semibold text-center transition-all hover:bg-blue-600 active:scale-98">
                 로그인
               </button>
               <button
                 onClick={handleSwitchToSignup}
-                className={`${styles['modal__button']} ${styles['modal__button--text']}`}
+                className="px-2 py-1 bg-transparent text-gray-600 text-center cursor-pointer hover:text-gray-900"
               >
                 회원가입으로
               </button>
@@ -164,42 +162,42 @@ export const MobileBottomNavigation = () => {
         </div>
       )}
       {isSignupModalOpen && (
-        <div className={styles['modal-overlay']}>
-          <div className={styles['modal']}>
-            <div className={styles['modal__header']}>
-              <h2 className={styles['modal__title']}>회원가입</h2>
+        <div className="fixed inset-0 z-[9999] bg-black/50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-xl w-full max-w-md p-6 shadow-xl">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-xl font-bold text-gray-900">회원가입</h2>
               <button
                 onClick={() => setIsSignupModalOpen(false)}
-                className={styles['modal__close']}
+                className="flex items-center justify-center w-8 h-8 text-gray-500 hover:text-gray-700 bg-transparent border-none cursor-pointer"
               >
                 ×
               </button>
             </div>
-            <div className={styles['modal__body']}>
-              <div className={styles['modal__input-group']}>
-                <label className={styles['modal__label']}>이메일</label>
+            <div className="flex flex-col gap-4">
+              <div className="flex flex-col gap-2">
+                <label className="text-sm font-semibold text-gray-700">이메일</label>
                 <input
                   type="email"
-                  className={styles['modal__input']}
+                  className="px-4 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10"
                   placeholder="이메일을 입력하세요"
                 />
               </div>
-              <div className={styles['modal__input-group']}>
-                <label className={styles['modal__label']}>비밀번호</label>
+              <div className="flex flex-col gap-2">
+                <label className="text-sm font-semibold text-gray-700">비밀번호</label>
                 <input
                   type="password"
-                  className={styles['modal__input']}
+                  className="px-4 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10"
                   placeholder="비밀번호를 입력하세요"
                 />
               </div>
             </div>
-            <div className={styles['modal__footer']}>
-              <button className={`${styles['modal__button']} ${styles['modal__button--primary']}`}>
+            <div className="flex flex-col gap-2 mt-6">
+              <button className="px-6 py-2 bg-blue-500 text-white rounded-lg text-base font-semibold text-center transition-all hover:bg-blue-600 active:scale-98">
                 회원가입
               </button>
               <button
                 onClick={handleSwitchToLogin}
-                className={`${styles['modal__button']} ${styles['modal__button--text']}`}
+                className="px-2 py-1 bg-transparent text-gray-600 text-center cursor-pointer hover:text-gray-900"
               >
                 로그인으로
               </button>

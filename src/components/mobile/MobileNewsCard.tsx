@@ -5,7 +5,6 @@
 
 import { Link } from 'react-router-dom'
 import type { MobileNewsItem } from '../../types/api'
-import styles from './MobileNewsCard.module.scss'
 
 type MobileNewsCardProps = {
   news: MobileNewsItem
@@ -25,16 +24,16 @@ export const MobileNewsCard = ({ news }: MobileNewsCardProps) => {
   }
 
   return (
-    <Link to={`/news/${news.id}`} className={styles['news-card']}>
-      <div className={styles['news-card__container']}>
+    <Link to={`/news/${news.id}`} className="block w-full h-full bg-white rounded-xl shadow-sm border border-blue-500 transition-all hover:shadow-md hover:-translate-y-1">
+      <div className="p-4">
         {/* 제목 */}
-        <h3 className={styles['news-card__title']}>{news.title}</h3>
+        <h3 className="text-base font-semibold text-gray-900 line-clamp-2 mb-2">{news.title}</h3>
 
         {/* 메타 정보 */}
-        <div className={styles['news-card__meta']}>
-          <span className={styles['news-card__meta-item']}>{news.author || '익명'}</span>
-          <span className={styles['news-card__separator']}>•</span>
-          <span className={styles['news-card__meta-item']}>{formatDate(news.date)}</span>
+        <div className="flex items-center gap-2 text-xs text-gray-500">
+          <span>{news.author || '익명'}</span>
+          <span>•</span>
+          <span>{formatDate(news.date)}</span>
         </div>
       </div>
     </Link>

@@ -11,7 +11,6 @@ import { MobileBottomNavigation } from './MobileBottomNavigation'
 import { MobileSearchModal } from './MobileSearchModal'
 import { MobileAPICard } from './MobileAPICard'
 import { MobileNewsCard } from './MobileNewsCard'
-import styles from './MobileHomePage.module.scss'
 
 export const MobileHomePage = () => {
   const { accessToken } = useAuth()
@@ -34,31 +33,31 @@ export const MobileHomePage = () => {
   } = useMobileHome()
 
   return (
-    <div className={styles['mobile-home']}>
+    <div className="relative w-full h-screen overflow-hidden bg-gradient-to-b from-blue-50 to-white">
       {/* 상단 헤더 */}
-      <header className={styles['mobile-home__header']}>
-        <div className={styles['mobile-home__logo']}>
-          <img src="/logo.svg" alt="Logo" />
-          <span>API Wiki</span>
+      <header className="fixed top-0 left-0 right-0 z-40 flex items-center justify-between px-4 h-14 bg-white/80 backdrop-blur-md border-b border-gray-200">
+        <div className="flex items-center gap-2">
+          <img src="/logo.svg" alt="Logo" className="w-8 h-8" />
+          <span className="text-lg font-bold text-blue-600">API Wiki</span>
         </div>
-        {isAuthenticated && <span className={styles['mobile-home__points']}>0p</span>}
+        {isAuthenticated && <span className="text-sm font-medium text-gray-600">0p</span>}
       </header>
 
       {/* 메인 컨텐츠 */}
-      <main className={styles['mobile-home__main']}>
+      <main className="flex flex-col items-center justify-center h-full px-4 pt-14 pb-20">
         {/* 로고 */}
         <motion.div
-          className={styles['mobile-home__logo-wrapper']}
+          className="mb-8"
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5 }}
         >
-          <img src="/logo.svg" alt="API Wiki Logo" />
+          <img src="/logo.svg" alt="API Wiki Logo" className="w-24 h-24" />
         </motion.div>
 
         {/* 설명 텍스트 */}
         <motion.p
-          className={styles['mobile-home__description']}
+          className="text-center text-gray-700 text-lg mb-8 leading-relaxed"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
@@ -70,21 +69,21 @@ export const MobileHomePage = () => {
 
         {/* 검색바 - 클릭하면 모달 열림 */}
         <motion.div
-          className={styles['mobile-home__search']}
+          className="w-full max-w-md mb-8 cursor-pointer"
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5, delay: 0.2 }}
           onClick={() => setIsSearchModalOpen(true)}
         >
-          <div className={styles['mobile-home__search-input']}>
-            <span>궁금한 API를 검색해보세요</span>
-            <img src="/mingcute_search-line.svg" alt="Search" />
+          <div className="flex items-center justify-between px-4 py-3 bg-white rounded-xl shadow-md border border-gray-200 hover:border-blue-500 transition-colors">
+            <span className="text-gray-400">궁금한 API를 검색해보세요</span>
+            <img src="/mingcute_search-line.svg" alt="Search" className="w-5 h-5" />
           </div>
         </motion.div>
 
         {/* 카테고리 캐러셀 */}
         <motion.div
-          className={styles['mobile-home__carousel']}
+          className="w-full max-w-md"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.3 }}
@@ -92,13 +91,13 @@ export const MobileHomePage = () => {
           <div
             ref={scrollRef}
             onScroll={handleScroll}
-            className={styles['mobile-home__carousel-scroll']}
+            className="flex gap-2 overflow-x-auto scrollbar-hide pb-2"
           >
             {categories.map((category, index) => (
               <motion.button
                 key={category}
                 onClick={() => handleCategoryClick(category)}
-                className={styles['mobile-home__category-btn']}
+                className="flex-shrink-0 px-4 py-2 bg-white rounded-full shadow-sm border border-gray-200 hover:border-blue-500 hover:bg-blue-50 transition-all text-sm font-medium text-gray-700"
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.3, delay: 0.4 + index * 0.03 }}
@@ -109,10 +108,10 @@ export const MobileHomePage = () => {
           </div>
 
           {/* 프로그레스 인디케이터 */}
-          <div className={styles['mobile-home__progress-bar']}>
+          <div className="relative w-full h-1 mt-4 bg-gray-200 rounded-full overflow-hidden">
             <div
-              className={styles['mobile-home__progress-indicator']}
-              style={{ left: `calc((100% - 0.6rem) * ${scrollProgress / 100})` }}
+              className="absolute top-0 w-3 h-full bg-blue-600 rounded-full transition-all duration-200"
+              style={{ left: `calc((100% - 0.75rem) * ${scrollProgress / 100})` }}
             />
           </div>
         </motion.div>
@@ -120,7 +119,7 @@ export const MobileHomePage = () => {
 
       {/* 스크롤 인디케이터 - 하단 고정 (메인 화면에서만 표시) */}
       <motion.button
-        className={styles['mobile-home__scroll-indicator']}
+        className="fixed bottom-24 left-1/2 -translate-x-1/2 z-30 p-3 bg-white rounded-full shadow-lg border border-gray-200"
         onClick={handleScrollToTop}
         animate={{
           opacity: isActive ? 0 : 1,
@@ -135,14 +134,14 @@ export const MobileHomePage = () => {
         }}
         aria-label="위로 스크롤"
       >
-        <img src="/nav-arrow-up-solid.svg" alt="Scroll to top" />
+        <img src="/nav-arrow-up-solid.svg" alt="Scroll to top" className="w-6 h-6" />
       </motion.button>
 
       {/* 스크롤 컨텐츠 섹션 */}
       <AnimatePresence>
         {isActive && (
           <motion.div
-            className={styles['mobile-home__scroll-content']}
+            className="fixed inset-0 z-50 bg-white overflow-y-auto pt-14 pb-20"
             ref={scrollContentRef}
             initial={{ opacity: 0, y: 100 }}
             animate={{ opacity: 1, y: 0 }}
@@ -151,7 +150,7 @@ export const MobileHomePage = () => {
           >
             {/* 내릴 때: 역삼각형 (아래쪽 화살표) */}
             <motion.button
-              className={styles['mobile-home__down-arrow']}
+              className="fixed top-20 left-1/2 -translate-x-1/2 z-30 p-3 bg-white rounded-full shadow-lg border border-gray-200 rotate-180"
               onClick={() => setIsActive(false)}
               animate={{ y: [0, -6, 0] }}
               transition={{
@@ -161,52 +160,52 @@ export const MobileHomePage = () => {
               }}
               aria-label="아래로 스크롤"
             >
-              <img src="/nav-arrow-up-solid.svg" alt="Scroll down" />
+              <img src="/nav-arrow-up-solid.svg" alt="Scroll down" className="w-6 h-6" />
             </motion.button>
 
-            <div className={styles['mobile-home__content-wrapper']}>
+            <div className="px-4 pt-16">
               {/* Latest News */}
-              <section className={styles['mobile-home__section']}>
-                <h2 className={styles['mobile-home__section-title']}>Latest News</h2>
-                <div className={styles['mobile-home__scrollable-section']}>
+              <section className="mb-8">
+                <h2 className="text-xl font-bold text-gray-900 mb-4">Latest News</h2>
+                <div className="flex gap-4 overflow-x-auto scrollbar-hide pb-2">
                   {newsItems.map((news) => (
-                    <div key={news.id} className={styles['mobile-home__card-item']}>
+                    <div key={news.id} className="flex-shrink-0 w-64">
                       <MobileNewsCard news={news} />
                     </div>
                   ))}
                 </div>
-                <div className={styles['mobile-home__progress-bar']} style={{ width: '15%' }}>
-                  <div className={styles['mobile-home__progress-indicator']} style={{ width: '0.75rem' }} />
+                <div className="relative w-[15%] h-1 mt-3 mx-auto bg-gray-200 rounded-full">
+                  <div className="absolute left-0 top-0 w-3 h-full bg-blue-600 rounded-full" />
                 </div>
               </section>
 
               {/* Recent Popular */}
-              <section className={styles['mobile-home__section']}>
-                <h2 className={styles['mobile-home__section-title']}>Recent Popular</h2>
-                <div className={styles['mobile-home__scrollable-section']}>
+              <section className="mb-8">
+                <h2 className="text-xl font-bold text-gray-900 mb-4">Recent Popular</h2>
+                <div className="flex gap-4 overflow-x-auto scrollbar-hide pb-2">
                   {popularAPIs.map((api) => (
-                    <div key={api.id} className={styles['mobile-home__card-item']}>
+                    <div key={api.id} className="flex-shrink-0 w-64">
                       <MobileAPICard api={api} />
                     </div>
                   ))}
                 </div>
-                <div className={styles['mobile-home__progress-bar']} style={{ width: '15%' }}>
-                  <div className={styles['mobile-home__progress-indicator']} style={{ width: '0.75rem' }} />
+                <div className="relative w-[15%] h-1 mt-3 mx-auto bg-gray-200 rounded-full">
+                  <div className="absolute left-0 top-0 w-3 h-full bg-blue-600 rounded-full" />
                 </div>
               </section>
 
               {/* Suggest API */}
-              <section className={styles['mobile-home__section']}>
-                <h2 className={styles['mobile-home__section-title']}>Suggest API</h2>
-                <div className={styles['mobile-home__scrollable-section']}>
+              <section className="mb-8">
+                <h2 className="text-xl font-bold text-gray-900 mb-4">Suggest API</h2>
+                <div className="flex gap-4 overflow-x-auto scrollbar-hide pb-2">
                   {suggestedAPIs.map((api) => (
-                    <div key={api.id} className={styles['mobile-home__card-item']}>
+                    <div key={api.id} className="flex-shrink-0 w-64">
                       <MobileAPICard api={api} />
                     </div>
                   ))}
                 </div>
-                <div className={styles['mobile-home__progress-bar']} style={{ width: '15%' }}>
-                  <div className={styles['mobile-home__progress-indicator']} style={{ width: '0.75rem' }} />
+                <div className="relative w-[15%] h-1 mt-3 mx-auto bg-gray-200 rounded-full">
+                  <div className="absolute left-0 top-0 w-3 h-full bg-blue-600 rounded-full" />
                 </div>
               </section>
             </div>

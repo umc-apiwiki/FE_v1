@@ -6,7 +6,6 @@
 
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
-import styles from './MobileTagNavigation.module.scss'
 
 type Tag = {
   id: string
@@ -16,28 +15,33 @@ type Tag = {
 }
 
 const tags: Tag[] = [
-  { id: 'public', name: '공개', icon: '🌐', color: 'blue' },
-  { id: 'opensource', name: '오픈소스', icon: '📦', color: 'green' },
-  { id: 'search', name: '검색', icon: '🔍', color: 'purple' },
-  { id: 'translate', name: '번역', icon: '🌍', color: 'pink' },
-  { id: 'ai', name: 'AI', icon: '🤖', color: 'indigo' },
-  { id: 'finance', name: '금융', icon: '💰', color: 'yellow' },
+  { id: 'public', name: '공개', icon: '🌐', color: 'bg-blue-50 text-blue-600' },
+  { id: 'opensource', name: '오픈소스', icon: '📦', color: 'bg-green-50 text-green-600' },
+  { id: 'search', name: '검색', icon: '🔍', color: 'bg-purple-50 text-purple-600' },
+  { id: 'translate', name: '번역', icon: '🌍', color: 'bg-pink-50 text-pink-600' },
+  { id: 'ai', name: 'AI', icon: '🤖', color: 'bg-indigo-50 text-indigo-600' },
+  { id: 'finance', name: '금융', icon: '💰', color: 'bg-yellow-50 text-yellow-600' },
 ]
 
 export const MobileTagNavigation = () => {
   return (
-    <div className={styles['tag-nav']}>
-      <div className={styles['tag-nav__container']}>
+    <div className="w-full overflow-x-auto scrollbar-hide md:hidden">
+      <div className="flex gap-2 px-4 py-3">
         {tags.map((tag, index) => (
-          <motion.div key={tag.id} initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: index * 0.05 }}>
+          <motion.div
+            key={tag.id}
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: index * 0.05 }}
+          >
             <Link
               to={`/explore?tag=${tag.id}`}
-              className={`${styles['tag-nav__link']} ${
-                styles[`tag-nav__link--${tag.color || 'gray'}`]
+              className={`flex items-center gap-2 px-4 py-2 rounded-full whitespace-nowrap transition-all hover:scale-105 ${
+                tag.color || 'bg-gray-100 text-gray-700'
               }`}
             >
-              {tag.icon && <span className={styles['tag-nav__icon']}>{tag.icon}</span>}
-              <span className={styles['tag-nav__text']}>{tag.name}</span>
+              {tag.icon && <span className="text-lg">{tag.icon}</span>}
+              <span className="text-sm font-medium">{tag.name}</span>
             </Link>
           </motion.div>
         ))}

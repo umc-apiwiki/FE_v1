@@ -82,7 +82,8 @@ const Header = () => {
   }, [isOpen])
 
   return (
-    <header className="sticky top-0 z-[60] bg-brand-50/50">
+    <header className="sticky top-0 z-[60] bg-brand-50/50 hidden md:block">
+      {/* 데스크톱 헤더: 768px 이상에서만 표시 */}
       {/* 상단 네비게이션 바 레이아웃 및 스타일 설정함 */}
       <nav className="grid h-20 w-full grid-cols-3 items-center justify-between overflow-visible">
         {/* 좌측 로고 및 타이틀 영역 메인 페이지로 이동 */}
