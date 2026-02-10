@@ -39,12 +39,12 @@ export default function APICardSmall({
       <div className="relative pl-4 xs:pl-6 sm:pl-8 h-full flex items-center">
         <div className="flex gap-2 xs:gap-3 sm:gap-4 items-center">
           {/* ✅ [수정] 아이콘 표시 영역 */}
-          <div className="w-14 h-14 xs:w-16 xs:h-16 sm:w-[70px] sm:h-[70px] rounded-lg xs:rounded-[10px] overflow-hidden flex-shrink-0 bg-white border border-brand-500/50 flex items-center justify-center shadow-sm">
+          <div className="w-14 h-14 xs:w-16 xs:h-16 sm:w-[70px] sm:h-[70px] rounded-lg xs:rounded-[10px] overflow-hidden flex-shrink-0 bg-white flex items-center justify-center shadow-sm">
             {!imgError ? (
               <img
                 src={logoUrl}
                 alt={name}
-                className="w-full h-full object-contain p-1 xs:p-1.5"
+                className="w-full h-full"
                 onError={() => setImgError(true)}
               />
             ) : (
