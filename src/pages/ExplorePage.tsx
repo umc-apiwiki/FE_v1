@@ -317,13 +317,13 @@ const ExplorePageContent = () => {
                   />
                 </button>
                 {isSortOpen && (
-                  <div className="absolute right-0 top-full mt-2 bg-white rounded-lg shadow-lg border border-brand-500/20 z-20 min-w-[100px] xs:min-w-[120px]">
+                  <div className="absolute right-1 top-full mt-2 bg-white rounded-lg rounded-tr-none shadow-lg shadow-brand-500/25 border border-brand-500/50 z-20 min-w-[100px] xs:min-w-[120px] p-3">
                     {SORT_OPTIONS.map(({ label, value }) => (
                       <button
                         key={value}
                         type="button"
                         onClick={() => handleSortChange(value)}
-                        className={`block w-full text-left px-3 xs:px-4 py-1.5 xs:py-2 text-xs xs:text-sm hover:bg-brand-500/10 transition-colors ${
+                        className={`block w-full text-left px-1 xs:px-2 py-1.5 xs:py-1 text-xs xs:text-lg hover:text-brand-500 transition-colors ${
                           params.sort === value ? 'text-brand-500 font-semibold' : 'text-info-dark'
                         }`}
                       >
