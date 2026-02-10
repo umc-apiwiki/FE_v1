@@ -154,36 +154,36 @@ export default function APIDetailPage() {
       <div className="mx-auto px-3 xs:px-4 sm:px-6 md:px-12 lg:px-16 mt-14 xs:mt-16 md:mt-20 lg:mt-28 xl:mt-32 pb-16 xs:pb-20 md:pb-10 2xl:mx-44 font-['Pretendard_Variable']">
         <div className="p-3 xs:p-4 sm:p-5 mb-12 xs:mb-16 md:mb-20 lg:mb-28 flex flex-col md:flex-row justify-between mx-auto items-start md:items-center gap-6 md:gap-8">
           <div className="flex flex-col justify-center gap-1 xs:gap-1.5 md:gap-2 mt-2 xs:mt-3 w-full md:w-auto order-2 md:order-1">
-            <h1 className="font-semibold text-2xl xs:text-3xl sm:text-4xl md:text-[40px] lg:text-[50px] text-info-darker mb-4 xs:mb-6 md:mb-10 break-words">{finalDetail.name}</h1>
-            <p className="font-medium text-lg xs:text-xl md:text-2xl text-info-dark">
+            <h1 className="font-semibold text-xl xs:text-2xl sm:text-3xl md:text-[40px] lg:text-[50px] text-info-darker mb-3 xs:mb-4 md:mb-10 break-words">{finalDetail.name}</h1>
+            <p className="font-medium text-sm xs:text-base md:text-lg lg:text-xl text-info-dark">
               Star {(finalDetail.avgRating || 0).toFixed(1)}
             </p>
-            <p className="font-medium text-lg xs:text-xl md:text-2xl text-info-dark mb-2 xs:mb-3 md:mb-4">
+            <p className="font-medium text-sm xs:text-base md:text-lg lg:text-xl text-info-dark mb-2 xs:mb-3 md:mb-4">
               {(finalDetail.viewCounts || 0).toLocaleString()} views
             </p>
             {/* 가격 정보 표시 (없으면 - 로 나옴) */}
-            <div className="text-zinc-400 text-base xs:text-lg md:text-xl font-normal mb-3 xs:mb-4 md:mb-6">{displayPricing}</div>
+            <div className="text-zinc-400 text-sm xs:text-base md:text-lg font-normal mb-3 xs:mb-4 md:mb-6">{displayPricing}</div>
 
             {finalDetail.officialUrl && (
               <a
                 href={finalDetail.officialUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-brand-500 text-base xs:text-lg font-medium hover:underline mt-1 xs:mt-2"
+                className="text-brand-500 text-sm xs:text-base md:text-lg font-medium hover:underline mt-1 xs:mt-2"
               >
                 공식 사이트
               </a>
             )}
           </div>
-          <div className="w-40 h-40 xs:w-48 xs:h-48 sm:w-56 sm:h-56 md:w-64 md:h-64 lg:w-72 lg:h-72 rounded-[30px] xs:rounded-[40px] md:rounded-[60px] overflow-hidden flex items-center justify-center flex-shrink-0 bg-white shadow-[1px_5px_10px_0px_var(--tw-shadow-color)] shadow-brand-500/25 border border-brand-500/25 mt-0 md:mt-10 mx-auto md:mx-0 order-1 md:order-2">
+          <div className="w-32 h-32 xs:w-40 xs:h-40 sm:w-48 sm:h-48 md:w-64 md:h-64 lg:w-72 lg:h-72 rounded-[20px] xs:rounded-[30px] md:rounded-[60px] overflow-hidden flex items-center justify-center flex-shrink-0 bg-white shadow-[1px_5px_10px_0px_var(--tw-shadow-color)] shadow-brand-500/25 border border-brand-500/25 mt-0 md:mt-10 mx-auto md:mx-0 order-1 md:order-2">
             {finalDetail.logo ? (
               <img
                 src={finalDetail.logo}
                 alt={finalDetail.name}
-                className="w-full h-full object-contain p-3 xs:p-4"
+                className="w-full h-full object-contain p-2 xs:p-3 md:p-4"
               />
             ) : (
-              <span className="text-brand-500 font-semibold text-4xl xs:text-5xl md:text-6xl">
+              <span className="text-brand-500 font-semibold text-3xl xs:text-4xl md:text-5xl lg:text-6xl">
                 {finalDetail.name ? finalDetail.name.charAt(0).toUpperCase() : 'API'}
               </span>
             )}
@@ -191,25 +191,25 @@ export default function APIDetailPage() {
         </div>
 
       {/* 하트 및 공유 */}
-      <div className="m-2 flex gap-4 mb-10">
+      <div className="m-2 flex gap-3 xs:gap-4 mb-6 xs:mb-8 md:mb-10">
         <img
           src={isFavorited ? HeartFill : HeartLine}
           alt="찜"
-          className="w-8 h-8 cursor-pointer"
+          className="w-6 h-6 xs:w-7 xs:h-7 md:w-8 md:h-8 cursor-pointer"
           onClick={handleToggleFavorite}
         />
-        <img src={Share} alt="공유" />
+        <img src={Share} alt="공유" className="w-6 h-6 xs:w-7 xs:h-7 md:w-8 md:h-8" />
       </div>
 
       {/* 탭 메뉴 */}
       <div>
-        <div className="flex gap-6 font-sans font-medium pb-6 border-b border-[#EEEEEE]">
+        <div className="flex gap-3 xs:gap-4 md:gap-6 font-sans font-medium pb-4 xs:pb-5 md:pb-6 border-b border-[#EEEEEE] overflow-x-auto">
           {MENUS.map(({ key, label }) => (
             <button
               key={key}
               type="button"
               onClick={() => setActiveMenu(key)}
-              className={`relative pb-3 text-2xl transition-colors ${activeMenu === key ? 'text-info-dark' : 'text-[#B0B0B0]'}`}
+              className={`relative pb-2 xs:pb-2.5 md:pb-3 text-sm xs:text-base md:text-lg lg:text-xl whitespace-nowrap transition-colors ${activeMenu === key ? 'text-info-dark' : 'text-[#B0B0B0]'}`}
             >
               {label}
               {activeMenu === key && (
@@ -218,7 +218,7 @@ export default function APIDetailPage() {
             </button>
           ))}
         </div>
-        <div className="mt-8">
+        <div className="mt-4 xs:mt-6 md:mt-8">
           {activeMenu === 'A' && (
             <OverviewSection
               longDescription={finalDetail.longDescription || finalDetail.summary}

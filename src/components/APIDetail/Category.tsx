@@ -6,14 +6,14 @@ const Category = ({ category }: CategoryTagProps) => {
   return (
     <button
       type="button"
-      className="h-[40px]
+      className="h-[32px] xs:h-[36px] md:h-[40px]
         w-auto
         bg-white
         border border-brand-500/50
-        rounded-[20px]
+        rounded-[16px] xs:rounded-[18px] md:rounded-[20px]
         flex items-center justify-center
-        px-4
-        font-sans text-xl font-medium text-info-dark
+        px-3 xs:px-3.5 md:px-4
+        font-sans text-sm xs:text-base md:text-lg lg:text-xl font-medium text-info-dark
         shadow-[0px_2px_4px_0px_var(--tw-shadow-color)] shadow-brand-500/25"
     >
       <span># {category.name}</span>
