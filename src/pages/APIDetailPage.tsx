@@ -12,8 +12,16 @@ import CodeExampleSection from '@/components/APIDetail/CodeExampleSection'
 import APICardSmall from '@/components/APICardSmall'
 import { MobileHeader } from '@/components/mobile/MobileHeader'
 import { MobileBottomNavigation } from '@/components/mobile/MobileBottomNavigation'
+import { MobileReviewSection } from '@/components/mobile'
 
-import { useApiDetail, useWikiContent, useWikiUpdate, useApiList, useApiPricing } from '@/hooks'
+import {
+  useApiDetail,
+  useWikiContent,
+  useWikiUpdate,
+  useApiList,
+  useApiPricing,
+  useDeviceDetect,
+} from '@/hooks'
 import { usePostFavorite } from '@/hooks/mutations/usePostFavorite'
 
 const MENUS = [
@@ -33,6 +41,7 @@ export default function APIDetailPage() {
   const { id } = useParams()
   const apiId = Number(id) || 0
   const [activeMenu, setActiveMenu] = useState<'A' | 'B' | 'C' | 'D'>('A')
+  const { isMobile } = useDeviceDetect()
 
   // ✅ 서버 데이터 가져오기 (가짜 데이터 로직 삭제됨)
   const { data: finalDetail, isLoading: isDetailLoading, error, fetchApiDetail } = useApiDetail()
@@ -234,7 +243,7 @@ export default function APIDetailPage() {
             {activeMenu === 'B' && (
               <PricingSection categories={finalDetail.categories} pricing={pricingData} />
             )}
-            {activeMenu === 'C' && <ReviewSection />}
+            {activeMenu === 'C' && (isMobile ? <MobileReviewSection /> : <ReviewSection />)}
             {activeMenu === 'D' && <CodeExampleSection />}
           </div>
         </div>

@@ -241,14 +241,24 @@ export interface PostReviewResult {
 }
 
 /** * 리뷰 목록 조회를 위한 개별 리뷰 데이터
+ * 주의: 백엔드 API에서 reviewId를 제공하지 않으므로 삭제 기능이 제한될 수 있음
  */
 export interface ReviewItem {
-  reviewId: number
+  reviewId?: number // optional로 변경
   nickname: string
   rating: number
   comment: string
   createdAt: string
-  updatedAt: string
+  updatedAt?: string // optional로 변경
+}
+
+/**
+ * 리뷰 목록 조회 결과 (평균 평점 + 페이지네이션)
+ */
+export interface ReviewList {
+  totalRating: number
+  reviewCount: number
+  reviews: PageResponse<ReviewItem>
 }
 
 /**
@@ -257,9 +267,9 @@ export interface ReviewItem {
 export type PostReviewResponse = ApiResponse<PostReviewResult>
 
 /**
- * 리뷰 목록 조회 응답 타입 (페이지네이션 적용 시)
+ * 리뷰 목록 조회 응답 타입
  */
-export type ReviewListResponse = ApiResponse<PageResponse<ReviewItem>>
+export type ReviewListResponse = ApiResponse<ReviewList>
 
 // ===== Review Delete Types  =====
 
@@ -269,19 +279,6 @@ export interface DeleteReviewPathParams {
   apiId: number
   reviewId: number
 }
-
-/** * 리뷰 삭제 성공 시 결과 데이터
- * Schema: PostReviewResult와 동일한 구조
- */
-export interface DeleteReviewResult {
-  rating: number
-  comment: string
-}
-
-/**
- * 리뷰 삭제 응답 타입
- */
-export type DeleteReviewResponse = ApiResponse<DeleteReviewResult>
 
 // ===== User Types (MyProfile) =====
 
