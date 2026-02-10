@@ -26,7 +26,7 @@ const tags: Tag[] = [
 export const MobileTagNavigation = () => {
   return (
     <div className="w-full overflow-x-auto scrollbar-hide md:hidden">
-      <div className="flex gap-2 px-4 py-3">
+      <div className="flex gap-2 px-4 py-2">
         {tags.map((tag, index) => (
           <motion.div
             key={tag.id}
@@ -36,12 +36,12 @@ export const MobileTagNavigation = () => {
           >
             <Link
               to={`/explore?tag=${tag.id}`}
-              className={`flex items-center gap-2 px-4 py-2 rounded-full whitespace-nowrap transition-all hover:scale-105 ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full whitespace-nowrap transition-all hover:scale-105 ${
                 tag.color || 'bg-gray-100 text-gray-700'
               }`}
             >
-              {tag.icon && <span className="text-lg">{tag.icon}</span>}
-              <span className="text-sm font-medium">{tag.name}</span>
+              {tag.icon && <span className="text-base">{tag.icon}</span>}
+              <span className="text-xs font-medium">{tag.name}</span>
             </Link>
           </motion.div>
         ))}
