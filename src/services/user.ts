@@ -12,9 +12,11 @@ export const getMyProfile = async (): Promise<MyProfileResponse> => {
 
 /**
  * 사용자의 위키 편집 목록 조회
- * POST /api/v1/users/me/wikis
+ * params를 바디가 아닌 쿼리 스트링으로 전달하도록 수정
  */
 export const getMyWikiHistory = async (params: WikiHistoryParams): Promise<MyWikiHistory> => {
-  const { data } = await axiosInstance.post<MyWikiHistory>('/api/v1/users/me/wikis', params)
+  const { data } = await axiosInstance.post<MyWikiHistory>('/api/v1/users/me/wikis', null, {
+    params,
+  })
   return data
 }
