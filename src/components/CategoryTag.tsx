@@ -1,11 +1,20 @@
+import { useNavigate } from 'react-router-dom'
+
 type CategoryTagProps = {
   category: { id: number; name: string }
 }
 
 const CategoryTag = ({ category }: CategoryTagProps) => {
+  const navigate = useNavigate()
+
+  const handleSearch = () => {
+    navigate(`/explore?q=${encodeURIComponent(category.name)}`)
+  }
+
   return (
     <button
       type="button"
+      onClick={handleSearch}
       className="h-[35px]
         w-auto
         bg-white
