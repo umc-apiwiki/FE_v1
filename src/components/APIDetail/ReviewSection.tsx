@@ -1,12 +1,23 @@
 import { useState, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import { useReviews, usePostReview, useAuth } from '@/hooks'
+import { useDeleteReview } from '@/hooks/mutations/useDeleteReview'
+import { useMyProfile } from '@/hooks/useUser'
+
 import Review from './Review'
 import Pagination from '@/components/Pagination'
 import StarFilled from '@/assets/icons/common/ic_star_filled.svg'
 import StarEmpty from '@/assets/icons/common/ic_star_empty.svg'
 
 const MAX_SCORE = 5
+
+// createReview 결과 처리를 위한 타입 정의
+interface CreateReviewResult {
+  success?: boolean
+  rating?: number
+  error?: string
+  message?: string
+}
 
 function PartialStar({ ratio }: { ratio: number }) {
   return (
@@ -48,7 +59,9 @@ export default function ReviewSection() {
   const [newReview, setNewReview] = useState({ rating: 5, comment: '' })
   const { accessToken } = useAuth()
 
-  /* API 데이터 불러오기 */
+  const { profile } = useMyProfile()
+  const { mutate: deleteReview, isLoading: isDeleting } = useDeleteReview()
+
   const {
     data: reviewData,
     isLoading: reviewsLoading,
@@ -59,11 +72,9 @@ export default function ReviewSection() {
 
   const { createReview, isLoading: postLoading } = usePostReview()
 
-  /* 평점 분포 계산 (useMemo로 변경) */
   const ratingDistribution = useMemo(() => {
     if (!reviewData?.reviews.content) return []
 
-    /* 평점별 개수 집계 */
     return [5, 4, 3, 2, 1].map((score) => {
       const count = reviewData.reviews.content.filter(
         (review) => Math.floor(review.rating) === score
@@ -73,7 +84,6 @@ export default function ReviewSection() {
   }, [reviewData])
 
   const handleSubmit = async () => {
-    /* 로그인 체크 */
     if (!accessToken) {
       alert('로그인이 필요한 기능입니다. 로그인 후 이용해주세요.')
       return
@@ -85,19 +95,43 @@ export default function ReviewSection() {
     }
     if (!apiId || apiId === 0) return
 
-    const result = await createReview(apiId, newReview)
+    // any 대신 타입 단언 사용
+    const result = (await createReview(apiId, newReview)) as CreateReviewResult
 
-    if (result?.success) {
+    if (result && (result.success || result.rating)) {
       alert('리뷰가 등록되었습니다.')
       setNewReview({ rating: 5, comment: '' })
-      /* 리뷰 목록 새로고침 */
       refresh()
-    } else if (result?.error) {
-      alert(result.error)
+    } else {
+      const errorMessage = result?.error || result?.message || '리뷰 등록에 실패했습니다.'
+      alert(errorMessage)
     }
   }
 
-  /* 데이터 기본값 설정 */
+  const handleDelete = async (reviewId: number) => {
+    if (!reviewId || reviewId === 0) {
+      alert('리뷰 정보 오류: 삭제할 ID가 없습니다.')
+      return
+    }
+
+    if (isDeleting) return
+
+    try {
+      const result = await deleteReview(apiId, reviewId)
+
+      if (result.isSuccess) {
+        alert('리뷰가 삭제되었습니다.')
+        refresh()
+      } else {
+        alert(result.message)
+      }
+    } catch (error) {
+      // [수정 포인트] 에러 변수(error)를 콘솔에 찍어서 '사용' 상태로 만듦 -> 린트 에러 해결!
+      console.error('리뷰 삭제 중 오류:', error)
+      alert('오류가 발생했습니다.')
+    }
+  }
+
   const totalRating = reviewData?.totalRating ?? 0
   const reviewCount = reviewData?.reviewCount ?? 0
   const reviewList = reviewData?.reviews.content ?? []
@@ -197,6 +231,7 @@ export default function ReviewSection() {
           reviewList.map((review) => (
             <Review
               key={`${review.nickname}-${review.createdAt}`}
+              reviewId={review.reviewId || 0}
               name={review.nickname}
               score={Math.floor(review.rating)}
               text={review.comment}
@@ -205,6 +240,8 @@ export default function ReviewSection() {
                 month: 'long',
                 day: 'numeric',
               })}
+              isMine={!!(profile?.nickname && profile.nickname === review.nickname)}
+              onDelete={handleDelete}
             />
           ))
         ) : (

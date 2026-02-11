@@ -32,3 +32,18 @@ export const postReview = async (
   )
   return data
 }
+
+/**
+ * [추가] 특정 API 리뷰 삭제
+ * DELETE /api/v1/apis/{apiId}/reviews/{reviewId}
+ */
+export const deleteReview = async (
+  apiId: number,
+  reviewId: number
+): Promise<ApiResponse<string>> => {
+  // axiosInstance를 쓰면 BaseURL과 토큰이 자동 적용됩니다.
+  const { data } = await axiosInstance.delete<ApiResponse<string>>(
+    `/api/v1/apis/${apiId}/reviews/${reviewId}`
+  )
+  return data
+}
