@@ -7,15 +7,13 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { useState } from 'react'
 import PriceFilter from '../filter/PriceFilter'
 import RatingFilter from '../filter/RatingFilter'
-import AuthFilter from '../filter/AuthFilter'
-import DocsFilter from '../filter/DocsFilter'
-import type { PricingType, AuthType } from '@/types/api'
+import ProviderFilter from '../filter/ProviderFilter'
+import type { PricingType, ProviderCompany } from '@/types/api'
 
 export type FilterValues = {
-  pricingTypes: PricingType[]
-  authTypes: AuthType[]
+  pricingTypes: PricingType | null
+  providers: ProviderCompany | null
   minRating: number | null
-  docs: string[]
 }
 
 type MobileFilterModalProps = {
@@ -28,8 +26,7 @@ type MobileFilterModalProps = {
 const MENUS = [
   { key: 'A', label: '가격' },
   { key: 'B', label: '평점' },
-  { key: 'C', label: 'API 인증' },
-  { key: 'D', label: '제공 문서' },
+  { key: 'C', label: '제공사' },
 ] as const
 
 export const MobileFilterModal = ({
@@ -38,12 +35,11 @@ export const MobileFilterModal = ({
   onApply,
   initialFilters,
 }: MobileFilterModalProps) => {
-  const [activeMenu, setActiveMenu] = useState<'A' | 'B' | 'C' | 'D'>('A')
+  const [activeMenu, setActiveMenu] = useState<'A' | 'B' | 'C'>('A')
   const [filters, setFilters] = useState<FilterValues>({
-    pricingTypes: initialFilters?.pricingTypes ?? [],
-    authTypes: initialFilters?.authTypes ?? [],
+    pricingTypes: initialFilters?.pricingTypes ?? null,
+    providers: initialFilters?.providers ?? null,
     minRating: initialFilters?.minRating ?? null,
-    docs: initialFilters?.docs ?? [],
   })
 
   const handleApply = () => {
@@ -53,10 +49,9 @@ export const MobileFilterModal = ({
 
   const handleReset = () => {
     setFilters({
-      pricingTypes: [],
-      authTypes: [],
+      pricingTypes: null,
+      providers: null,
       minRating: null,
-      docs: [],
     })
   }
 
@@ -129,16 +124,9 @@ export const MobileFilterModal = ({
               )}
 
               {activeMenu === 'C' && (
-                <AuthFilter
-                  value={filters.authTypes}
-                  onChange={(next) => setFilters((prev) => ({ ...prev, authTypes: next }))}
-                />
-              )}
-
-              {activeMenu === 'D' && (
-                <DocsFilter
-                  value={filters.docs}
-                  onChange={(next) => setFilters((prev) => ({ ...prev, docs: next }))}
+                <ProviderFilter
+                  value={filters.providers}
+                  onChange={(next) => setFilters((prev) => ({ ...prev, providers: next }))}
                 />
               )}
             </div>

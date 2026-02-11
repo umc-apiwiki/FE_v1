@@ -119,9 +119,9 @@ export type ApiListParams = {
   q?: string
   sort?: SortOption
   direction?: SortDirection
-  providers?: ProviderCompany
-  authTypes?: AuthType
-  pricingTypes?: PricingType
+  providers?: ProviderCompany[]
+  authTypes?: AuthType[]
+  pricingTypes?: PricingType[]
   minRating?: number
 }
 

@@ -2,16 +2,14 @@ import { useState } from 'react'
 import Modal from '../modal/Modal'
 import PriceFilter from '../filter/PriceFilter'
 import RatingFilter from '../filter/RatingFilter'
-import AuthFilter from '../filter/AuthFilter'
-import DocsFilter from '../filter/DocsFilter'
+import ProviderFilter from '../filter/ProviderFilter'
 import ModalButton from './components/ModalButton'
-import type { PricingType, AuthType } from '@/types/api'
+import type { PricingType, ProviderCompany } from '@/types/api'
 
 export type FilterValues = {
-  pricingTypes: PricingType[]
-  authTypes: AuthType[]
+  pricingTypes: PricingType | null
+  providers: ProviderCompany | null
   minRating: number | null
-  docs: string[]
 }
 
 type FilterModalProps = {
@@ -23,17 +21,15 @@ type FilterModalProps = {
 const MENUS = [
   { key: 'A', label: '가격' },
   { key: 'B', label: '평점' },
-  { key: 'C', label: 'API 인증 방식' },
-  { key: 'D', label: '제공 문서' },
+  { key: 'C', label: '제공사' },
 ] as const
 
 export default function FilterModal({ onClose, onApply, initialFilters }: FilterModalProps) {
-  const [activeMenu, setActiveMenu] = useState<'A' | 'B' | 'C' | 'D'>('A')
+  const [activeMenu, setActiveMenu] = useState<'A' | 'B' | 'C'>('A')
   const [filters, setFilters] = useState<FilterValues>({
-    pricingTypes: initialFilters?.pricingTypes ?? [],
-    authTypes: initialFilters?.authTypes ?? [],
+    pricingTypes: initialFilters?.pricingTypes ?? null,
+    providers: initialFilters?.providers ?? null,
     minRating: initialFilters?.minRating ?? null,
-    docs: initialFilters?.docs ?? [],
   })
 
   const handleApply = () => {
@@ -42,13 +38,13 @@ export default function FilterModal({ onClose, onApply, initialFilters }: Filter
   }
 
   return (
-    <Modal onClose={onClose}>
-      <div className="m-8 relative h-full">
+    <Modal onClose={onClose} width="w-[520px]" height="h-[680px]">
+      <div className="flex flex-col h-full p-8">
         <div className="font-sans text-xl font-medium pb-5">
           <span>Filters</span>
         </div>
         {/* 메뉴 */}
-        <div className="flex gap-6 text-lg font-sans font-medium pb-6 m-2">
+        <div className="flex gap-6 text-lg font-sans font-medium pb-6">
           {MENUS.map(({ key, label }) => (
             <button
               key={key}
@@ -64,7 +60,7 @@ export default function FilterModal({ onClose, onApply, initialFilters }: Filter
           ))}
         </div>
         {/* 내용물 */}
-        <div className="m-2">
+        <div className="flex-1 overflow-y-auto pr-2">
           {activeMenu === 'A' && (
             <PriceFilter
               value={filters.pricingTypes}
@@ -80,21 +76,14 @@ export default function FilterModal({ onClose, onApply, initialFilters }: Filter
           )}
 
           {activeMenu === 'C' && (
-            <AuthFilter
-              value={filters.authTypes}
-              onChange={(next) => setFilters((prev) => ({ ...prev, authTypes: next }))}
-            />
-          )}
-
-          {activeMenu === 'D' && (
-            <DocsFilter
-              value={filters.docs}
-              onChange={(next) => setFilters((prev) => ({ ...prev, docs: next }))}
+            <ProviderFilter
+              value={filters.providers}
+              onChange={(next) => setFilters((prev) => ({ ...prev, providers: next }))}
             />
           )}
         </div>
         {/* 필터 적용 버튼 */}
-        <div className="absolute bottom-24 left-1/2 -translate-x-1/2">
+        <div className="pt-6 flex justify-center">
           <ModalButton onClick={handleApply}>필터 적용</ModalButton>
         </div>
       </div>

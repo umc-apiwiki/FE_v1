@@ -1,8 +1,8 @@
 import type { ProviderCompany } from '@/types/api'
 
 type ProviderFilterProps = {
-  value: ProviderCompany[]
-  onChange: (next: ProviderCompany[]) => void
+  value: ProviderCompany | null
+  onChange: (next: ProviderCompany | null) => void
 }
 
 const OPTIONS: { label: string; value: ProviderCompany }[] = [
@@ -30,26 +30,31 @@ const OPTIONS: { label: string; value: ProviderCompany }[] = [
 
 export default function ProviderFilter({ value, onChange }: ProviderFilterProps) {
   const toggle = (v: ProviderCompany) => {
-    const next = value.includes(v) ? value.filter((p) => p !== v) : [...value, v]
-    onChange(next)
+    onChange(value === v ? null : v)
   }
 
   return (
-    <div className="flex flex-col gap-6">
-      {OPTIONS.map(({ label, value: optVal }) => (
-        <label
-          key={optVal}
-          className="flex items-center gap-3 cursor-pointer font-sans font-normal text-lg text-info-darker"
-        >
-          <input
-            type="checkbox"
-            checked={value.includes(optVal)}
-            onChange={() => toggle(optVal)}
-            className="w-4 h-4 accent-brand-500 rounded border border-brand-500"
-          />
-          {label}
-        </label>
-      ))}
+    <div className="grid grid-cols-2 gap-3">
+      {OPTIONS.map(({ label, value: optVal }) => {
+        const isSelected = value === optVal
+        return (
+          <button
+            key={optVal}
+            type="button"
+            onClick={() => toggle(optVal)}
+            className={`
+              px-4 py-3 rounded-lg border-2 text-sm font-medium transition-all
+              ${
+                isSelected
+                  ? 'border-brand-500 bg-brand-50 text-brand-700'
+                  : 'border-gray-200 bg-white text-gray-700 hover:border-brand-300 hover:bg-brand-50/50'
+              }
+            `}
+          >
+            {label}
+          </button>
+        )
+      })}
     </div>
   )
 }

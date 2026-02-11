@@ -173,8 +173,8 @@ const ExplorePageContent = () => {
     setParams((prev) => ({
       ...prev,
       page: 0,
-      pricingTypes: filters.pricingTypes.length === 1 ? filters.pricingTypes[0] : undefined,
-      authTypes: filters.authTypes.length === 1 ? filters.authTypes[0] : undefined,
+      pricingTypes: filters.pricingTypes ? [filters.pricingTypes] : undefined,
+      providers: filters.providers ? [filters.providers] : undefined,
       minRating: filters.minRating ?? undefined,
     }))
   }, [])

@@ -1,8 +1,8 @@
 import type { PricingType } from '@/types/api'
 
 type PriceFilterProps = {
-  value: PricingType[]
-  onChange: (next: PricingType[]) => void
+  value: PricingType | null
+  onChange: (next: PricingType | null) => void
 }
 
 const OPTIONS: { label: string; value: PricingType }[] = [
@@ -13,8 +13,7 @@ const OPTIONS: { label: string; value: PricingType }[] = [
 
 export default function PriceFilter({ value, onChange }: PriceFilterProps) {
   const toggle = (v: PricingType) => {
-    const next = value.includes(v) ? value.filter((p) => p !== v) : [...value, v]
-    onChange(next)
+    onChange(value === v ? null : v)
   }
 
   return (
@@ -26,7 +25,7 @@ export default function PriceFilter({ value, onChange }: PriceFilterProps) {
         >
           <input
             type="checkbox"
-            checked={value.includes(optVal)}
+            checked={value === optVal}
             onChange={() => toggle(optVal)}
             className="w-4 h-4 accent-brand-500 rounded border border-brand-500"
           />
