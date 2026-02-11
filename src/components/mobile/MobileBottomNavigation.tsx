@@ -89,7 +89,7 @@ export const MobileBottomNavigation = () => {
   return (
     <>
       {/* 모바일 하단 네비게이션: 768px 미만에서만 표시 */}
-      <nav className="fixed bottom-0 left-0 right-0 w-full max-w-full h-14 xs:h-15 sm:h-16 bg-white/50 backdrop-blur-lg border-l border-r border-t border-sky-500/30 rounded-t-xl xs:rounded-t-2xl z-50 box-border m-0 p-0 md:hidden mobile-safe-area-bottom">
+      <nav className="fixed bottom-0 left-0 right-0 w-full max-w-full h-16 xs:h-17 sm:h-18 bg-white/50 backdrop-blur-lg border-l border-r border-t border-sky-500/30 rounded-t-xl xs:rounded-t-2xl z-50 box-border m-0 p-0 md:hidden mobile-safe-area-bottom">
         <div className="flex justify-around items-center h-full w-full px-1 xs:px-2 box-border">
           {navItems.map(({ svg, href, id, onClick }) => {
             const active = isActive(href)

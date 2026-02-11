@@ -23,7 +23,7 @@ export const MobileHomePage = () => {
   } = useMobileHome()
 
   return (
-    <div className="relative w-full min-h-screen max-w-full overflow-x-hidden bg-gradient-to-b from-blue-50 to-white pb-20">
+    <div className="relative w-full min-h-screen max-w-full overflow-x-hidden bg-gradient-to-b from-blue-50 to-white pb-24">
       <MobileHeader />
 
       {/* 메인 컨텐츠 */}
