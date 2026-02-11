@@ -1,6 +1,9 @@
 import { useState, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import { useReviews, usePostReview, useAuth } from '@/hooks'
+import { useDeleteReview } from '@/hooks/mutations/useDeleteReview' // [추가]
+import { useMyProfile } from '@/hooks/useUser' // [추가]
+
 import Review from './Review'
 import Pagination from '@/components/Pagination'
 import StarFilled from '@/assets/icons/common/ic_star_filled.svg'
@@ -48,6 +51,11 @@ export default function ReviewSection() {
   const [newReview, setNewReview] = useState({ rating: 5, comment: '' })
   const { accessToken } = useAuth()
 
+  // [추가] 내 프로필 정보
+  const { profile } = useMyProfile()
+  // [추가] 리뷰 삭제 훅
+  const { mutate: deleteReview, isLoading: isDeleting } = useDeleteReview()
+
   /* API 데이터 불러오기 */
   const {
     data: reviewData,
@@ -85,15 +93,36 @@ export default function ReviewSection() {
     }
     if (!apiId || apiId === 0) return
 
-    const result = await createReview(apiId, newReview)
+    // any 타입으로 처리 (유연성)
+    const result: any = await createReview(apiId, newReview)
 
-    if (result?.success) {
+    if (result && (result.success || result.rating)) {
       alert('리뷰가 등록되었습니다.')
       setNewReview({ rating: 5, comment: '' })
       /* 리뷰 목록 새로고침 */
       refresh()
-    } else if (result?.error) {
-      alert(result.error)
+    } else {
+      const errorMessage = result?.error || result?.message || '리뷰 등록에 실패했습니다.'
+      alert(errorMessage)
+    }
+  }
+
+  // [추가] 리뷰 삭제 핸들러
+  const handleDelete = async (reviewId: number) => {
+    if (!reviewId) {
+      alert('리뷰 ID를 찾을 수 없습니다.')
+      return
+    }
+
+    if (isDeleting) return
+
+    const result = await deleteReview(apiId, reviewId)
+
+    if (result.isSuccess) {
+      alert('리뷰가 삭제되었습니다.')
+      refresh() // 목록 새로고침
+    } else {
+      alert(result.message)
     }
   }
 
@@ -197,6 +226,7 @@ export default function ReviewSection() {
           reviewList.map((review) => (
             <Review
               key={`${review.nickname}-${review.createdAt}`}
+              reviewId={review.reviewId || 0}
               name={review.nickname}
               score={Math.floor(review.rating)}
               text={review.comment}
@@ -205,6 +235,8 @@ export default function ReviewSection() {
                 month: 'long',
                 day: 'numeric',
               })}
+              isMine={!!(profile?.nickname && profile.nickname === review.nickname)}
+              onDelete={handleDelete}
             />
           ))
         ) : (
