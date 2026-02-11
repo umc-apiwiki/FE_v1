@@ -26,7 +26,7 @@ export const MobileHomePage = () => {
     <div className="relative w-full min-h-screen max-w-full overflow-x-hidden bg-gradient-to-b from-blue-50 to-white pb-24">
       {/* 배경 원 그라데이션 */}
       <div className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-[calc(50%-80px)] w-[200px] h-[200px] bg-brand-500/40 rounded-full blur-[150px] pointer-events-none" />
-      
+
       <MobileHeader />
 
       {/* 메인 컨텐츠 */}
