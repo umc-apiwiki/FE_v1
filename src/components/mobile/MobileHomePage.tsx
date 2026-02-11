@@ -95,7 +95,7 @@ export const MobileHomePage = () => {
               <motion.button
                 key={category}
                 onClick={() => handleCategoryClick(category)}
-                className="flex-shrink-0 px-3 xs:px-4 py-1.5 xs:py-2 bg-white rounded-[20px] xs:rounded-[25px] shadow-[1px_1px_5px_1px_var(--tw-shadow-color)] shadow-brand-500/10 border border-brand-500/25 hover:bg-brand-500 hover:text-white transition-all text-xs xs:text-sm sm:text-base font-medium text-brand-500 whitespace-nowrap"
+                className="flex-shrink-0 px-3 xs:px-4 py-1.5 xs:py-2 bg-white/95 backdrop-blur-sm rounded-[20px] xs:rounded-[25px] shadow-[1px_1px_5px_1px_var(--tw-shadow-color)] shadow-brand-500/10 border border-brand-500/25 hover:bg-brand-500 hover:text-white transition-all text-xs xs:text-sm sm:text-base font-medium text-brand-500 whitespace-nowrap"
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.3, delay: 0.4 + index * 0.03 }}
