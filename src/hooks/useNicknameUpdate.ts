@@ -68,7 +68,7 @@ export const useNicknameUpdate = (
 
   const handleCheckNickname = async () => {
     const trimmedNickname = nickname.trim()
-    
+
     if (!trimmedNickname) {
       setNicknameError('닉네임을 입력해주세요.')
       return
@@ -90,7 +90,7 @@ export const useNicknameUpdate = (
 
     try {
       await checkNicknameDuplicate(trimmedNickname)
-      
+
       setIsNicknameChecked(true)
       alert('사용 가능한 닉네임입니다.')
     } catch (error: unknown) {
@@ -110,7 +110,9 @@ export const useNicknameUpdate = (
       } else if (errorCode === 'AUTH4003') {
         setNicknameError('인증이 만료되었습니다. 다시 로그인해주세요.')
       } else {
-        setNicknameError(errorMessage || '닉네임 중복 확인에 실패했습니다. 잠시 후 다시 시도해주세요.')
+        setNicknameError(
+          errorMessage || '닉네임 중복 확인에 실패했습니다. 잠시 후 다시 시도해주세요.'
+        )
       }
       setIsNicknameChecked(false)
     } finally {
@@ -138,10 +140,10 @@ export const useNicknameUpdate = (
     setNicknameError(undefined)
     setPasswordError(undefined)
 
-    const requestData = { 
-      nickname: nickname.trim(), 
-      password: currentPassword.trim(), 
-      passwordConfirm: currentPassword.trim() 
+    const requestData = {
+      nickname: nickname.trim(),
+      password: currentPassword.trim(),
+      passwordConfirm: currentPassword.trim(),
     }
 
     try {
@@ -156,7 +158,7 @@ export const useNicknameUpdate = (
     } catch (error: unknown) {
       const errorCode = isAxiosError(error) ? error.response?.data?.code : undefined
       const errorMessage = isAxiosError(error) ? error.response?.data?.message : undefined
-      
+
       // 닉네임 변경 실패는 중요한 사용자 경험이므로 Sentry에 보고
       // 단, 예상된 비즈니스 에러(USER4001, USER4004)는 제외
       if (errorCode !== 'USER4001' && errorCode !== 'USER4004') {
@@ -165,7 +167,7 @@ export const useNicknameUpdate = (
           extra: { errorCode, errorMessage },
         })
       }
-      
+
       // 특정 에러 코드에 따른 처리
       if (errorCode === 'USER4001') {
         setNicknameError('이미 사용 중인 닉네임입니다.')

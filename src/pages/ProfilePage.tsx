@@ -72,8 +72,7 @@ const ProfilePage = () => {
     'h-11 xs:h-12 rounded-[30px] shadow-[0px_3px_5px_0px_rgba(33,150,243,0.25)] flex justify-center items-center transition-colors text-sm xs:text-base font-semibold'
 
   const buttonPrimaryStyle = 'bg-brand-500 hover:bg-brand-600 text-white cursor-pointer'
-  const buttonDisabledStyle =
-    'bg-gray-300 text-gray-500 cursor-not-allowed opacity-60'
+  const buttonDisabledStyle = 'bg-gray-300 text-gray-500 cursor-not-allowed opacity-60'
 
   if (isLoading)
     return (
@@ -130,9 +129,7 @@ const ProfilePage = () => {
             transition={{ delay: 0.1 }}
             className="w-full bg-white rounded-2xl shadow-md p-5 xs:p-6"
           >
-            <h3 className="text-base xs:text-lg font-semibold text-slate-900 mb-4">
-              닉네임 변경
-            </h3>
+            <h3 className="text-base xs:text-lg font-semibold text-slate-900 mb-4">닉네임 변경</h3>
             <div className="space-y-3">
               {/* 현재 닉네임 표시 */}
               {profile?.nickname && (
@@ -156,7 +153,13 @@ const ProfilePage = () => {
                   disabled={isNicknameSubmitting}
                   aria-label="새 닉네임"
                   aria-invalid={!!nicknameError}
-                  aria-describedby={nicknameError ? 'nickname-error' : isNicknameChecked ? 'nickname-success' : undefined}
+                  aria-describedby={
+                    nicknameError
+                      ? 'nickname-error'
+                      : isNicknameChecked
+                        ? 'nickname-success'
+                        : undefined
+                  }
                   maxLength={10}
                   name="new-nickname-field"
                   autoComplete="off"
@@ -184,7 +187,7 @@ const ProfilePage = () => {
                   ✓ 사용 가능한 닉네임입니다.
                 </p>
               )}
-              
+
               {/* 현재 비밀번호 입력 */}
               <div>
                 <input
@@ -201,12 +204,16 @@ const ProfilePage = () => {
                   autoComplete="off"
                 />
                 {nicknamePasswordError && (
-                  <p id="current-password-error" className="text-red-500 text-xs mt-1 ml-4" role="alert">
+                  <p
+                    id="current-password-error"
+                    className="text-red-500 text-xs mt-1 ml-4"
+                    role="alert"
+                  >
                     {nicknamePasswordError}
                   </p>
                 )}
               </div>
-              
+
               <button
                 type="button"
                 onClick={handleNicknameSubmit}
@@ -237,8 +244,8 @@ const ProfilePage = () => {
               {/* 비밀번호 요구사항 안내 */}
               <div className="bg-blue-50 rounded-lg p-3 mb-2">
                 <p className="text-xs text-blue-700">
-                  • 8자 이상 입력해주세요<br />
-                  • 영문과 숫자를 포함해야 합니다
+                  • 8자 이상 입력해주세요
+                  <br />• 영문과 숫자를 포함해야 합니다
                 </p>
               </div>
               <div>
@@ -276,7 +283,11 @@ const ProfilePage = () => {
                   autoComplete="new-password"
                 />
                 {passwordConfirmError && (
-                  <p id="password-confirm-error" className="text-red-500 text-xs mt-1 ml-4" role="alert">
+                  <p
+                    id="password-confirm-error"
+                    className="text-red-500 text-xs mt-1 ml-4"
+                    role="alert"
+                  >
                     {passwordConfirmError}
                   </p>
                 )}

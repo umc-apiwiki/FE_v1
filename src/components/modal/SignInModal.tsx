@@ -40,10 +40,10 @@ export default function LoginModal({ onClose, onSwitchToSignUp }: LoginModalProp
       onClose()
     } catch (error: unknown) {
       console.error('로그인 실패:', error)
-      
+
       // Axios 에러에서 서버 응답 메시지 추출
       let errorMessage = '로그인 중 오류가 발생했습니다.'
-      
+
       if (
         error &&
         typeof error === 'object' &&
@@ -55,7 +55,7 @@ export default function LoginModal({ onClose, onSwitchToSignUp }: LoginModalProp
         const responseData = error.response.data as { message?: string }
         errorMessage = responseData?.message || errorMessage
       }
-      
+
       alert(errorMessage)
     } finally {
       setIsLoading(false)

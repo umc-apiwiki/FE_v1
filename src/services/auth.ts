@@ -12,7 +12,9 @@ export const signup = async (data: SignupRequest): Promise<ApiResponse<LoginResp
   } catch (error: unknown) {
     // 서버가 400 에러로 응답한 경우에도 response.data 반환
     if (error && typeof error === 'object' && 'response' in error) {
-      const axiosError = error as { response?: { data?: ApiResponse<LoginResponse>; status?: number } }
+      const axiosError = error as {
+        response?: { data?: ApiResponse<LoginResponse>; status?: number }
+      }
       if (axiosError.response?.data) {
         // 5xx 서버 에러는 Sentry에 보고
         if (axiosError.response.status && axiosError.response.status >= 500) {
@@ -52,7 +54,9 @@ export const login = async (data: LoginRequest): Promise<ApiResponse<LoginRespon
   } catch (error: unknown) {
     // 서버가 400 에러로 응답한 경우에도 response.data 반환
     if (error && typeof error === 'object' && 'response' in error) {
-      const axiosError = error as { response?: { data?: ApiResponse<LoginResponse>; status?: number } }
+      const axiosError = error as {
+        response?: { data?: ApiResponse<LoginResponse>; status?: number }
+      }
       if (axiosError.response?.data) {
         // 5xx 서버 에러는 Sentry에 보고
         if (axiosError.response.status && axiosError.response.status >= 500) {

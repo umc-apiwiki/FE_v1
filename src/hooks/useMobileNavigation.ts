@@ -115,7 +115,7 @@ export const useMobileNavigation = (): UseMobileNavigationReturn => {
       setLoginForm({ email: '', password: '' })
     } catch (error: unknown) {
       console.error('로그인 실패:', error)
-      
+
       // Axios 에러에서 서버 응답 메시지 추출
       if (
         error &&
@@ -160,7 +160,7 @@ export const useMobileNavigation = (): UseMobileNavigationReturn => {
       }
     } catch (error: unknown) {
       console.error('회원가입 실패:', error)
-      
+
       // Axios 에러에서 서버 응답 메시지 추출
       if (
         error &&
