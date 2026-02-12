@@ -1,6 +1,8 @@
 import { useState, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import { useReviews, usePostReview, useAuth } from '@/hooks'
+import { useDeleteReview } from '@/hooks/mutations/useDeleteReview'
+import { useMyProfile } from '@/hooks/useUser'
 import MobileReview from './MobileReview'
 import Pagination from '@/components/Pagination'
 import StarFilled from '@/assets/icons/common/ic_star_filled.svg'
@@ -37,6 +39,9 @@ export default function MobileReviewSection() {
   const apiId = Number(id) || 0
   const [newReview, setNewReview] = useState({ rating: 5, comment: '' })
   const { accessToken } = useAuth()
+
+  const { profile } = useMyProfile()
+  const { mutate: deleteReview, isLoading: isDeleting } = useDeleteReview()
 
   /* API 데이터 불러오기 */
   const {
@@ -82,6 +87,29 @@ export default function MobileReviewSection() {
       refresh()
     } else if (result?.error) {
       alert(result.error)
+    }
+  }
+
+  const handleDelete = async (reviewId: number) => {
+    if (!reviewId || reviewId === 0) {
+      alert('리뷰 정보 오류: 삭제할 ID가 없습니다.')
+      return
+    }
+
+    if (isDeleting) return
+
+    try {
+      const result = await deleteReview(apiId, reviewId)
+
+      if (result.isSuccess) {
+        alert('리뷰가 삭제되었습니다.')
+        refresh()
+      } else {
+        alert(result.message)
+      }
+    } catch (error) {
+      console.error('리뷰 삭제 중 오류:', error)
+      alert('오류가 발생했습니다.')
     }
   }
 
@@ -176,6 +204,7 @@ export default function MobileReviewSection() {
           reviewList.map((review) => (
             <MobileReview
               key={`${review.nickname}-${review.createdAt}`}
+              reviewId={review.reviewId || 0}
               name={review.nickname}
               score={Math.floor(review.rating)}
               text={review.comment}
@@ -184,6 +213,8 @@ export default function MobileReviewSection() {
                 month: 'long',
                 day: 'numeric',
               })}
+              isMine={!!(profile?.nickname && profile.nickname === review.nickname)}
+              onDelete={handleDelete}
             />
           ))
         ) : (

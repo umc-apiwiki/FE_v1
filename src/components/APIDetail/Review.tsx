@@ -47,7 +47,7 @@ export default function Review({
           <button
             type="button"
             onClick={handleDeleteClick}
-            className="ml-2 text-gray-400 hover:text-red-500 text-xs xs:text-sm underline transition-colors"
+            className="ml-auto text-xs xs:text-sm text-gray-500 hover:text-red-500 transition-colors px-2 py-1 rounded hover:bg-red-50"
           >
             삭제
           </button>
