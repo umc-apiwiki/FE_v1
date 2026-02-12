@@ -6,7 +6,13 @@ interface NewsCardProps {
   preventClick?: boolean
 }
 
-export default function NewsCard({ title, publisherLogoUrl, thumbnailUrl, url, preventClick = false }: NewsCardProps) {
+export default function NewsCard({
+  title,
+  publisherLogoUrl,
+  thumbnailUrl,
+  url,
+  preventClick = false,
+}: NewsCardProps) {
   const handleClick = (e: React.MouseEvent) => {
     if (preventClick) {
       e.preventDefault()
@@ -19,10 +25,7 @@ export default function NewsCard({ title, publisherLogoUrl, thumbnailUrl, url, p
   }
 
   return (
-    <div 
-      className="group relative w-80 h-60 flex-shrink-0 cursor-pointer"
-      onClick={handleClick}
-    >
+    <div className="group relative w-80 h-60 flex-shrink-0 cursor-pointer" onClick={handleClick}>
       {/* 수정됨: border-[0.25px] border-sky-500 삭제 */}
       <div
         className="w-full h-full bg-white rounded-2xl shadow-[1px_5px_10px_0px_rgba(33,150,243,0.25)] 

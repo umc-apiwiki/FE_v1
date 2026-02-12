@@ -107,13 +107,13 @@ const ScrollableSection = ({
     isDragging.current = true
     hasDraggedRef.current = false // ref 초기화
     setHasDragged(false) // state 초기화
-    
+
     // 기존 타임아웃 취소
     if (clickTimeoutRef.current) {
       clearTimeout(clickTimeoutRef.current)
       clickTimeoutRef.current = null
     }
-    
+
     setIsDragActive(true)
     setActiveTarget(target)
     dragTarget.current = target
@@ -152,7 +152,7 @@ const ScrollableSection = ({
 
   const onDragEnd = () => {
     const wasDragging = hasDraggedRef.current
-    
+
     isDragging.current = false
     setIsDragActive(false)
     setActiveTarget(null)
@@ -337,11 +337,7 @@ const HomePage = () => {
 
         {/* Popular API (실제 인기 API) */}
         {!isLoadingPopular && popularData?.content && popularData.content.length > 0 && (
-          <ScrollableSection
-            title="Recent Popular"
-            data={popularData.content}
-            type="api"
-          />
+          <ScrollableSection title="Recent Popular" data={popularData.content} type="api" />
         )}
 
         {/* Suggest API (실제 최신 API) */}

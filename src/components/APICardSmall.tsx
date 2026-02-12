@@ -42,10 +42,7 @@ export default function APICardSmall({
   }
 
   return (
-    <div
-      className="group relative w-full h-32 xs:h-36 cursor-pointer"
-      onClick={handleClick}
-    >
+    <div className="group relative w-full h-32 xs:h-36 cursor-pointer" onClick={handleClick}>
       {/* 카드 배경 */}
       <div className="absolute inset-0 rounded-xl xs:rounded-[15px] border-brand-500/30 border-thin bg-white shadow-[1px_5px_10px_0px_var(--tw-shadow-color)] shadow-brand-500/25 transition-all duration-300 group-hover:bg-gradient-to-b group-hover:from-brand-500/10 group-hover:to-white" />
 
