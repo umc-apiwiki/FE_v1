@@ -43,21 +43,17 @@ export const getSuggestedApis = async (limit = 4): Promise<ApiPreview[]> => {
 export const getCategories = async (): Promise<string[]> => {
   // 임시 카테고리 목록
   return [
-    '공개',
-    '오픈소스',
-    '검색',
-    '번역',
-    'AI',
-    '금융',
-    '지도',
-    '날씨',
     '결제',
-    '소셜',
-    '음악',
+    '관리',
+    '파일',
+    '마케팅',
+    '지도',
     '이미지',
     '비디오',
-    '메일',
+    'SMS',
+    'AI',
     '분석',
+    '프로젝트',
   ]
 }
 

@@ -6,21 +6,16 @@ import { useRef, useState } from 'react'
 export default function SearchTagSection() {
   const categories = [
     { id: 1, name: '결제' },
-    { id: 2, name: '소셜로그인' },
-    { id: 3, name: '지도' },
-    { id: 4, name: '날씨' },
-    { id: 5, name: 'AI' },
-    { id: 6, name: '이메일' },
-    { id: 7, name: '금융' },
-    { id: 8, name: '데이터' },
-    { id: 9, name: '보안' },
-    { id: 10, name: '통신' },
-    { id: 11, name: '미디어' },
-    { id: 12, name: '개발도구' },
-    { id: 13, name: '클라우드' },
-    { id: 14, name: 'CMS' },
-    { id: 15, name: '분석' },
-    { id: 16, name: '모니터링' },
+    { id: 2, name: '관리' },
+    { id: 3, name: '파일' },
+    { id: 4, name: '마케팅' },
+    { id: 5, name: '지도' },
+    { id: 6, name: '이미지' },
+    { id: 7, name: '비디오' },
+    { id: 8, name: 'SMS' },
+    { id: 9, name: 'AI' },
+    { id: 10, name: '분석' },
+    { id: 11, name: '프로젝트' },
   ]
   const tagScrollRef = useRef<HTMLDivElement | null>(null)
   const [indicatorX, setIndicatorX] = useState(0)
