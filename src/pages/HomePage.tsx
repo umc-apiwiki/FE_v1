@@ -10,104 +10,7 @@ import { MobileHomePage } from '@/components/mobile'
 import type { ApiPreview } from '@/types/api'
 import { useApiList, useDeviceDetect } from '@/hooks'
 
-// -------------------- 1. 타겟 설정 (화면에 보여줄 하드코딩 데이터) --------------------
-
-interface TargetConfig {
-  dbName: string // DB 매칭 시도용 이름
-  localImage: string // 로컬 이미지 경로
-  fallbackTitle: string // 화면에 보여줄 제목 (무조건 이거 사용)
-  mockRating: number
-  mockReviews: number
-  mockPrice: string
-}
-
-const TARGET_POPULAR: TargetConfig[] = [
-  {
-    dbName: 'Youtube API',
-    localImage: '/images/YouTube.svg',
-    fallbackTitle: 'YouTube',
-    mockRating: 4.8,
-    mockReviews: 1240,
-    mockPrice: 'Free',
-  },
-  {
-    dbName: 'OpenStreetMap',
-    localImage: '/images/OpenStreetMap.svg',
-    fallbackTitle: 'OpenStreetMap',
-    mockRating: 4.1,
-    mockReviews: 850,
-    mockPrice: 'Mixed',
-  },
-  {
-    dbName: 'Google Login',
-    localImage: '/images/Google Login.svg',
-    fallbackTitle: 'Google Login',
-    mockRating: 4.7,
-    mockReviews: 2100,
-    mockPrice: 'Free',
-  },
-  {
-    dbName: 'OpenAI GPT-4',
-    localImage: '/images/Open AI.svg',
-    fallbackTitle: 'Open AI',
-    mockRating: 4.2,
-    mockReviews: 3400,
-    mockPrice: 'Paid',
-  },
-  {
-    dbName: 'Gmail_Fake',
-    localImage: '/images/Gmail.svg',
-    fallbackTitle: 'Gmail',
-    mockRating: 4.9,
-    mockReviews: 540,
-    mockPrice: 'Free',
-  },
-]
-
-const TARGET_SUGGEST: TargetConfig[] = [
-  {
-    dbName: 'Map_Fake_1',
-    localImage: '/images/국토부 2D지도API.svg',
-    fallbackTitle: '국토부 2D지도',
-    mockRating: 4.8,
-    mockReviews: 120,
-    mockPrice: 'Free',
-  },
-  {
-    dbName: 'Naver_Fake',
-    localImage: '/images/Naver.svg',
-    fallbackTitle: 'Naver',
-    mockRating: 4.3,
-    mockReviews: 890,
-    mockPrice: 'Mixed',
-  },
-  {
-    dbName: 'KakaoPay_Fake',
-    localImage: '/images/카카오페이.svg',
-    fallbackTitle: '카카오페이',
-    mockRating: 3.6,
-    mockReviews: 320,
-    mockPrice: 'Free',
-  },
-  {
-    dbName: 'AWS_Fake',
-    localImage: '/images/AWS API.svg',
-    fallbackTitle: 'AWS API',
-    mockRating: 4.8,
-    mockReviews: 1500,
-    mockPrice: 'Paid',
-  },
-  {
-    dbName: 'NaverMap_Fake',
-    localImage: '/images/네이버지도.svg',
-    fallbackTitle: '네이버 지도',
-    mockRating: 3.7,
-    mockReviews: 670,
-    mockPrice: 'Paid',
-  },
-]
-
-// -------------------- 2. 뉴스 데이터 --------------------
+// -------------------- 1. 뉴스 데이터 --------------------
 interface NewsData {
   title: string
   publisher: string
@@ -142,7 +45,7 @@ const newsItems: NewsData[] = [
   },
 ]
 
-// -------------------- 3. ScrollableSection --------------------
+// -------------------- 2. ScrollableSection --------------------
 const ScrollableSection = ({
   title,
   data,
@@ -290,54 +193,40 @@ const ScrollableSection = ({
   )
 }
 
-// -------------------- 4. HomePage Component --------------------
+// -------------------- 3. HomePage Component --------------------
 
 const HomePage = () => {
   const navigate = useNavigate()
   const [isSearchOpen, setIsSearchOpen] = useState(false)
   const [showMore, setShowMore] = useState(false)
 
-  const { data: serverData, fetchApiList } = useApiList()
+  // 인기 API 목록 (POPULAR 정렬)
+  const {
+    data: popularData,
+    fetchApiList: fetchPopularList,
+    isLoading: isLoadingPopular,
+  } = useApiList()
+
+  // 제안 API 목록 (LATEST 정렬)
+  const {
+    data: suggestData,
+    fetchApiList: fetchSuggestList,
+    isLoading: isLoadingSuggest,
+  } = useApiList()
 
   // 디바이스 타입 감지
   const { isMobile } = useDeviceDetect()
 
   useEffect(() => {
-    fetchApiList({ sort: 'POPULAR', size: 100 })
-  }, [fetchApiList])
+    // 인기 API 가져오기 (인기순 정렬, 최대 10개)
+    fetchPopularList({ sort: 'POPULAR', size: 10 })
+    // 제안 API 가져오기 (최신순 정렬, 최대 10개)
+    fetchSuggestList({ sort: 'LATEST', size: 10 })
+  }, [fetchPopularList, fetchSuggestList])
 
   // 모바일 디바이스에서는 MobileHomePage 렌더링
   if (isMobile) {
     return <MobileHomePage />
-  }
-
-  // ✅ [수정된 로직] 화면은 하드코딩 데이터 강제 + 링크는 서버 ID 연결
-  const mergeData = (targets: TargetConfig[], fetchedList: ApiPreview[] = []) => {
-    return targets.map((target) => {
-      // 1. 실제 DB에 해당 API가 있는지 확인
-      const realData = fetchedList.find((item) => item.name === target.dbName)
-
-      // 2. 링크 연결할 ID 결정 (중요!)
-      // - 진짜 데이터가 있으면 그 ID (예: 12)
-      // - 없으면? 서버 리스트의 "첫 번째 API ID"를 빌려옴 (예: 5) -> 이렇게 하면 404 안 뜸
-      // - 서버 리스트도 비었으면? 그냥 1번 (예비용)
-      const linkedApiId = realData?.apiId ?? fetchedList[0]?.apiId ?? 1
-
-      // 3. 리턴되는 데이터: 화면에 보여줄 내용은 무조건 target(하드코딩) 값 사용
-      return {
-        apiId: linkedApiId, // 클릭 시 이동할 ID (실제 존재하는 페이지로 납치)
-        name: target.fallbackTitle, // 이름은 하드코딩된 값 (예: Gmail)
-        summary: '주요 기능을 제공하는 인기 API입니다.',
-        avgRating: target.mockRating, // 별점도 하드코딩
-        reviewCount: target.mockReviews, // 리뷰 수도 하드코딩
-        viewCounts: target.mockReviews * 150,
-        pricingType: target.mockPrice,
-        authType: 'API_KEY',
-        providerCompany: 'ETC',
-        isFavorited: false,
-        logo: target.localImage, // 로고도 하드코딩
-      } as unknown as ApiPreview
-    })
   }
 
   const handleSearch = (query: string) => {
@@ -373,19 +262,19 @@ const HomePage = () => {
         {/* 뉴스 섹션 */}
         <ScrollableSection title="Latest News" data={newsItems} type="news" />
 
-        {/* Popular API (하드코딩 비주얼 + 실제 링크) */}
-        <ScrollableSection
-          title="Recent Popular"
-          data={mergeData(TARGET_POPULAR, serverData?.content)}
-          type="api"
-        />
+        {/* Popular API (실제 인기 API) */}
+        {!isLoadingPopular && popularData?.content && popularData.content.length > 0 && (
+          <ScrollableSection
+            title="Recent Popular"
+            data={popularData.content}
+            type="api"
+          />
+        )}
 
-        {/* Suggest API (하드코딩 비주얼 + 실제 링크) */}
-        <ScrollableSection
-          title="Suggest API"
-          data={mergeData(TARGET_SUGGEST, serverData?.content)}
-          type="api"
-        />
+        {/* Suggest API (실제 최신 API) */}
+        {!isLoadingSuggest && suggestData?.content && suggestData.content.length > 0 && (
+          <ScrollableSection title="Suggest API" data={suggestData.content} type="api" />
+        )}
       </div>
 
       <BottomButtonSection onClick={toggleView} isExpanded={true} />
