@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/react'
 import { axiosInstance } from '@/apis/axios'
 import type { MyProfileResponse, MyWikiHistory, WikiHistoryParams } from '@/types/api'
 import type {
@@ -33,11 +34,23 @@ export const getMyWikiHistory = async (params: WikiHistoryParams): Promise<MyWik
 export const updateProfile = async (
   profileData: UpdateProfileRequest
 ): Promise<UpdateProfileResponse> => {
-  const { data } = await axiosInstance.patch<UpdateProfileResponse>(
-    '/api/v1/profile',
-    profileData
-  )
-  return data
+  try {
+    const { data } = await axiosInstance.patch<UpdateProfileResponse>(
+      '/api/v1/profile',
+      profileData
+    )
+    return data
+  } catch (error: unknown) {
+    // 프로필 업데이트 실패는 중요한 기능이므로 Sentry에 보고
+    Sentry.captureException(error, {
+      tags: { service: 'user', action: 'updateProfile', critical: 'true' },
+      extra: {
+        hasNickname: !!profileData.nickname,
+        hasPassword: !!profileData.password,
+      },
+    })
+    throw error
+  }
 }
 
 /**
@@ -61,6 +74,14 @@ export const checkNicknameDuplicate = async (
  * DELETE /api/v1/profile
  */
 export const deleteUser = async (): Promise<UpdateProfileResponse> => {
-  const { data } = await axiosInstance.delete<UpdateProfileResponse>('/api/v1/profile')
-  return data
+  try {
+    const { data } = await axiosInstance.delete<UpdateProfileResponse>('/api/v1/profile')
+    return data
+  } catch (error: unknown) {
+    // 회원 탈퇴 실패는 중요한 기능이므로 Sentry에 보고
+    Sentry.captureException(error, {
+      tags: { service: 'user', action: 'deleteUser', critical: 'true' },
+    })
+    throw error
+  }
 }

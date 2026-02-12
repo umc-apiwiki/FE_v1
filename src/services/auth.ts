@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/react'
 import api from './api'
 import type { ApiResponse, LoginRequest, LoginResponse, SignupRequest } from '@/types/api'
 
@@ -11,11 +12,23 @@ export const signup = async (data: SignupRequest): Promise<ApiResponse<LoginResp
   } catch (error: unknown) {
     // 서버가 400 에러로 응답한 경우에도 response.data 반환
     if (error && typeof error === 'object' && 'response' in error) {
-      const axiosError = error as { response?: { data?: ApiResponse<LoginResponse> } }
+      const axiosError = error as { response?: { data?: ApiResponse<LoginResponse>; status?: number } }
       if (axiosError.response?.data) {
+        // 5xx 서버 에러는 Sentry에 보고
+        if (axiosError.response.status && axiosError.response.status >= 500) {
+          Sentry.captureException(error, {
+            tags: { service: 'auth', action: 'signup' },
+            extra: { email: data.email },
+          })
+        }
         return axiosError.response.data
       }
     }
+    // 예상치 못한 에러는 Sentry에 보고
+    Sentry.captureException(error, {
+      tags: { service: 'auth', action: 'signup' },
+      extra: { email: data.email },
+    })
     throw error
   }
 }
@@ -39,11 +52,23 @@ export const login = async (data: LoginRequest): Promise<ApiResponse<LoginRespon
   } catch (error: unknown) {
     // 서버가 400 에러로 응답한 경우에도 response.data 반환
     if (error && typeof error === 'object' && 'response' in error) {
-      const axiosError = error as { response?: { data?: ApiResponse<LoginResponse> } }
+      const axiosError = error as { response?: { data?: ApiResponse<LoginResponse>; status?: number } }
       if (axiosError.response?.data) {
+        // 5xx 서버 에러는 Sentry에 보고
+        if (axiosError.response.status && axiosError.response.status >= 500) {
+          Sentry.captureException(error, {
+            tags: { service: 'auth', action: 'login' },
+            extra: { email: data.email },
+          })
+        }
         return axiosError.response.data
       }
     }
+    // 예상치 못한 에러는 Sentry에 보고 (특히 로그인 실패는 중요)
+    Sentry.captureException(error, {
+      tags: { service: 'auth', action: 'login', critical: 'true' },
+      extra: { email: data.email },
+    })
     throw error
   }
 }
@@ -67,11 +92,22 @@ export const logout = async (): Promise<ApiResponse<string>> => {
   } catch (error: unknown) {
     // 서버가 400 에러로 응답한 경우에도 response.data 반환
     if (error && typeof error === 'object' && 'response' in error) {
-      const axiosError = error as { response?: { data?: ApiResponse<string> } }
+      const axiosError = error as { response?: { data?: ApiResponse<string>; status?: number } }
       if (axiosError.response?.data) {
+        // 5xx 서버 에러는 Sentry에 보고
+        if (axiosError.response.status && axiosError.response.status >= 500) {
+          Sentry.captureException(error, {
+            tags: { service: 'auth', action: 'logout' },
+          })
+        }
         return axiosError.response.data
       }
     }
+    // 로그아웃 실패는 비중요하지만 기록
+    Sentry.captureException(error, {
+      tags: { service: 'auth', action: 'logout' },
+      level: 'warning',
+    })
     throw error
   }
 }

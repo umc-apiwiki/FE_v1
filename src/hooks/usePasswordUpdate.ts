@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import * as Sentry from '@sentry/react'
 import { updateProfile } from '@/services/user'
 import { validatePassword, validatePasswordConfirm } from '@/utils/validateProfile'
 import type { AxiosError } from 'axios'
@@ -115,6 +116,15 @@ export const usePasswordUpdate = (
     } catch (error: unknown) {
       const errorCode = isAxiosError(error) ? error.response?.data?.code : undefined
       const errorMessage = isAxiosError(error) ? error.response?.data?.message : undefined
+      
+      // 비밀번호 변경 실패는 보안상 중요하므로 Sentry에 보고
+      // 단, 예상된 비즈니스 에러(USER4004)는 제외
+      if (errorCode !== 'USER4004') {
+        Sentry.captureException(error, {
+          tags: { service: 'profile', action: 'updatePassword', critical: 'true', security: 'true' },
+          extra: { errorCode, errorMessage },
+        })
+      }
       
       // 특정 에러 코드에 따른 처리
       if (errorCode === 'USER4004') {

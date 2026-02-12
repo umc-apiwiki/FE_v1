@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import * as Sentry from '@sentry/react'
 import { updateProfile, checkNicknameDuplicate } from '@/services/user'
 import { validateNickname } from '@/utils/validateProfile'
 import type { AxiosError } from 'axios'
@@ -96,6 +97,14 @@ export const useNicknameUpdate = (
       const errorCode = isAxiosError(error) ? error.response?.data?.code : undefined
       const errorMessage = isAxiosError(error) ? error.response?.data?.message : undefined
 
+      // 예상치 못한 에러는 Sentry에 보고 (USER4001은 예상된 에러이므로 제외)
+      if (errorCode !== 'USER4001' && errorCode !== 'AUTH4003') {
+        Sentry.captureException(error, {
+          tags: { service: 'profile', action: 'checkNickname' },
+          extra: { nickname: trimmedNickname, errorCode },
+        })
+      }
+
       if (errorCode === 'USER4001') {
         setNicknameError('이미 사용 중인 닉네임입니다.')
       } else if (errorCode === 'AUTH4003') {
@@ -147,6 +156,15 @@ export const useNicknameUpdate = (
     } catch (error: unknown) {
       const errorCode = isAxiosError(error) ? error.response?.data?.code : undefined
       const errorMessage = isAxiosError(error) ? error.response?.data?.message : undefined
+      
+      // 닉네임 변경 실패는 중요한 사용자 경험이므로 Sentry에 보고
+      // 단, 예상된 비즈니스 에러(USER4001, USER4004)는 제외
+      if (errorCode !== 'USER4001' && errorCode !== 'USER4004') {
+        Sentry.captureException(error, {
+          tags: { service: 'profile', action: 'updateNickname', critical: 'true' },
+          extra: { errorCode, errorMessage },
+        })
+      }
       
       // 특정 에러 코드에 따른 처리
       if (errorCode === 'USER4001') {

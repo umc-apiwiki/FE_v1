@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import * as Sentry from '@sentry/react'
 import { deleteUser } from '@/services/user'
 
 type UseDeleteAccountReturn = {
@@ -70,6 +71,13 @@ export const useDeleteAccount = (onSuccess?: () => void): UseDeleteAccountReturn
       }
     } catch (error: unknown) {
       const errorMessage = isAxiosError(error) ? error.response?.data?.message : undefined
+      
+      // 회원 탈퇴 실패는 중요한 이슈이므로 Sentry에 보고
+      Sentry.captureException(error, {
+        tags: { service: 'profile', action: 'deleteAccount', critical: 'true' },
+        extra: { errorMessage },
+      })
+      
       alert(errorMessage || '회원 탈퇴에 실패했습니다.')
     } finally {
       setIsDeleting(false)
