@@ -38,8 +38,25 @@ export default function LoginModal({ onClose, onSwitchToSignUp }: LoginModalProp
       await login({ email: values.email, password: values.password })
 
       onClose()
-    } catch (error) {
-      console.error(error)
+    } catch (error: unknown) {
+      console.error('로그인 실패:', error)
+
+      // Axios 에러에서 서버 응답 메시지 추출
+      let errorMessage = '로그인 중 오류가 발생했습니다.'
+
+      if (
+        error &&
+        typeof error === 'object' &&
+        'response' in error &&
+        error.response &&
+        typeof error.response === 'object' &&
+        'data' in error.response
+      ) {
+        const responseData = error.response.data as { message?: string }
+        errorMessage = responseData?.message || errorMessage
+      }
+
+      alert(errorMessage)
     } finally {
       setIsLoading(false)
     }

@@ -113,8 +113,24 @@ export const useMobileNavigation = (): UseMobileNavigationReturn => {
       // 로그인 성공 시 AuthProvider의 login 함수에서 리다이렉트 처리
       setIsLoginModalOpen(false)
       setLoginForm({ email: '', password: '' })
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('로그인 실패:', error)
+
+      // Axios 에러에서 서버 응답 메시지 추출
+      if (
+        error &&
+        typeof error === 'object' &&
+        'response' in error &&
+        error.response &&
+        typeof error.response === 'object' &&
+        'data' in error.response
+      ) {
+        const responseData = error.response.data as { message?: string }
+        const errorMessage = responseData?.message || '로그인 중 오류가 발생했습니다.'
+        alert(errorMessage)
+      } else {
+        alert('로그인 중 오류가 발생했습니다.')
+      }
     } finally {
       setIsLoading(false)
     }
@@ -142,9 +158,24 @@ export const useMobileNavigation = (): UseMobileNavigationReturn => {
       } else {
         alert(response.message || '회원가입에 실패했습니다.')
       }
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('회원가입 실패:', error)
-      alert('회원가입 중 오류가 발생했습니다.')
+
+      // Axios 에러에서 서버 응답 메시지 추출
+      if (
+        error &&
+        typeof error === 'object' &&
+        'response' in error &&
+        error.response &&
+        typeof error.response === 'object' &&
+        'data' in error.response
+      ) {
+        const responseData = error.response.data as { message?: string }
+        const errorMessage = responseData?.message || '회원가입 중 오류가 발생했습니다.'
+        alert(errorMessage)
+      } else {
+        alert('회원가입 중 오류가 발생했습니다.')
+      }
     } finally {
       setIsLoading(false)
     }
