@@ -28,8 +28,15 @@ function validateSignup(values: UserSignupInfo) {
   // 비밀번호 검사
   if (!values.password) {
     errors.password = '비밀번호를 입력해주세요.'
-  } else if (values.password.length < 8 || values.password.length >= 20) {
-    errors.password = '비밀번호는 8~20자 사이로 입력해주세요.'
+  } else if (values.password.length < 8) {
+    errors.password = '비밀번호는 8자 이상이어야 합니다.'
+  } else {
+    const hasLetter = /[a-zA-Z]/.test(values.password)
+    const hasNumber = /[0-9]/.test(values.password)
+
+    if (!hasLetter || !hasNumber) {
+      errors.password = '비밀번호는 영문과 숫자를 포함해야 합니다.'
+    }
   }
 
   // 비밀번호 확인 검사
