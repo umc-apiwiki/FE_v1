@@ -11,14 +11,19 @@ const PRICING_LABEL: Record<string, string> = {
 // ✅ [추가] 로고 이미지 기본 경로 (APICard와 동일하게 설정)
 const LOGO_BASE = 'https://api-wiki-api-logos.s3.ap-northeast-2.amazonaws.com/api-logos'
 
+interface APICardSmallProps extends ApiPreview {
+  preventClick?: boolean // 드래그 중 클릭 방지용
+}
+
 export default function APICardSmall({
   apiId,
   name,
   avgRating,
   reviewCount,
   pricingType,
-  logo, // ✅ [추가] logo prop 받기
-}: ApiPreview) {
+  logo,
+  preventClick = false,
+}: APICardSmallProps) {
   const navigate = useNavigate()
 
   // ✅ [추가] 이미지 에러 처리를 위한 상태
@@ -27,10 +32,19 @@ export default function APICardSmall({
   // ✅ [추가] 로고 URL 생성 로직
   const logoUrl = logo ?? `${LOGO_BASE}/api_${apiId}.png`
 
+  const handleClick = (e: React.MouseEvent) => {
+    if (preventClick) {
+      e.preventDefault()
+      e.stopPropagation()
+      return
+    }
+    navigate(`/apis/${apiId}`)
+  }
+
   return (
     <div
       className="group relative w-full h-32 xs:h-36 cursor-pointer"
-      onClick={() => navigate(`/apis/${apiId}`)}
+      onClick={handleClick}
     >
       {/* 카드 배경 */}
       <div className="absolute inset-0 rounded-xl xs:rounded-[15px] border-brand-500/30 border-thin bg-white shadow-[1px_5px_10px_0px_var(--tw-shadow-color)] shadow-brand-500/25 transition-all duration-300 group-hover:bg-gradient-to-b group-hover:from-brand-500/10 group-hover:to-white" />

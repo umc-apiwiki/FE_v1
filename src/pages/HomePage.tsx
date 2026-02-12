@@ -61,6 +61,7 @@ const ScrollableSection = ({
   // 드래그 상태 관리 (Lint 에러 해결을 위해 State로 관리)
   const [isDragActive, setIsDragActive] = useState(false)
   const [activeTarget, setActiveTarget] = useState<'handle' | 'content' | null>(null)
+  const [hasDragged, setHasDragged] = useState(false) // 실제로 드래그가 발생했는지 추적 (state로 변경)
 
   const isDragging = useRef(false)
   const dragTarget = useRef<'handle' | 'content' | null>(null)
@@ -69,6 +70,7 @@ const ScrollableSection = ({
   const startIndicatorX = useRef(0)
 
   const MAX_MOVE = 24
+  const DRAG_THRESHOLD = 5 // 드래그로 인식하기 위한 최소 이동 거리 (px)
 
   // [Lint 해결] document.body 직접 수정을 useEffect로 이동
   useEffect(() => {
@@ -91,6 +93,7 @@ const ScrollableSection = ({
 
   const onDragStart = (e: React.MouseEvent, target: 'handle' | 'content') => {
     isDragging.current = true
+    setHasDragged(false) // 드래그 시작 시 초기화
     setIsDragActive(true)
     setActiveTarget(target)
     dragTarget.current = target
@@ -107,18 +110,28 @@ const ScrollableSection = ({
     if (!isDragging.current || !scrollRef.current) return
     const deltaX = e.clientX - startX.current
 
-    if (dragTarget.current === 'handle') {
-      const newX = Math.max(0, Math.min(startIndicatorX.current + deltaX, MAX_MOVE))
-      setIndicatorX(newX)
-      const { scrollWidth, clientWidth } = scrollRef.current
-      scrollRef.current.scrollLeft = (newX / MAX_MOVE) * (scrollWidth - clientWidth)
-    } else {
-      scrollRef.current.style.scrollBehavior = 'auto'
-      scrollRef.current.scrollLeft = startScrollLeft.current - deltaX
+    // 드래그 threshold 체크: 일정 거리 이상 움직였을 때만 드래그로 인식
+    if (Math.abs(deltaX) > DRAG_THRESHOLD) {
+      setHasDragged(true)
+    }
+
+    // 실제 드래그가 발생했을 때만 스크롤 이동
+    if (Math.abs(deltaX) > DRAG_THRESHOLD) {
+      if (dragTarget.current === 'handle') {
+        const newX = Math.max(0, Math.min(startIndicatorX.current + deltaX, MAX_MOVE))
+        setIndicatorX(newX)
+        const { scrollWidth, clientWidth } = scrollRef.current
+        scrollRef.current.scrollLeft = (newX / MAX_MOVE) * (scrollWidth - clientWidth)
+      } else {
+        scrollRef.current.style.scrollBehavior = 'auto'
+        scrollRef.current.scrollLeft = startScrollLeft.current - deltaX
+      }
     }
   }
 
   const onDragEnd = () => {
+    const wasDragging = hasDragged
+    
     isDragging.current = false
     setIsDragActive(false)
     setActiveTarget(null)
@@ -128,6 +141,15 @@ const ScrollableSection = ({
     document.removeEventListener('mousemove', onDragMove)
     document.removeEventListener('mouseup', onDragEnd)
     document.removeEventListener('mouseleave', onDragEnd)
+
+    // 드래그가 발생했다면 클릭 이벤트가 완전히 처리될 때까지 충분한 시간 대기
+    if (wasDragging) {
+      setTimeout(() => {
+        setHasDragged(false)
+      }, 100)
+    } else {
+      setHasDragged(false)
+    }
   }
 
   useEffect(() => {
@@ -149,6 +171,13 @@ const ScrollableSection = ({
       <div
         ref={scrollRef}
         onMouseDown={(e) => onDragStart(e, 'content')}
+        onClick={(e) => {
+          // 드래그가 발생했으면 클릭 이벤트 막기
+          if (hasDragged) {
+            e.preventDefault()
+            e.stopPropagation()
+          }
+        }}
         // 이미지 드래그 방지 (중요)
         onDragStart={(e) => e.preventDefault()}
         className={`flex overflow-x-auto gap-6 pb-4 no-scrollbar scroll-smooth ${
@@ -161,8 +190,15 @@ const ScrollableSection = ({
               <div
                 key={`api-${title}-${api.apiId}-${index}`}
                 className="flex-shrink-0 w-[280px] sm:w-[300px]"
+                onClick={(e) => {
+                  // 드래그가 발생했으면 하위 클릭 이벤트도 막기
+                  if (hasDragged) {
+                    e.preventDefault()
+                    e.stopPropagation()
+                  }
+                }}
               >
-                <APICardSmall {...api} />
+                <APICardSmall {...api} preventClick={hasDragged} />
               </div>
             ))
           : (data as NewsData[]).map((news, i) => (
