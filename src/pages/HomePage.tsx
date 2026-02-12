@@ -255,7 +255,9 @@ const ScrollableSection = ({
       >
         {type === 'api'
           ? (data as ApiPreview[]).map((api, index) => (
-              <APICardSmall key={`api-${title}-${api.apiId}-${index}`} {...api} />
+              <div key={`api-${title}-${api.apiId}-${index}`} className="flex-shrink-0 w-[280px] sm:w-[300px]">
+                <APICardSmall {...api} />
+              </div>
             ))
           : (data as NewsData[]).map((news, i) => (
               <NewsCard

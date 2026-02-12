@@ -91,17 +91,18 @@ const BookmarkPage = () => {
                   ) : (
                     <div className="flex gap-3 xs:gap-4 md:gap-5">
                       {group.activities.map((api) => (
-                        <APICard
-                          key={api.apiId}
-                          {...api}
-                          isFavorited={api.isFavorited}
-                          onToggleFavorite={async () => {
-                            if (!isToggling) {
-                              api.isFavorited = !api.isFavorited
-                              await toggleBookmark(api.apiId)
-                            }
-                          }}
-                        />
+                        <div key={api.apiId} className="flex-shrink-0 w-96">
+                          <APICard
+                            {...api}
+                            isFavorited={api.isFavorited}
+                            onToggleFavorite={async () => {
+                              if (!isToggling) {
+                                api.isFavorited = !api.isFavorited
+                                await toggleBookmark(api.apiId)
+                              }
+                            }}
+                          />
+                        </div>
                       ))}
                     </div>
                   )}

@@ -335,7 +335,11 @@ export default function APIDetailPage() {
             {similarApisData?.content?.filter((api) => api.apiId !== apiId).length ? (
               similarApisData.content
                 .filter((api) => api.apiId !== apiId)
-                .map((api) => <APICardSmall key={api.apiId} {...api} />)
+                .map((api) => (
+                  <div key={api.apiId} className="flex-shrink-0 w-[280px] sm:w-[300px]">
+                    <APICardSmall {...api} />
+                  </div>
+                ))
             ) : (
               <div className="text-gray-400 text-base xs:text-lg py-8 xs:py-10 w-full text-center">
                 비슷한 API가 없습니다.
