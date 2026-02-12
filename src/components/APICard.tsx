@@ -56,7 +56,7 @@ export default function APICard({
 
   return (
     <div
-      className="group relative w-96 h-64 flex-shrink-0 cursor-pointer"
+      className="group relative w-full h-64 cursor-pointer"
       onClick={() => navigate(`/apis/${apiId}`)}
     >
       {/* 카드 배경 */}

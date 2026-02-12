@@ -29,7 +29,7 @@ export default function APICardSmall({
 
   return (
     <div
-      className="group relative w-full xs:w-[280px] sm:w-[300px] h-32 xs:h-36 flex-shrink-0 cursor-pointer"
+      className="group relative w-full h-32 xs:h-36 cursor-pointer"
       onClick={() => navigate(`/apis/${apiId}`)}
     >
       {/* 카드 배경 */}
