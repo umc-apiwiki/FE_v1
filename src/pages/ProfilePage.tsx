@@ -1,6 +1,5 @@
 import { motion } from 'framer-motion'
 import profileImg from '@/assets/default_profile.png'
-import editIcon from '@/assets/icons/common/ic_edit.svg'
 import { useMyProfile } from '@/hooks/useUser'
 import { useAuth } from '@/hooks/useAuth'
 import { useNicknameUpdate } from '@/hooks/useNicknameUpdate'
@@ -122,17 +121,6 @@ const ProfilePage = () => {
               alt="Profile"
               className="w-full h-full rounded-full border border-brand-500 object-cover bg-white shadow-sm"
             />
-            <motion.button
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              className="absolute bottom-0 xs:bottom-1 -right-6 xs:-right-8 sm:-right-10 p-1.5 xs:p-2 cursor-pointer"
-            >
-              <img
-                src={editIcon}
-                alt="Edit Profile"
-                className="w-5 h-5 xs:w-6 xs:h-6 sm:w-7 sm:h-7"
-              />
-            </motion.button>
           </motion.div>
 
           {/* 닉네임 변경 섹션 */}
