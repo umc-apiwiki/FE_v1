@@ -11,9 +11,9 @@ export default function BottomButtonSection({ onClick, isExpanded }: BottomButto
     <button
       type="button"
       onClick={onClick}
-      className={`fixed left-1/2 -translate-x-1/2 z-[9999] p-2 transition-all duration-500 ease-in-out focus:outline-none
-        ${isExpanded ? 'top-32' : 'bottom-3'}
-        ${!isExpanded && 'hover:-translate-y-1'}
+      className={`p-2 transition-all duration-500 ease-in-out focus:outline-none
+        ${isExpanded ? 'relative' : 'fixed left-1/2 -translate-x-1/2 bottom-3 hover:-translate-y-1'}
+        z-[9999]
       `}
     >
       <img

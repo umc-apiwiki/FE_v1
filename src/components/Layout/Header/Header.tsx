@@ -93,7 +93,7 @@ const Header = () => {
             이렇게 하면 로고 클릭 시 브라우저가 주소를 새로 로딩(Refresh)하므로,
             HomePage의 showMore 상태가 false(초기화면)로 리셋됩니다.
           */}
-          <a href="/" className="flex items-center pt-2 gap-[7px] sm:pl-8 md:pl-16 lg:pl-32">
+          <a href="/" className="flex items-center pt-2 gap-[7px] pl-4 sm:pl-8 md:pl-12 lg:pl-20 xl:pl-32">
             <img src={HomeLogo} alt="Home Logo Icon" />
             <span className="font-mono antialiased text-[27px] font-medium tracking-[-3px] text-brand-500">
               API Wiki
@@ -102,7 +102,7 @@ const Header = () => {
         </div>
 
         {/* 중앙 메뉴 */}
-        <div className="flex justify-self-center sm:gap-12 md:gap-16 lg:gap-36 whitespace-nowrap font-sans text-xl font-medium tracking-[-1px] text-info-dark pr-2">
+        <div className="flex justify-self-center gap-6 sm:gap-10 md:gap-14 lg:gap-20 xl:gap-32 whitespace-nowrap font-sans text-xl font-medium tracking-[-1px] text-info-dark">
           <Link to="/bookmark" className="hover:text-brand-500">
             Bookmark
           </Link>
@@ -115,7 +115,7 @@ const Header = () => {
         </div>
 
         {/* 우측 로그인 버튼 영역 */}
-        <div className="flex justify-self-end whitespace-nowrap pr-4 sm:pr-8 md:pr-16 lg:pr-32 font-sans text-xl font-medium tracking-[-1px] text-info-dark">
+        <div className="flex justify-self-end whitespace-nowrap pr-4 sm:pr-8 md:pr-12 lg:pr-20 xl:pr-32 font-sans text-xl font-medium tracking-[-1px] text-info-dark">
           {!accessToken && !user ? (
             // 로그인 안 했을 때
             <span

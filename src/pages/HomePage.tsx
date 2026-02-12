@@ -332,6 +332,11 @@ const HomePage = () => {
   return (
     <div className="w-full flex flex-col items-center justify-center min-h-screen">
       <div className="w-full flex flex-col items-center pt-24 pb-24 animate-slide-up">
+        {/* 홈으로 돌아가기 버튼 */}
+        <div className="w-full flex justify-center mb-8">
+          <BottomButtonSection onClick={toggleView} isExpanded={true} />
+        </div>
+
         {/* 뉴스 섹션 */}
         <ScrollableSection title="Latest News" data={newsItems} type="news" />
 
@@ -345,8 +350,6 @@ const HomePage = () => {
           <ScrollableSection title="Suggest API" data={suggestData.content} type="api" />
         )}
       </div>
-
-      <BottomButtonSection onClick={toggleView} isExpanded={true} />
     </div>
   )
 }
