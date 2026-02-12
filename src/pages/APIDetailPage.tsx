@@ -20,6 +20,7 @@ import {
   useApiList,
   useApiPricing,
   useDeviceDetect,
+  useAuth,
 } from '@/hooks'
 import { usePostFavorite } from '@/hooks/mutations/usePostFavorite'
 
@@ -40,6 +41,7 @@ export default function APIDetailPage() {
   const apiId = Number(id) || 0
   const [activeMenu, setActiveMenu] = useState<'A' | 'B' | 'C'>('A')
   const { isMobile } = useDeviceDetect()
+  const { accessToken } = useAuth() // 로그인 상태 확인
 
   const { data: finalDetail, isLoading: isDetailLoading, error, fetchApiDetail } = useApiDetail()
   const { mutate: toggleFavorite, isLoading: isToggling } = usePostFavorite()
@@ -53,14 +55,27 @@ export default function APIDetailPage() {
 
   const [isEditing, setIsEditing] = useState(false)
   const [editedWikiText, setEditedWikiText] = useState<string | null>(null)
-  const displayWikiText = editedWikiText !== null ? editedWikiText : wikiData?.content || ''
+
+  // 로그인 상태일 때는 수정용 wiki 데이터를 사용, 로그아웃일 때는 finalDetail.wiki 사용
+  const wikiContent = accessToken
+    ? editedWikiText !== null
+      ? editedWikiText
+      : wikiData?.content || finalDetail?.wiki?.contentMd || ''
+    : finalDetail?.wiki?.contentMd || ''
+
+  const wikiVersion = accessToken
+    ? (wikiData?.version ?? finalDetail?.wiki?.version ?? 0)
+    : (finalDetail?.wiki?.version ?? 0)
 
   useEffect(() => {
     if (apiId) {
       fetchApiDetail(apiId)
-      fetchWiki(apiId)
+      // 로그인 상태일 때만 수정용 wiki 데이터 조회
+      if (accessToken) {
+        fetchWiki(apiId)
+      }
     }
-  }, [apiId, fetchApiDetail, fetchWiki])
+  }, [apiId, accessToken, fetchApiDetail, fetchWiki])
 
   // ✅ 수정 포인트 1: 데이터 개수를 6개로 늘려 요청 (나 자신 제외 대비)
   useEffect(() => {
@@ -86,12 +101,16 @@ export default function APIDetailPage() {
   }, [apiId, isFavorited, toggleFavorite, isToggling])
 
   const handleSaveWiki = async () => {
-    if (!displayWikiText.trim()) return alert('내용을 입력해주세요.')
+    if (!wikiContent.trim()) return alert('내용을 입력해주세요.')
+    if (!accessToken) return alert('로그인이 필요합니다.')
+
     try {
-      const currentVersion = wikiData?.version ?? 0
-      await saveWiki(apiId, { content: displayWikiText, version: currentVersion })
+      await saveWiki(apiId, { content: wikiContent, version: wikiVersion })
       alert('위키가 저장되었습니다!')
-      await fetchWiki(apiId)
+      await fetchApiDetail(apiId) // API 상세 정보 다시 조회 (업데이트된 wiki 포함)
+      if (accessToken) {
+        await fetchWiki(apiId) // 수정용 wiki 데이터도 다시 조회
+      }
       setIsEditing(false)
       setEditedWikiText(null)
     } catch {
@@ -107,7 +126,11 @@ export default function APIDetailPage() {
   }
 
   const handleStartEdit = () => {
-    setEditedWikiText(wikiData?.content || '')
+    if (!accessToken) {
+      alert('로그인이 필요합니다.')
+      return
+    }
+    setEditedWikiText(wikiData?.content || finalDetail?.wiki?.contentMd || '')
     setIsEditing(true)
   }
 
@@ -242,7 +265,7 @@ export default function APIDetailPage() {
                 API 위키
               </span>
               <span className="text-gray-500 text-xs xs:text-sm font-sans ">
-                마지막 업데이트 버전: <span className="font-bold">{wikiData?.version ?? 0}</span>
+                마지막 업데이트 버전: <span className="font-bold">{wikiVersion}</span>
               </span>
             </div>
           </div>
@@ -250,7 +273,7 @@ export default function APIDetailPage() {
             {isEditing ? (
               <div data-color-mode="light">
                 <MDEditor
-                  value={displayWikiText}
+                  value={wikiContent}
                   onChange={(val) => setEditedWikiText(val || '')}
                   height={400}
                   preview="edit"
@@ -273,9 +296,9 @@ export default function APIDetailPage() {
               </div>
             ) : (
               <div data-color-mode="light" className="p-3 xs:p-4 sm:p-5">
-                {wikiData?.content ? (
+                {wikiContent ? (
                   <MDEditor.Markdown
-                    source={wikiData.content}
+                    source={wikiContent}
                     style={{ backgroundColor: 'white', color: '#333', minHeight: '200px' }}
                     className="text-sm xs:text-base"
                   />
@@ -285,14 +308,16 @@ export default function APIDetailPage() {
                     <p>첫 번째 기여자가 되어보세요!</p>
                   </div>
                 )}
-                <div className="flex justify-end mt-4 xs:mt-6 pt-3 xs:pt-4 border-t border-gray-100">
-                  <button
-                    onClick={handleStartEdit}
-                    className="px-4 xs:px-6 py-1.5 xs:py-2 border-2 border-brand-500 text-brand-500 font-bold rounded-lg hover:bg-brand-50 transition-colors text-xs xs:text-sm"
-                  >
-                    위키 수정하기
-                  </button>
-                </div>
+                {accessToken && (
+                  <div className="flex justify-end mt-4 xs:mt-6 pt-3 xs:pt-4 border-t border-gray-100">
+                    <button
+                      onClick={handleStartEdit}
+                      className="px-4 xs:px-6 py-1.5 xs:py-2 border-2 border-brand-500 text-brand-500 font-bold rounded-lg hover:bg-brand-50 transition-colors text-xs xs:text-sm"
+                    >
+                      위키 수정하기
+                    </button>
+                  </div>
+                )}
               </div>
             )}
           </div>

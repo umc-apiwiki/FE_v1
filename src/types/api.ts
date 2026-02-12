@@ -172,6 +172,7 @@ export type ApiDetail = {
   createdAt: string
   updatedAt: string
   isFavorited: boolean
+  wiki?: WikiItem
 }
 
 /** 북마크 토글 응답 */
@@ -290,6 +291,15 @@ export interface MyProfile {
 export type MyProfileResponse = ApiResponse<MyProfile>
 
 // ===== Wiki Types =====
+
+/** 위키 아이템 (API 상세 조회 응답에 포함) */
+export interface WikiItem {
+  wikiId: number
+  contentMd: string
+  version: number
+  lastEditorNickname: string
+  updatedAt: string
+}
 
 /** 위키 내용 조회 응답 데이터 */
 export interface WikiContent {
