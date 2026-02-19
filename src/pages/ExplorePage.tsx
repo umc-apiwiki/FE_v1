@@ -53,13 +53,13 @@ const ExplorePageContent = () => {
   } = useCompare()
 
   // API 조회 파라미터
-  const [params, setParams] = useState<ApiListParams>({
+  const [params, setParams] = useState<ApiListParams>(() => ({
     page: 0,
     size: 16,
     sort: 'LATEST',
     direction: 'DESC',
     q: searchParams.get('q') || undefined,
-  })
+  }))
 
   // 필터 상태 (FilterModal 초기값 전달용)
   const [filterState, setFilterState] = useState<Partial<FilterValues>>({})
@@ -78,6 +78,27 @@ const ExplorePageContent = () => {
   const isResetRef = useRef(true)
   // 이전 API 호출 params 저장 (중복 호출 방지용)
   const prevParamsRef = useRef<string>('')
+
+  // URL 파라미터(q) 변화에 따른 상태 동기화 및 초기화 (린트 에러 수정)
+  useEffect(() => {
+    const urlQuery = searchParams.get('q') || undefined
+
+    if (params.q === urlQuery) return
+
+    isResetRef.current = true
+
+    /* eslint-disable react-hooks/set-state-in-effect */
+    setParams((prev) => ({
+      ...prev,
+      q: urlQuery,
+      page: 0,
+    }))
+    /* eslint-enable react-hooks/set-state-in-effect */
+
+    if (!urlQuery) {
+      setFilterState({})
+    }
+  }, [searchParams, params.q])
 
   // ✅ [수정됨] pageData 수신 시 items 업데이트 (중복 제거 로직 추가)
   useEffect(() => {
@@ -126,7 +147,7 @@ const ExplorePageContent = () => {
 
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting && !isLoading && !error) {
+        if (entries[0].isIntersecting && !isLoading && !error && hasMore) {
           setParams((prev) => ({ ...prev, page: (prev.page ?? 0) + 1 }))
         }
       },
@@ -135,7 +156,7 @@ const ExplorePageContent = () => {
 
     observer.observe(sentinel)
     return () => observer.disconnect()
-  }, [isLoading, error, items.length, hasMore])
+  }, [isLoading, error, hasMore])
 
   // Sort 드롭다운 외부 클릭 닫기
   useEffect(() => {
@@ -148,17 +169,10 @@ const ExplorePageContent = () => {
     return () => document.removeEventListener('mousedown', handleClick)
   }, [])
 
-  // 검색
+  // 검색 (URL만 변경하여 useEffect가 처리하게 유도)
   const handleSearch = useCallback(
     (q: string) => {
-      isResetRef.current = true
-      setItems([])
-      setHasMore(true)
-      setTotalElements(null)
-      setParams((prev) => ({ ...prev, q, page: 0 }))
-
-      // URL 쿼리 파라미터 업데이트
-      setSearchParams({ q })
+      setSearchParams(q ? { q } : {})
     },
     [setSearchParams]
   )
