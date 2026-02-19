@@ -53,13 +53,13 @@ const ExplorePageContent = () => {
   } = useCompare()
 
   // API 조회 파라미터
-  const [params, setParams] = useState<ApiListParams>({
+  const [params, setParams] = useState<ApiListParams>(() => ({
     page: 0,
     size: 16,
     sort: 'LATEST',
     direction: 'DESC',
     q: searchParams.get('q') || undefined,
-  })
+  }))
 
   // 필터 상태 (FilterModal 초기값 전달용)
   const [filterState, setFilterState] = useState<Partial<FilterValues>>({})
@@ -79,7 +79,7 @@ const ExplorePageContent = () => {
   // 이전 API 호출 params 저장 (중복 호출 방지용)
   const prevParamsRef = useRef<string>('')
 
-  // URL 파라미터(q) 변화에 따른 상태 동기화 및 초기화 (헤더 클릭 시 초기화 해결)
+  // URL 파라미터(q) 변화에 따른 상태 동기화 및 초기화 (린트 에러 수정)
   useEffect(() => {
     const urlQuery = searchParams.get('q') || undefined
 
@@ -87,11 +87,13 @@ const ExplorePageContent = () => {
 
     isResetRef.current = true
 
+    /* eslint-disable react-hooks/set-state-in-effect */
     setParams((prev) => ({
       ...prev,
       q: urlQuery,
       page: 0,
     }))
+    /* eslint-enable react-hooks/set-state-in-effect */
 
     if (!urlQuery) {
       setFilterState({})
