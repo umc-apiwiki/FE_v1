@@ -83,25 +83,20 @@ const ExplorePageContent = () => {
   useEffect(() => {
     const urlQuery = searchParams.get('q') || undefined
 
-    // URL의 q와 현재 메모리 상의 q가 다를 때만 동기화 로직 실행
-    if (params.q !== urlQuery) {
-      isResetRef.current = true
-      setItems([])
-      setHasMore(true)
-      setTotalElements(null)
+    if (params.q === urlQuery) return
 
-      setParams((prev) => ({
-        ...prev,
-        q: urlQuery,
-        page: 0,
-      }))
+    isResetRef.current = true
 
-      // 검색어가 없는 경로(/explore)로 이동한 경우 필터 UI 상태도 초기화
-      if (!urlQuery) {
-        setFilterState({})
-      }
+    setParams((prev) => ({
+      ...prev,
+      q: urlQuery,
+      page: 0,
+    }))
+
+    if (!urlQuery) {
+      setFilterState({})
     }
-  }, [searchParams])
+  }, [searchParams, params.q])
 
   // ✅ [수정됨] pageData 수신 시 items 업데이트 (중복 제거 로직 추가)
   useEffect(() => {
