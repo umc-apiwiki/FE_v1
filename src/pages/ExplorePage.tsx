@@ -89,7 +89,7 @@ const ExplorePageContent = () => {
       setItems([])
       setHasMore(true)
       setTotalElements(null)
-      
+
       setParams((prev) => ({
         ...prev,
         q: urlQuery,
